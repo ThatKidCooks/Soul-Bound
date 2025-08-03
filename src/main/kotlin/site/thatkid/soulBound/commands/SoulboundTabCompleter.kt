@@ -1,0 +1,31 @@
+package site.thatkid.soulBound.commands
+
+import org.bukkit.command.Command
+import org.bukkit.command.CommandSender
+import org.bukkit.command.TabCompleter
+import org.bukkit.entity.Player
+
+class SoulboundTabCompleter : TabCompleter {
+    override fun onTabComplete(
+        sender: CommandSender,
+        command: Command,
+        alias: String,
+        args: Array<out String>
+    ): List<String>? {
+
+        if (args.size == 1) {
+            val subcommands = listOf("help", "ability", "drain", "cooldown", "trust", "untrust", "trustlist")
+            return subcommands.filter { it.startsWith(args[0], ignoreCase = true) }
+        }
+
+        if (args.size == 2 && (args[0].equals("trust", true) || args[0].equals("untrust", true))) {
+            if (sender is Player) {
+                return sender.server.onlinePlayers
+                    .map { it.name }
+                    .filter { it.startsWith(args[1], ignoreCase = true) }
+            }
+        }
+
+        return emptyList()
+    }
+}

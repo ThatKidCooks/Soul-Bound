@@ -1,0 +1,17 @@
+name: SoulBound
+version: '1.0-SNAPSHOT'
+main: site.thatkid.soulBound.SoulBound
+api-version: '1.21'
+load: STARTUP
+depend: [ProtocolLib]
+
+commands:
+  soulbound:
+    description: Soul Bound Commands
+    usage: /soulbound <command>
+    aliases: [ sb ]
+
+authors: [ ItsMinechook ]
+website: thatkid.site
+
+debug: true
