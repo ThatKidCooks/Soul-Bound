@@ -14,7 +14,6 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.Heart
-import site.thatkid.soulBound.items.hearts.Crowned.remaining
 import java.util.UUID
 
 object Wise : Heart() {
@@ -105,5 +104,9 @@ object Wise : Heart() {
 
     override fun clearCooldown(playerId: UUID) {
         cooldowns.remove(playerId)
+    }
+
+    override fun getCooldown(playerId: UUID): Long {
+        return cooldowns[playerId] ?: 0L
     }
 }

@@ -207,4 +207,8 @@ object Ghastly : Heart() {
         cooldowns.remove(uuid)
         specialActive.remove(uuid)
     }
+
+    override fun getCooldown(playerId: UUID): Long {
+        return cooldowns[playerId] ?: 0L
+    }
 }

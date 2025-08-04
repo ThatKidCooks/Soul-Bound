@@ -119,6 +119,10 @@ object Golem: Heart() {
         knockbackImmune.remove(playerId)
     }
 
+    override fun getCooldown(playerId: UUID): Long {
+        return cooldowns[playerId] ?: 0L
+    }
+
     // Method to check if player has knockback immunity
     fun hasKnockbackImmunity(playerId: UUID): Boolean {
         val now = System.currentTimeMillis()

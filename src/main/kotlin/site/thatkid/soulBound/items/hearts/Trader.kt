@@ -73,4 +73,8 @@ object Trader : Heart() {
     override fun clearCooldown(uuid: UUID) {
         cooldowns.remove(uuid)
     }
+
+    override fun getCooldown(playerId: UUID): Long {
+        return cooldowns[playerId] ?: 0L
+    }
 }

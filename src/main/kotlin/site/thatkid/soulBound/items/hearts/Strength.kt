@@ -69,4 +69,8 @@ object Strength : Heart() {
     override fun clearCooldown(playerId: UUID) {
         cooldowns.remove(playerId)
     }
+
+    override fun getCooldown(playerId: UUID): Long {
+        return cooldowns[playerId] ?: 0L
+    }
 }

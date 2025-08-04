@@ -12,6 +12,7 @@ abstract class Heart {
     abstract fun constantEffect(player: Player)
     abstract fun specialEffect(player: Player)
     abstract fun clearCooldown(playerId: UUID)
+    abstract fun getCooldown(playerId: UUID): Long
 
     open fun trustPlayer(ownerId: UUID, targetId: UUID) {
         TrustRegistry.trust(ownerId, targetId)

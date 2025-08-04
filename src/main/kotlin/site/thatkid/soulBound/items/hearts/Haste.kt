@@ -2,7 +2,6 @@ package site.thatkid.soulBound.items.hearts
 
 import net.kyori.adventure.text.Component
 import org.bukkit.*
-import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
@@ -93,9 +92,7 @@ object Haste : Heart() {
         cooldowns.remove(uuid)
     }
 
-    fun getCooldown(uuid: UUID): Long {
-        val lastUsed = cooldowns[uuid] ?: return 0L
-        val remaining = cooldownTime - (System.currentTimeMillis() - lastUsed)
-        return if (remaining > 0) remaining / 1000 else 0L
+    override fun getCooldown(playerId: UUID): Long {
+        return cooldowns[playerId] ?: 0L
     }
 }

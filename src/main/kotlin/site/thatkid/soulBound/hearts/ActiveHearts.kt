@@ -3,6 +3,7 @@ package site.thatkid.soulBound.hearts
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import site.thatkid.soulBound.items.Heart
 import site.thatkid.soulBound.json.SavedHeartData
@@ -11,30 +12,43 @@ import java.util.*
 
 object ActiveHearts {
 
+    enum class AddHeartResult {
+        SUCCESS,
+        SAME_HEART,
+        COOLDOWN_ACTIVE
+    }
+
+    private var done: Boolean = false
+
     private val gson: Gson = GsonBuilder()
         .setPrettyPrinting()
         .create()
 
     private val playerHearts: MutableMap<UUID, Heart> = mutableMapOf()
 
-    fun add(playerUUID: UUID, heart: Heart) {
+    fun add(playerUUID: UUID, heart: Heart): AddHeartResult {
         val currentHeart = playerHearts[playerUUID]
-        if (currentHeart != null && currentHeart::class == heart::class) return
 
-        if (playerHearts[playerUUID] != null) {
-            // Get the actual player object from UUID to give back the old heart
-            val player = Bukkit.getPlayer(playerUUID)
-            if (player != null) {
-                // Give back the old heart as an item
-                val oldHeart = playerHearts[playerUUID]!!
-                player.inventory.addItem(oldHeart.createItem())
+        if (currentHeart != null && currentHeart::class == heart::class) {
+            return AddHeartResult.SAME_HEART
+        }
+
+        currentHeart?.getCooldown(playerUUID)?.let { cooldown ->
+            if (cooldown > 0L) {
+                return AddHeartResult.COOLDOWN_ACTIVE
             }
-            // Remove the old heart regardless of whether player is online
-            playerHearts.remove(playerUUID)
+        }
+
+        if (currentHeart != null) {
+            val player = Bukkit.getPlayer(playerUUID)
+            player?.inventory?.addItem(currentHeart.createItem())
         }
 
         playerHearts[playerUUID] = heart
+        return AddHeartResult.SUCCESS
     }
+
+
 
     fun remove(player: Player, slot: Int) {
         val playerUUID = player.uniqueId
