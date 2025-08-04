@@ -74,7 +74,7 @@ object Ghastly : Heart() {
             player.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, 100, 0, true, false, false))
         } else {
             // Normal: weak invisibility
-            player.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, 60, 0, true, false, false))
+            player.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, 60, 0, true, true, false))
         }
     }
 
