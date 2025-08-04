@@ -102,6 +102,7 @@ object Warden : Heart() {
                 for (entity in point.world.getNearbyEntities(point, 1.5, 1.5, 1.5)) {
                     if (entity == player || entity !is LivingEntity || entity.uniqueId in hitEntities) continue
                     if (trusted.contains(entity.uniqueId)) continue
+                    if (player.gameMode != GameMode.SURVIVAL || player.gameMode != GameMode.ADVENTURE) continue
 
                     val damage = 15.0 // 7.5 hearts
 

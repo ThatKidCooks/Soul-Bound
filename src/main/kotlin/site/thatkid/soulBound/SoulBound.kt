@@ -4,13 +4,13 @@ import HeartEatListener
 import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.commands.CommandManager
 import site.thatkid.soulBound.commands.SoulboundTabCompleter
+import site.thatkid.soulBound.gui.player.DisplayHearts
 import site.thatkid.soulBound.items.hearts.Crowned
 import site.thatkid.soulBound.hearts.ActiveHearts
-import site.thatkid.soulBound.gui.player.DisplayHearts
 import site.thatkid.soulBound.hearts.ConstantAbilitiesCaller
-import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.listeners.GolemKBTracker
 import site.thatkid.soulBound.listeners.PlayerDeathListener
+import site.thatkid.soulBound.listeners.PlayerQuitListener
 import site.thatkid.soulBound.listeners.msgs.DeathMessageListener
 import site.thatkid.soulBound.managers.*
 import java.io.File
@@ -27,6 +27,8 @@ class SoulBound : JavaPlugin() {
     private lateinit var golemTracker: GolemHeartTracker
     private lateinit var wiseTracker: WiseHeartTracker
     private lateinit var trustManager: TrustStorageManager
+
+    private var displayHearts: DisplayHearts = DisplayHearts()
 
     override fun onEnable() {
         crownedTracker = object : HeartTracker(this, Crowned, killsRequired = 5) {}
@@ -65,13 +67,14 @@ class SoulBound : JavaPlugin() {
         getCommand("soulbound")?.setExecutor(CommandManager(this))
         getCommand("soulbound")?.setTabCompleter(SoulboundTabCompleter())
 
-        DisplayHearts().runTaskTimer(this, 0, 20L)
+        displayHearts.runTaskTimer(this, 0, 3L)
         ConstantAbilitiesCaller().runTaskTimer(this, 0, 20L)
 
         server.pluginManager.registerEvents(HeartEatListener(this), this)
         server.pluginManager.registerEvents(DeathMessageListener(), this)
         server.pluginManager.registerEvents(PlayerDeathListener(this), this)
         server.pluginManager.registerEvents(GolemKBTracker(this), this)
+        server.pluginManager.registerEvents(PlayerQuitListener(displayHearts), this)
 
         ActiveHearts.loadFromFile(File(soulBoundDir, "hearts.json"))
     }

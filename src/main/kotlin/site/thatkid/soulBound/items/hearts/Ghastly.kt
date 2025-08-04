@@ -211,4 +211,8 @@ object Ghastly : Heart() {
     override fun getCooldown(playerId: UUID): Long {
         return cooldowns[playerId] ?: 0L
     }
+
+    fun isSpecialActive(playerId: UUID): Boolean {
+        return specialActive.contains(playerId)
+    }
 }
