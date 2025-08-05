@@ -26,7 +26,7 @@ object Crowned : Heart() {
     private val cooldowns = mutableMapOf<UUID, Long>()
     private var cooldownTime = 40 * 1000L // 40 seconds in milliseconds
 
-    val smashedBy = mutableMapOf<UUID, UUID>()
+    private val smashedBy = mutableMapOf<UUID, UUID>()
 
     override fun createItem(): ItemStack {
         val item = ItemStack(Material.APPLE)
