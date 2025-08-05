@@ -2,6 +2,7 @@ package site.thatkid.soulBound.listeners
 
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.event.player.PlayerChangedWorldEvent
@@ -25,6 +26,12 @@ class PlayerQuitListener(private val displayHearts: DisplayHearts) : Listener {
     @EventHandler
     fun onPlayerChangedWorld(event: PlayerChangedWorldEvent) {
         // Clean up armor stands when changing worlds
+        displayHearts.cleanupPlayer(event.player)
+    }
+
+    @EventHandler
+    fun onPlayerDeath(event: PlayerDeathEvent) {
+        // Clean up armor stands when player dies
         displayHearts.cleanupPlayer(event.player)
     }
 }

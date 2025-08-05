@@ -66,6 +66,7 @@ class CommandManager(private var plugin: JavaPlugin): CommandExecutor {
                     Aquatic.clearCooldown(sender.uniqueId)
                     Golem.clearCooldown(sender.uniqueId)
                     Wise.clearCooldown(sender.uniqueId)
+                    Fire.clearCooldown(sender.uniqueId)
                     sender.sendMessage("§aYour heart cooldowns have been reset.")
                 } else {
                     sender.sendMessage("§cYou don’t have permission to reset cooldowns.")

@@ -20,7 +20,8 @@ class HeartEatListener(private val plugin: JavaPlugin) : Listener {
         "strength" to Strength,
         "aquatic" to Aquatic,
         "golem" to Golem,
-        "wise" to Wise
+        "wise" to Wise,
+        "fire" to Fire
     ).mapKeys { NamespacedKey(plugin, it.key) }
 
     @EventHandler

@@ -32,6 +32,7 @@ class DisplayHearts : BukkitRunnable() {
                     is Aquatic -> detailedSymbols.add("§b❤ Aquatic")
                     is Golem -> detailedSymbols.add("§7❤ Golem")
                     is Wise -> detailedSymbols.add("§f❤ Wise")
+                    is Fire -> detailedSymbols.add("§c❤ Fire")
                 }
             }
 

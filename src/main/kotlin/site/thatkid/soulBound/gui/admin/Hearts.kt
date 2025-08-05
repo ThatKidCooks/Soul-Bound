@@ -7,6 +7,7 @@ import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.items.hearts.Aquatic
 import site.thatkid.soulBound.items.hearts.Crowned
+import site.thatkid.soulBound.items.hearts.Fire
 import site.thatkid.soulBound.items.hearts.Ghastly
 import site.thatkid.soulBound.items.hearts.Golem
 import site.thatkid.soulBound.items.hearts.Haste
@@ -19,7 +20,7 @@ class Hearts(private val plugin: JavaPlugin): Listener {
     private val TITLE = Component.text("§bHearts")
 
     fun open(player: Player) {
-        val inventory = Bukkit.createInventory(null, 9, TITLE)
+        val inventory = Bukkit.createInventory(null, 18, TITLE)
 
         val crowned = Crowned.createItem()
         val warden = Warden.createItem()
@@ -30,6 +31,7 @@ class Hearts(private val plugin: JavaPlugin): Listener {
         val aquatic = Aquatic.createItem()
         val golem = Golem.createItem()
         val wise = Wise.createItem()
+        val fire = Fire.createItem()
 
         inventory.setItem(0, crowned)
         inventory.setItem(1, warden)
@@ -40,6 +42,7 @@ class Hearts(private val plugin: JavaPlugin): Listener {
         inventory.setItem(6, aquatic)
         inventory.setItem(7, golem)
         inventory.setItem(8, wise)
+        inventory.setItem(9, fire)
 
         player.openInventory(inventory)
     }
