@@ -24,7 +24,7 @@ object Crowned : Heart() {
 
     override val key = NamespacedKey(plugin, "crowned")
     private val cooldowns = mutableMapOf<UUID, Long>()
-    var cooldownTime = 40 * 1000L // 40 seconds in milliseconds
+    private var cooldownTime = 40 * 1000L // 40 seconds in milliseconds
 
     val smashedBy = mutableMapOf<UUID, UUID>()
 
