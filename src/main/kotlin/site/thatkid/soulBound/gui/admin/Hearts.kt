@@ -15,6 +15,7 @@ import site.thatkid.soulBound.items.hearts.Strength
 import site.thatkid.soulBound.items.hearts.Trader
 import site.thatkid.soulBound.items.hearts.Warden
 import site.thatkid.soulBound.items.hearts.Wise
+import site.thatkid.soulBound.items.hearts.Wither
 
 class Hearts(private val plugin: JavaPlugin): Listener {
     private val TITLE = Component.text("§bHearts")
@@ -32,6 +33,7 @@ class Hearts(private val plugin: JavaPlugin): Listener {
         val golem = Golem.createItem()
         val wise = Wise.createItem()
         val fire = Fire.createItem()
+        val wither = Wither.createItem()
 
         inventory.setItem(0, crowned)
         inventory.setItem(1, warden)
@@ -43,6 +45,7 @@ class Hearts(private val plugin: JavaPlugin): Listener {
         inventory.setItem(7, golem)
         inventory.setItem(8, wise)
         inventory.setItem(9, fire)
+        inventory.setItem(10, wither)
 
         player.openInventory(inventory)
     }
