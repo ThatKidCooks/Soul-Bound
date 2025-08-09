@@ -44,7 +44,7 @@ object Wise : Heart() {
     }
 
     override fun constantEffect(player: Player) {
-        if (!player.hasPotionEffect(PotionEffectType.LUCK)) {
+        if (!player.hasPotionEffect(PotionEffectType.HEALTH_BOOST)) {
             player.addPotionEffect(PotionEffect(PotionEffectType.HEALTH_BOOST, 40, 1, true, false))
         }
     }
