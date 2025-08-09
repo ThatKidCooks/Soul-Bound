@@ -26,6 +26,7 @@ class SoulBound : JavaPlugin() {
     private lateinit var aquaticTracker: AquaticHeartTracker
     private lateinit var golemTracker: GolemHeartTracker
     private lateinit var wiseTracker: WiseHeartTracker
+    private lateinit var fireTracker: FireHeartTracker
     private lateinit var trustManager: TrustStorageManager
 
     private var displayHearts: DisplayHearts = DisplayHearts(this)
@@ -57,6 +58,9 @@ class SoulBound : JavaPlugin() {
 
         wiseTracker = WiseHeartTracker(this)
         wiseTracker.enable()
+
+        fireTracker = FireHeartTracker(this)
+        fireTracker.enable()
 
         trustManager = TrustStorageManager
         trustManager.load(File(dataFolder, "trusted_players.json"))
