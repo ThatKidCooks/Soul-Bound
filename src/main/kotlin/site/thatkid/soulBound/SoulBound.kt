@@ -28,7 +28,7 @@ class SoulBound : JavaPlugin() {
     private lateinit var wiseTracker: WiseHeartTracker
     private lateinit var trustManager: TrustStorageManager
 
-    private var displayHearts: DisplayHearts = DisplayHearts()
+    private var displayHearts: DisplayHearts = DisplayHearts(this)
 
     override fun onEnable() {
         crownedTracker = object : HeartTracker(this, Crowned, killsRequired = 5) {}
@@ -94,5 +94,6 @@ class SoulBound : JavaPlugin() {
         if (::wiseTracker.isInitialized) wiseTracker.disable()
 
         trustManager.save(File(dataFolder, "trusted_players.json"))
+        displayHearts.cleanup()
     }
 }

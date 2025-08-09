@@ -112,6 +112,41 @@ class CommandManager(private var plugin: JavaPlugin): CommandExecutor {
                 }
             }
 
+            "add" -> {
+                if (sender.isOp) {
+                    if (args.size < 3) {
+                        sender.sendMessage("§cUsage: /soulbound add <player> <heart>")
+                        return true
+                    }
+
+                    val player = plugin.server.getPlayer(args[1])
+
+                    val heartName = args[2].lowercase()
+                    val heart = when (heartName) {
+                        "crowned" -> Crowned
+                        "warden" -> Warden
+                        "ghastly" -> Ghastly
+                        "haste" -> Haste
+                        "trader" -> Trader
+                        "strength" -> Strength
+                        "aquatic" -> Aquatic
+                        "golem" -> Golem
+                        "wise" -> Wise
+                        "fire" -> Fire
+                        else -> null
+                    }
+
+                    if (heart != null) {
+                        ActiveHearts.add(player?.uniqueId ?: sender.uniqueId, heart)
+                        sender.sendMessage("§aYou have added the ${heartName.capitalize()} heart.")
+                    } else {
+                        sender.sendMessage("§cUnknown heart type: $heartName")
+                    }
+                } else {
+                    sender.sendMessage("§cUnknown subcommand. Use /soulbound help for help.")
+                }
+            }
+
             else -> {
                 sender.sendMessage("§cUnknown subcommand. Use /soulbound help for help.")
             }
