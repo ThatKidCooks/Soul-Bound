@@ -42,7 +42,8 @@ object Fire : Heart() {
         val meta = item.itemMeta!!
         meta.displayName(Component.text("§cFire Heart"))
         meta.lore(listOf(
-            Component.text("§7Born in Eternal Volcanic Power"),
+            Component.text("§7Few can withstand the heart of fire."),
+            Component.text("§cThe Nether will not hand it to you — it will burn away the unworthy."),
             Component.text(""),
             Component.text("§f✧ §7Permanent §cFire Resistance §7& §9Strength when on Fire"),
             Component.text(""),
