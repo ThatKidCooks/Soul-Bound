@@ -14,6 +14,7 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import org.bukkit.util.Vector
 import site.thatkid.soulBound.hearts.ActiveHearts
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.Heart
@@ -69,6 +70,7 @@ object Wither : Heart(), Listener {
         }
     }
 
+    
     override fun specialEffect(player: Player) {
         if (cooldowns.containsKey(player.uniqueId) && System.currentTimeMillis() < cooldowns[player.uniqueId]!!) {
             player.sendMessage("§cYou must wait before using Wither Blast again.")
@@ -76,10 +78,18 @@ object Wither : Heart(), Listener {
         }
 
         val direction = player.location.direction
-        val numHeads = 5 // Number of wither heads to shoot
+        val rightVector = direction.crossProduct(Vector(0.0, 1.0, 0.0)).normalize()
+        val numHeads = 5 // Number of wither heads to shoot - this one is so obvious
+        val spacing = 1.0 // Distance between heads duh - then again that isn't really a duh
+        val forwardDistance = 2.0 // Spawn heads this far in front of the player
+
         for (i in 0 until numHeads) {
-            val head = player.world.spawnEntity(player.location, EntityType.WITHER_SKULL)
-            head.velocity = direction.multiply(1.5).add(org.bukkit.util.Vector(0.0, 0.5, 0.0))
+            val offset = (i - (numHeads - 1) / 2.0) * spacing
+            val spawnLocation = player.location.clone()
+                .add(direction.clone().multiply(forwardDistance)) // Move forward
+                .add(rightVector.clone().multiply(offset)) // Spread horizontally
+            val head = player.world.spawnEntity(spawnLocation, EntityType.WITHER_SKULL)
+            head.velocity = direction.multiply(1.5)
         }
 
         cooldowns[player.uniqueId] = System.currentTimeMillis() + cooldownTime
