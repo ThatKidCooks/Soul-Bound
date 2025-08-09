@@ -96,6 +96,7 @@ class SoulBound : JavaPlugin() {
         if (::aquaticTracker.isInitialized) aquaticTracker.disable()
         if (::golemTracker.isInitialized) golemTracker.disable()
         if (::wiseTracker.isInitialized) wiseTracker.disable()
+        if (::fireTracker.isInitialized) fireTracker.disable()
 
         trustManager.save(File(dataFolder, "trusted_players.json"))
         displayHearts.cleanup()
