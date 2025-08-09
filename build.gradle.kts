@@ -1,6 +1,5 @@
 plugins {
     kotlin("jvm") version "2.2.0"
-    id("com.gradleup.shadow") version "8.3.0"
     id("xyz.jpenilla.run-paper") version "2.3.1"
 }
 
@@ -16,11 +15,29 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("com.google.code.gson:gson:2.10.1")
+    compileOnly("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    compileOnly("com.google.code.gson:gson:2.10.1")
 
     // ← Use 5.3.0 (published) instead of 5.4.0
     compileOnly("com.comphenix.protocol:ProtocolLib:5.3.0")
+}
+
+// Configure jar task to exclude all dependencies
+tasks.withType<Jar> {
+    // Only include your plugin classes
+    from(sourceSets.main.get().output)
+    // Explicitly exclude everything else
+    exclude("META-INF/**")
+    exclude("kotlin/**")
+    exclude("org/jetbrains/**")
+    exclude("com/google/**")
+    exclude("io/papermc/**")
+    exclude("com/comphenix/**")
+    exclude("org/bukkit/**")
+    exclude("net/kyori/**")
+    // Include only your packages
+    include("site/thatkid/**")
+    include("plugin.yml")
 }
 
 tasks {
@@ -35,7 +52,7 @@ kotlin {
 }
 
 tasks.build {
-    dependsOn("shadowJar")
+    // No special dependencies needed
 }
 
 tasks.processResources {

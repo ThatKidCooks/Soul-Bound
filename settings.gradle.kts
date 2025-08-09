@@ -1,1 +1,1 @@
-rootProject.name = "Sould Bound"
+rootProject.name = "Soul Bound"
