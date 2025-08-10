@@ -14,8 +14,12 @@ class SoulboundTabCompleter : TabCompleter {
     ): List<String>? {
 
         if (args.size == 1) {
-            val subcommands = listOf("help", "ability", "drain", "cooldown", "trust", "untrust", "trustlist")
-            return subcommands.filter { it.startsWith(args[0], ignoreCase = true) }
+            val normalSubcommands = listOf("help", "ability", "drain", "trust", "untrust", "trustlist")
+            val adminSubcommands = listOf("help", "ability", "cooldown", "drain", "trust", "untrust", "trustlist", "add")
+            if (sender.isOp) {
+                return adminSubcommands.filter { it.startsWith(args[0], ignoreCase = true) }
+            }
+            return normalSubcommands.filter { it.startsWith(args[0], ignoreCase = true) }
         }
 
         if (args.size == 2 && (args[0].equals("trust", true) || args[0].equals("untrust", true))) {
