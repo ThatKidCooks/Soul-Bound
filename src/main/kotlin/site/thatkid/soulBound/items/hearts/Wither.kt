@@ -65,9 +65,7 @@ object Wither : Heart(), Listener {
 
         if (attacker !is Player || entity !is Player) return
         if (ActiveHearts.getHearts(attacker.uniqueId).contains(Wither)) {
-            if (Math.random() >= 0.1) {
-                return
-            } // 10% chance
+            if (Math.random() >= 0.1) return // 10% chance
             plugin.logger.info("passed random chance for Wither Heart hit event")
             if (TrustRegistry.trustedPlayers[attacker.uniqueId]?.contains(entity.uniqueId) == true) return
             plugin.logger.info("Wither Heart hit event: Inflicting Wither I on ${entity.name} by ${attacker.name}")
