@@ -76,7 +76,7 @@ object Wither : Heart(), Listener {
             plugin.logger.info("passed random chance for Wither Heart hit event")
             if (TrustRegistry.trustedPlayers[attacker.uniqueId]?.contains(entity.uniqueId) == true) return
             plugin.logger.info("Wither Heart hit event: Inflicting Wither I on ${entity.name} by ${attacker.name}")
-            entity.addPotionEffect(PotionEffect(PotionEffectType.WITHER, 100, 0))
+            entity.addPotionEffect(PotionEffect(PotionEffectType.WITHER, 20 * 10, 0))
             attacker.sendMessage("§aYou inflicted Wither I on ${entity.name}!")
         }
     }
