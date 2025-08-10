@@ -13,6 +13,7 @@ import site.thatkid.soulBound.listeners.PlayerDeathListener
 import site.thatkid.soulBound.listeners.PlayerQuitListener
 import site.thatkid.soulBound.listeners.msgs.DeathMessageListener
 import site.thatkid.soulBound.managers.*
+import site.thatkid.soulBound.items.hearts.Wither
 import java.io.File
 
 class SoulBound : JavaPlugin() {
@@ -79,6 +80,7 @@ class SoulBound : JavaPlugin() {
         server.pluginManager.registerEvents(PlayerDeathListener(this), this)
         server.pluginManager.registerEvents(GolemKBTracker(this), this)
         server.pluginManager.registerEvents(PlayerQuitListener(displayHearts), this)
+        server.pluginManager.registerEvents(Wither, this)
 
         ActiveHearts.loadFromFile(File(soulBoundDir, "hearts.json"))
     }

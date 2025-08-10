@@ -1,6 +1,8 @@
 package site.thatkid.soulBound.items.hearts
 
+import io.papermc.paper.command.brigadier.argument.ArgumentTypes.world
 import net.kyori.adventure.text.Component
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.EntityType
@@ -33,7 +35,7 @@ object Wither : Heart(), Listener {
     override fun createItem(): ItemStack {
         val item = ItemStack(Material.APPLE)
         val meta = item.itemMeta!!
-        meta.setDisplayName("§0Wither Heart")
+        meta.setDisplayName("§8Wither Heart")
         meta.lore(listOf(
             Component.text("§7A heart that carries the burden of decay."),
             Component.text("§7It withers the soul, but grants power."),
@@ -61,10 +63,19 @@ object Wither : Heart(), Listener {
         val attacker = event.damager
         val entity = event.entity
 
+        plugin.logger.info("Wither Heart hit event: Attacker: ${attacker.type}, Entity: ${entity.type}")
+
         if (attacker !is Player || entity !is Player) return
-        if (ActiveHearts.getHearts(attacker.uniqueId).contains(this)) {
-            if (Math.random() >= 0.1) return // 10% chance
-            if (TrustRegistry.trustedPlayers[attacker.uniqueId]?.contains(entity.uniqueId) ?: return) return
+        plugin.logger.info("Wither Heart hit event: Both attacker and entity are players")
+        if (ActiveHearts.getHearts(attacker.uniqueId).contains(Wither)) {
+            plugin.logger.info("Wither Heart hit event: Attacker has Wither Heart")
+            if (Math.random() >= 0.1) {
+                plugin.logger.info("Wither Heart hit event: Random chance failed")
+                return
+            } // 10% chance
+            plugin.logger.info("passed random chance for Wither Heart hit event")
+            if (TrustRegistry.trustedPlayers[attacker.uniqueId]?.contains(entity.uniqueId) == true) return
+            plugin.logger.info("Wither Heart hit event: Inflicting Wither I on ${entity.name} by ${attacker.name}")
             entity.addPotionEffect(PotionEffect(PotionEffectType.WITHER, 100, 0))
             attacker.sendMessage("§aYou inflicted Wither I on ${entity.name}!")
         }
@@ -78,18 +89,13 @@ object Wither : Heart(), Listener {
         }
 
         val direction = player.location.direction
-        val rightVector = direction.crossProduct(Vector(0.0, 1.0, 0.0)).normalize()
         val numHeads = 5 // Number of wither heads to shoot - this one is so obvious
-        val spacing = 1.0 // Distance between heads duh - then again that isn't really a duh
-        val forwardDistance = 2.0 // Spawn heads this far in front of the player
+        val spacing = 1 // Distance between heads duh - then again that isn't really a duh
 
         for (i in 0 until numHeads) {
-            val offset = (i - (numHeads - 1) / 2.0) * spacing
-            val spawnLocation = player.location.clone()
-                .add(direction.clone().multiply(forwardDistance)) // Move forward
-                .add(rightVector.clone().multiply(offset)) // Spread horizontally
-            val head = player.world.spawnEntity(spawnLocation, EntityType.WITHER_SKULL)
-            head.velocity = direction.multiply(1.5)
+            val location = Location(player.world, player.location.x, player.location.y + 0.5, player.location.z)
+            val head = player.world.spawnEntity(location, EntityType.WITHER_SKULL)
+            head.velocity = direction.clone().multiply(1.5 + i * spacing)
         }
 
         cooldowns[player.uniqueId] = System.currentTimeMillis() + cooldownTime
