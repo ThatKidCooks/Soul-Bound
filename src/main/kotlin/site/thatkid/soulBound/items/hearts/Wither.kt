@@ -63,14 +63,9 @@ object Wither : Heart(), Listener {
         val attacker = event.damager
         val entity = event.entity
 
-        plugin.logger.info("Wither Heart hit event: Attacker: ${attacker.type}, Entity: ${entity.type}")
-
         if (attacker !is Player || entity !is Player) return
-        plugin.logger.info("Wither Heart hit event: Both attacker and entity are players")
         if (ActiveHearts.getHearts(attacker.uniqueId).contains(Wither)) {
-            plugin.logger.info("Wither Heart hit event: Attacker has Wither Heart")
             if (Math.random() >= 0.1) {
-                plugin.logger.info("Wither Heart hit event: Random chance failed")
                 return
             } // 10% chance
             plugin.logger.info("passed random chance for Wither Heart hit event")
