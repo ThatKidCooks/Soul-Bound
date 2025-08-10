@@ -72,7 +72,6 @@ class WardenHeartTracker(private val plugin: JavaPlugin) : Listener {
   private fun load() {
     if (!dataFile.exists()) return
     try {
-      @Suppress("UNCHECKED_CAST")
       val tree = gson.fromJson(dataFile.readText(), Map::class.java) as Map<String, Any>
       (tree["winner"] as? String)?.let {
         heartWinner = UUID.fromString(it)
