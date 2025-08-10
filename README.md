@@ -24,10 +24,14 @@ How this plugin works is there is unique hearts that you can get from different 
 
 - 📜 **Wise**: Brew all potions (tier 2 are banned so they don't count) and kill 5 players while under any potion effect.
 
+- 📜 **Fire**: Kill a Withers
+
+- 📜 **Wither**: Kill 7 Withers
+
                                                             
 **Remember wherever you use this only 1 of each heart can be obtained so time is of the essence!**
 
-## The hearts also have different abilities one passive and one special:
+## The hearts also have different abilities, one passive and one special:
 
 - **⚔️ Aquatic:** Constant is Conduit Power II + Dolphins Grace and it's Special is Strength 3 for 10 sec if in water when activated.
 
@@ -45,7 +49,11 @@ How this plugin works is there is unique hearts that you can get from different 
 
 - **⚔️ Golem:** Constant is permanent Resistance I and it's Special is knocking back all players and getting Resistance II and Strength II for seconds.
 
-- **⚔️ Wise:** Constant is permanent Luck I and it's Special is making all untrusted players glow around you as well as giving you Regeneration II and Absorption II for 10 sec.z
+- **⚔️ Wise:** Constant is permanent Luck I, and it's Special is making all untrusted players glow around you as well as giving you Regeneration II and Absorption II for 10 sec.
+
+- **⚔️ Fire:** Constant is Fire Resistance, and it's Special is a Fire Tornado and all trusted players get fire resistance.
+
+- **⚔️ Wither:** Constant is a 10% chance to apply Wither I on hit and it's Special is shooting 5 Wither Skulls.
   
 
 
@@ -66,5 +74,6 @@ How this plugin works is there is unique hearts that you can get from different 
 - **/soulbound** - Opens the heart gui that gives you all hearts.
 - **/sb** - Aliases of /soulbound.
 - **/sb cooldown** - Resets the cooldown of all your hearts. (Useful for testing)
+- **/sb add <player> <heart>** - Adds a heart to a player.
 
 # Enjoy!
