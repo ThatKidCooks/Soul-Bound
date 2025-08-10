@@ -11,10 +11,12 @@ import site.thatkid.soulBound.items.hearts.Fire
 import java.io.File
 import java.util.UUID
 
-class FireHeartTracker(private val plugin: JavaPlugin) : Listener {
+class WitherHeartTracker(private val plugin: JavaPlugin) : Listener {
 
   private val gson = GsonBuilder().setPrettyPrinting().create()
-  private val dataFile = File(plugin.dataFolder, "fire_heart.json")
+  private val dataFile = File(plugin.dataFolder, "wither_heart.json")
+
+  private val kills = mutableMapOf<UUID, Int>()
 
   // The single player who has received the heart (null if no one has it yet)
   private var heartWinner: UUID? = null
@@ -29,7 +31,7 @@ class FireHeartTracker(private val plugin: JavaPlugin) : Listener {
     load()
     // register this listener
     plugin.server.pluginManager.registerEvents(this, plugin)
-    plugin.logger.info("[FireHeartTracker] Enabled – listening for wither kills")
+    plugin.logger.info("[WitherHeartTracker] Enabled – listening for wither kills")
   }
 
   /**
@@ -37,7 +39,7 @@ class FireHeartTracker(private val plugin: JavaPlugin) : Listener {
    */
   fun disable() {
     save()
-    plugin.logger.info("[FireHeartTracker] Disabled – saved wither heart winner")
+    plugin.logger.info("[WitherHeartTracker] Disabled – saved wither heart winner")
   }
 
   @EventHandler
@@ -48,12 +50,17 @@ class FireHeartTracker(private val plugin: JavaPlugin) : Listener {
     if (e.entityType != EntityType.WITHER) return
     val killer = e.entity.killer ?: return
 
-    // Give the heart to the first player to kill a wither
-    killer.inventory.addItem(Fire.createItem())
-    killer.sendMessage("§2You are the first to slay a Wither and have earned the §cFire Heart§r§2!")
-    Bukkit.broadcastMessage("§a${killer.name} is the first to slay a Wither and earn the §cFire Heart§r§a!")
+    kills[killer.uniqueId] = kills.getOrDefault(killer.uniqueId, 0) + 1
 
-    heartWinner = killer.uniqueId
+    if (kills[killer.uniqueId] == 7) {
+
+      // Give the heart to the first player to kill a wither
+      killer.inventory.addItem(Fire.createItem())
+      killer.sendMessage("§2You are the first to slay 7 Withers and have earned the §8Wither Heart§r§2!")
+      Bukkit.broadcastMessage("§a${killer.name} is the first to slay 7 Withers and earn the §8Wither Heart§r§a!")
+
+      heartWinner = killer.uniqueId
+    }
     save()
   }
 
@@ -62,6 +69,10 @@ class FireHeartTracker(private val plugin: JavaPlugin) : Listener {
    */
   private fun save() {
     val content = mutableMapOf<String, Any>()
+    kills.forEach { (uuid, killCount) ->
+      content[uuid.toString()] = killCount
+      println(content)
+    }
     heartWinner?.let { content["winner"] = it.toString() }
     dataFile.writeText(gson.toJson(content))
   }
@@ -73,8 +84,20 @@ class FireHeartTracker(private val plugin: JavaPlugin) : Listener {
     if (!dataFile.exists()) return
     try {
       val tree = gson.fromJson(dataFile.readText(), Map::class.java) as Map<String, Any>
-      (tree["winner"] as? String)?.let {
-        heartWinner = UUID.fromString(it)
+      tree.forEach { (key, value) ->
+        when (key) {
+          "winner" -> {
+            heartWinner = (value as? String)?.let { UUID.fromString(it) }
+          }
+          else -> {
+            val uuid = UUID.fromString(key)
+            val killCount = (value as? Number)?.toInt() ?: return@forEach
+            plugin.logger.info("[WitherHeartTracker] Loading with UUID $uuid for $killCount kills")
+            kills[uuid] = killCount
+            println(kills)
+          }
+        }
+
       }
     } catch (ex: Exception) {
       plugin.logger.warning("Failed to load fire heart data: ${ex.message}")
