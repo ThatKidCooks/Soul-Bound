@@ -1,6 +1,5 @@
 package site.thatkid.soulBound.items.hearts
 
-import io.papermc.paper.command.brigadier.argument.ArgumentTypes.world
 import net.kyori.adventure.text.Component
 import org.bukkit.Location
 import org.bukkit.Material
@@ -16,7 +15,6 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import org.bukkit.util.Vector
 import site.thatkid.soulBound.hearts.ActiveHearts
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.Heart
@@ -66,7 +64,6 @@ object Wither : Heart(), Listener {
         if (attacker !is Player || entity !is Player) return
         if (ActiveHearts.getHearts(attacker.uniqueId).contains(Wither)) {
             if (Math.random() >= 0.1) return // 10% chance
-            plugin.logger.info("passed random chance for Wither Heart hit event")
             if (TrustRegistry.trustedPlayers[attacker.uniqueId]?.contains(entity.uniqueId) == true) return
             plugin.logger.info("Wither Heart hit event: Inflicting Wither I on ${entity.name} by ${attacker.name}")
             entity.addPotionEffect(PotionEffect(PotionEffectType.WITHER, 20 * 10, 0))
@@ -86,7 +83,7 @@ object Wither : Heart(), Listener {
         val spacing = 1 // Distance between heads duh - then again that isn't really a duh
 
         for (i in 0 until numHeads) {
-            val location = Location(player.world, player.location.x, player.location.y + 0.5, player.location.z)
+            val location = player.location.clone().add(0.0, 1.0, 0.0)
             val head = player.world.spawnEntity(location, EntityType.WITHER_SKULL)
             head.velocity = direction.clone().multiply(1.5 + i * spacing)
         }
