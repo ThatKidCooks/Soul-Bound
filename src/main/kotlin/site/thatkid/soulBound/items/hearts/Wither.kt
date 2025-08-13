@@ -64,7 +64,7 @@ object Wither : Heart(), Listener {
         if (attacker !is Player || entity !is Player) return
         if (ActiveHearts.getHearts(attacker.uniqueId).contains(Wither)) {
             if (Math.random() >= 0.1) return // 10% chance
-            if (TrustRegistry.trustedPlayers[attacker.uniqueId]?.contains(entity.uniqueId) == true) return
+            if (TrustRegistry.getTrusted(attacker.uniqueId).contains(entity.uniqueId)) return
             plugin.logger.info("Wither Heart hit event: Inflicting Wither I on ${entity.name} by ${attacker.name}")
             entity.addPotionEffect(PotionEffect(PotionEffectType.WITHER, 20 * 10, 0))
             attacker.sendMessage("§aYou inflicted Wither I on ${entity.name}!")
