@@ -106,7 +106,7 @@ object Warden : Heart() {
                         if (entity.gameMode != GameMode.SURVIVAL || entity.gameMode != GameMode.ADVENTURE) continue
                     }
 
-                    val damage = 15.0 // 7.5 hearts
+                    val damage = 7.5 // 3.75 hearts
 
                     val newHealth = (entity.health - damage).coerceAtLeast(0.0)
                     entity.health = newHealth
