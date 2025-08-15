@@ -58,6 +58,7 @@ class DisplayHearts(private val plugin: JavaPlugin) : BukkitRunnable() {
                 is Wise -> detailedSymbols.add("§f❤ Wise")
                 is Fire -> detailedSymbols.add("§c❤ Fire")
                 is Wither -> detailedSymbols.add("§8❤ Wither")
+                is Frozen -> detailedSymbols.add("§b❤ Frozen")
             }
         }
         return if (detailedSymbols.isNotEmpty()) detailedSymbols.joinToString(" §7| ") else ""

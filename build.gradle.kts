@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm") version "2.2.0"
     id("com.gradleup.shadow") version "8.3.0"
     id("xyz.jpenilla.run-paper") version "2.3.1"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "site.thatkid"

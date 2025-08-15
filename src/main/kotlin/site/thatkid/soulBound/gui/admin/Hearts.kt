@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.items.hearts.Aquatic
 import site.thatkid.soulBound.items.hearts.Crowned
 import site.thatkid.soulBound.items.hearts.Fire
+import site.thatkid.soulBound.items.hearts.Frozen
 import site.thatkid.soulBound.items.hearts.Ghastly
 import site.thatkid.soulBound.items.hearts.Golem
 import site.thatkid.soulBound.items.hearts.Haste
@@ -34,6 +35,7 @@ class Hearts(private val plugin: JavaPlugin): Listener {
         val wise = Wise.createItem()
         val fire = Fire.createItem()
         val wither = Wither.createItem()
+        val frozen = Frozen.createItem()
 
         inventory.setItem(0, crowned)
         inventory.setItem(1, warden)
@@ -46,6 +48,7 @@ class Hearts(private val plugin: JavaPlugin): Listener {
         inventory.setItem(8, wise)
         inventory.setItem(9, fire)
         inventory.setItem(10, wither)
+        inventory.setItem(11, frozen)
 
         player.openInventory(inventory)
     }

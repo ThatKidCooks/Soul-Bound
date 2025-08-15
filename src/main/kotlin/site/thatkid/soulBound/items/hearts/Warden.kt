@@ -50,23 +50,7 @@ object Warden : Heart() {
 
 
     override fun constantEffect(player: Player) {
-        val trusted = TrustRegistry.getTrusted(player.uniqueId)
-        for (entity in player.world.getNearbyEntities(player.location, 8.0, 8.0, 8.0)) {
-            if (entity is LivingEntity && entity != player) {
-                if (entity is Monster || entity is Slime || entity is Ghast || entity is Phantom || entity is Player) {
-                    for (other in player.world.players) {
-                        if (other != player && other.location.distance(other.location) < 32 && !trusted.contains(other.uniqueId)) {
-                            other.playSound(other.location, Sound.ENTITY_WARDEN_ANGRY, 1f, 1f)
-                        }
-                    }
-                    if (!trusted.contains(entity.uniqueId)) {
-                        if (!player.hasPotionEffect(PotionEffectType.DARKNESS)) {
-                            player.addPotionEffect(PotionEffect(PotionEffectType.DARKNESS, 40, 0, false, true))
-                        }
-                    }
-                }
-            }
-        }
+        return
     }
 
     override fun specialEffect(player: Player) {
@@ -100,10 +84,13 @@ object Warden : Heart() {
                 player.world.playSound(point, Sound.ENTITY_WARDEN_SONIC_BOOM, 2f, 1f)
 
                 for (entity in point.world.getNearbyEntities(point, 1.5, 1.5, 1.5)) {
-                    if (entity == player || entity !is LivingEntity || entity.uniqueId in hitEntities) continue
-                    if (trusted.contains(entity.uniqueId)) continue
+                    if (entity == player || entity !is LivingEntity || entity.uniqueId in hitEntities) return
+                    if (trusted.contains(entity.uniqueId)) return
                     if (entity is Player) {
-                        if (entity.gameMode != GameMode.SURVIVAL || entity.gameMode != GameMode.ADVENTURE) continue
+                        if (entity.gameMode != GameMode.SURVIVAL || entity.gameMode != GameMode.ADVENTURE) return
+                    } else {
+                        if (!(entity is Monster || entity is Slime || entity is Phantom || entity is Ghast))
+                            return
                     }
 
                     val damage = 7.5 // 3.75 hearts
