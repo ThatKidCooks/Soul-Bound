@@ -149,6 +149,23 @@ class CommandManager(private var plugin: JavaPlugin): CommandExecutor {
                 }
             }
 
+            "remove" -> {
+                if (sender.isOp) {
+                    if (args.size < 2) {
+                        sender.sendMessage("§cUsage: /soulbound remove <player>")
+                        return true
+                    }
+
+                    val player = plugin.server.getPlayer(args[1])
+
+                    val heartName = ActiveHearts.remove(sender, 1)
+                    sender.sendMessage("§aYou have removed the $heartName heart.")
+                    sender.sendMessage("§cUnknown heart type: $heartName")
+                } else {
+                    sender.sendMessage("§cYou don’t have permission to use this command.")
+                }
+            }
+
             else -> {
                 sender.sendMessage("§cUnknown subcommand. Use /soulbound help for help.")
             }

@@ -29,6 +29,7 @@ class SoulBound : JavaPlugin() {
     private lateinit var wiseTracker: WiseHeartTracker
     private lateinit var fireTracker: FireHeartTracker
     private lateinit var witherTracker: WitherHeartTracker
+    private lateinit var frozenTracker: FrozenHeartTracker
     private lateinit var trustManager: TrustStorageManager
 
     private var displayHearts: DisplayHearts = DisplayHearts(this)
@@ -67,6 +68,9 @@ class SoulBound : JavaPlugin() {
         witherTracker = WitherHeartTracker(this)
         witherTracker.enable()
 
+        frozenTracker = FrozenHeartTracker(this)
+        frozenTracker.enable()
+
         trustManager = TrustStorageManager
         trustManager.load(File(dataFolder, "trusted_players.json"))
 
@@ -103,6 +107,7 @@ class SoulBound : JavaPlugin() {
         if (::golemTracker.isInitialized) golemTracker.disable()
         if (::wiseTracker.isInitialized) wiseTracker.disable()
         if (::fireTracker.isInitialized) fireTracker.disable()
+        if (::frozenTracker.isInitialized) frozenTracker.disable()
 
         trustManager.save(File(dataFolder, "trusted_players.json"))
         displayHearts.cleanup()

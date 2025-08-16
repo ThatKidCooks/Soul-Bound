@@ -50,7 +50,7 @@ object ActiveHearts {
 
 
 
-    fun remove(player: Player, slot: Int) {
+    fun remove(player: Player, slot: Int) : Heart {
         val playerUUID = player.uniqueId
 
         val heart = when (slot) {
@@ -61,6 +61,8 @@ object ActiveHearts {
         if (heart != null) {
             player.inventory.addItem(heart.createItem())
         }
+
+        return heart ?: throw IllegalArgumentException("No heart found in slot $slot for player ${player.name} (${playerUUID})")
     }
 
     // Alternative remove method that doesn't give the item back

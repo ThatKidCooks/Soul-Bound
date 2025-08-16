@@ -62,7 +62,7 @@ object Frozen : Heart(), Listener {
             if (Math.random() >= 0.1) return // 10% chance
             if (TrustRegistry.getTrusted(attacker.uniqueId).contains(entity.uniqueId)) return
             plugin.logger.info("Frozen Heart hit event: Inflicting Frozen on ${entity.name} by ${attacker.name}")
-            entity.freezeTicks = 100 // 5-second freeze - hoping this works
+            entity.freezeTicks = 1000 // 5-second freeze - hoping this works
             attacker.sendMessage("§aYou froze ${entity.name}!")
         }
     }
@@ -73,7 +73,8 @@ object Frozen : Heart(), Listener {
 
         location.world.getNearbyEntities(location, radius, radius, radius).forEach { entity ->
             if (entity is Player && entity != player) {
-                entity.freezeTicks = 200 // 10-second freeze
+                if (TrustRegistry.getTrusted(player.uniqueId).contains(entity.uniqueId)) return@forEach
+                entity.freezeTicks = 2000 // 10-second freeze
                 player.sendMessage("§aYou froze ${entity.name} for 10 seconds!")
             }
         }
