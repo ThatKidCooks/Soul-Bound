@@ -31,7 +31,7 @@ object Wise : Heart() {
         meta.lore(listOf(
             Component.text("§7Wise doesn't mean old."),
             Component.text(""),
-            Component.text("§f✧ §7Permanent §aLuck I"),
+            Component.text("§f✧ §7Permanent §aHealth Boost"),
             Component.text(""),
             Component.text("§6§lPower — Arcane Insight"),
             Component.text("§7Reveal nearby players with §eGlowing§7,"),
@@ -45,7 +45,7 @@ object Wise : Heart() {
 
     override fun constantEffect(player: Player) {
         if (!player.hasPotionEffect(PotionEffectType.HEALTH_BOOST)) {
-            player.addPotionEffect(PotionEffect(PotionEffectType.HEALTH_BOOST, 40, 1, true, false))
+            player.addPotionEffect(PotionEffect(PotionEffectType.HEALTH_BOOST, 50, 0, true, false))
         }
     }
 

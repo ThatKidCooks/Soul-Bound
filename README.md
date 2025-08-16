@@ -66,9 +66,9 @@ How this plugin works is there is unique hearts that you can get from different 
 - **/sb trust <player>** - Adds the player to a trust list that your hearts don't hurt them.
 - **/sb untrust <player>** - Removes the player from a trust list.
 - **/sb trustlist** - Tells you the players you have trusted.
-- **/sb ability** - Activates your special ability. We reckomend using Command Keys so that you can use a macro to activate this with a button press.
+- **/sb ability** - Activates your special ability. We recommend using Command Keys so that you can use a macro to activate this with a button press.
 - **/sb help** - Tells you all the commands.
-- **/sb drain** - Drains the current heart you have equipt.
+- **/sb drain** - Drains the current heart you have equipped.
 
 ### Admin Commands:
 - **/soulbound** - Opens the heart gui that gives you all hearts.

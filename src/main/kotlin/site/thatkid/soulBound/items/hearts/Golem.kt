@@ -52,7 +52,7 @@ object Golem: Heart() {
         // Permanent Resistance I
         if (!player.hasPotionEffect(PotionEffectType.RESISTANCE)) {
             player.addPotionEffect(
-                PotionEffect(PotionEffectType.RESISTANCE, 40, 0, false, true)
+                PotionEffect(PotionEffectType.RESISTANCE, 50, 0, false, true)
             )
         }
 

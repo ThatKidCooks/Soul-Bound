@@ -84,13 +84,13 @@ object Warden : Heart() {
                 player.world.playSound(point, Sound.ENTITY_WARDEN_SONIC_BOOM, 2f, 1f)
 
                 for (entity in point.world.getNearbyEntities(point, 1.5, 1.5, 1.5)) {
-                    if (entity == player || entity !is LivingEntity || entity.uniqueId in hitEntities) return
-                    if (trusted.contains(entity.uniqueId)) return
+                    if (entity == player || entity !is LivingEntity || entity.uniqueId in hitEntities) continue
+                    if (trusted.contains(entity.uniqueId)) continue
                     if (entity is Player) {
-                        if (entity.gameMode != GameMode.SURVIVAL || entity.gameMode != GameMode.ADVENTURE) return
+                        if (entity.gameMode != GameMode.SURVIVAL || entity.gameMode != GameMode.ADVENTURE) continue
                     } else {
                         if (!(entity is Monster || entity is Slime || entity is Phantom || entity is Ghast))
-                            return
+                            continue
                     }
 
                     val damage = 7.5 // 3.75 hearts

@@ -76,10 +76,10 @@ object Crowned : Heart() {
         val trusted = TrustRegistry.getTrusted(player.uniqueId)
 
         for (entity in player.world.getNearbyEntities(player.location, radius, radius, radius)) {
-            if (entity == player || entity.isDead) return
+            if (entity == player || entity.isDead) continue
 
             if (entity is Player && trusted.contains(entity.uniqueId)) {
-                return // skip trusted players
+                continue // skip trusted players
             }
 
             val isHostile = entity is Monster || entity is Slime || entity is Phantom || entity is Ghast
