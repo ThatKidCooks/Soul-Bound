@@ -50,11 +50,9 @@ object Golem: Heart() {
 
     override fun constantEffect(player: Player) {
         // Permanent Resistance I
-        if (!player.hasPotionEffect(PotionEffectType.RESISTANCE)) {
             player.addPotionEffect(
                 PotionEffect(PotionEffectType.RESISTANCE, 50, 0, false, true)
             )
-        }
 
         // Check if knockback immunity has expired
         val now = System.currentTimeMillis()
