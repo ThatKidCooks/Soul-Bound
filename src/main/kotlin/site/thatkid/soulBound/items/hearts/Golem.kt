@@ -5,7 +5,12 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Particle
 import org.bukkit.Sound
+import org.bukkit.entity.Ghast
+import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Monster
+import org.bukkit.entity.Phantom
 import org.bukkit.entity.Player
+import org.bukkit.entity.Slime
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
@@ -14,6 +19,7 @@ import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.Heart
+import site.thatkid.soulBound.items.hearts.Crowned.smashedBy
 import java.util.UUID
 import kotlin.math.cos
 import kotlin.math.sin
@@ -85,26 +91,30 @@ object Golem: Heart() {
         val world = player.world
 
         // Particle effects
-        world.spawnParticle(Particle.BLOCK_CRUMBLE, location, 50, 2.0, 0.5, 2.0, 0.1, Material.IRON_BLOCK.createBlockData())
         world.spawnParticle(Particle.SWEEP_ATTACK, location, 10, 2.0, 0.5, 2.0, 0.0)
 
         // Sound effect
         world.playSound(location, Sound.ENTITY_IRON_GOLEM_ATTACK, 2.0f, 0.8f)
         world.playSound(location, Sound.BLOCK_ANVIL_LAND, 1.5f, 1.0f)
 
-        // Knock back nearby players (5 block radius) - only non-trusted players
         val trusted = TrustRegistry.getTrusted(player.uniqueId)
-        val nearbyPlayers = world.getNearbyEntities(location, 5.0, 5.0, 5.0)
-            .filterIsInstance<Player>()
-            .filter { it != player && it.uniqueId !in trusted }
 
+        for (entity in player.world.getNearbyEntities(player.location, 5.0, 5.0, 5.0)) {
+            if (entity == player || entity.isDead) continue
 
-        for (nearbyPlayer in nearbyPlayers) {
-            val direction = nearbyPlayer.location.toVector().subtract(location.toVector()).normalize()
-            direction.y = 0.3 // Add upward component
-            nearbyPlayer.velocity = direction.multiply(1.5)
+            if (entity is Player && trusted.contains(entity.uniqueId)) {
+                continue // skip trusted players
+            }
 
-            nearbyPlayer.sendMessage(Component.text("§7You were knocked back by ${player.name}'s iron might!"))
+            val isHostile = entity is Monster || entity is Slime || entity is Phantom || entity is Ghast
+            val isEnemyPlayer = entity is Player
+
+            if ((isHostile || isEnemyPlayer) && entity is LivingEntity) {
+                val direction = entity.location.toVector().subtract(player.location.toVector()).normalize().multiply(5)
+                direction.y = 2.0
+                entity.velocity = direction
+
+            }
         }
 
         // Apply buffs to the user

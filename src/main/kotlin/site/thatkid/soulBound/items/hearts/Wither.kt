@@ -84,7 +84,10 @@ object Wither : Heart(), Listener {
 
         for (i in 0 until numHeads) {
             val location = player.location.clone().add(0.0, 1.0, 0.0)
-            val head = player.world.spawnEntity(location, EntityType.WITHER_SKULL)
+            val head = player.world.spawnEntity(location, EntityType.WITHER_SKULL) as org.bukkit.entity.WitherSkull
+            head.isCharged = true
+            head.yield = 0f
+            head.shooter = player
             head.velocity = direction.clone().multiply(1.5 + i * spacing)
         }
 
