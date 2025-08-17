@@ -87,7 +87,7 @@ object Warden : Heart() {
                     if (entity == player || entity !is LivingEntity || entity.uniqueId in hitEntities) continue
                     if (trusted.contains(entity.uniqueId)) continue
                     if (entity is Player) {
-                        if (entity.gameMode != GameMode.SURVIVAL || entity.gameMode != GameMode.ADVENTURE) continue
+                        if (entity.gameMode == GameMode.CREATIVE || entity.gameMode == GameMode.SPECTATOR) continue
                     } else {
                         if (!(entity is Monster || entity is Slime || entity is Phantom || entity is Ghast))
                             continue
