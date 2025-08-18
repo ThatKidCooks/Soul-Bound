@@ -24,7 +24,6 @@ abstract class HeartTracker(
 
   private val killTracker: MutableMap<UUID, MutableSet<UUID>> = mutableMapOf()
   protected var owner: UUID? = null
-    private set
 
   protected open fun giveHeart(killerId: UUID) {
     owner = killerId
@@ -53,7 +52,8 @@ abstract class HeartTracker(
     if (owner != null || killer.uniqueId == e.entity.uniqueId) return
 
     val set = killTracker.getOrPut(killer.uniqueId) { mutableSetOf() }
-    if (set.add(e.entity.uniqueId) && set.size >= killsRequired) {
+    set.add(e.entity.uniqueId)
+    if (set.size >= killsRequired) {
       giveHeart(killer.uniqueId)
     }
   }

@@ -15,7 +15,7 @@ class SoulboundTabCompleter : TabCompleter {
 
         if (args.size == 1) {
             val normalSubcommands = listOf("help", "ability", "drain", "trust", "untrust", "trustlist")
-            val adminSubcommands = listOf("help", "ability", "cooldown", "drain", "trust", "untrust", "trustlist", "add", "remove")
+            val adminSubcommands = listOf("help", "ability", "cooldown", "drain", "trust", "untrust", "trustlist", "add", "remove", "save")
             if (sender.isOp) {
                 return adminSubcommands.filter { it.startsWith(args[0], ignoreCase = true) }
             }

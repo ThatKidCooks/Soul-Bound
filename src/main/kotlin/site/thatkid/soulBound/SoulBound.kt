@@ -94,6 +94,10 @@ class SoulBound : JavaPlugin() {
     }
 
     override fun onDisable() {
+        save()
+    }
+
+    fun save() {
         val soulBoundDir = File(dataFolder, "Soul Bound").apply { mkdirs() }
         ActiveHearts.saveToFile(File(soulBoundDir, "hearts.json"))
 

@@ -5,12 +5,13 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
+import site.thatkid.soulBound.SoulBound
 import site.thatkid.soulBound.gui.admin.Hearts
 import site.thatkid.soulBound.hearts.ActiveHearts
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.hearts.*
 
-class CommandManager(private var plugin: JavaPlugin): CommandExecutor {
+class CommandManager(private var plugin: JavaPlugin, private var soulBound: SoulBound): CommandExecutor {
     override fun onCommand(
         sender: CommandSender,
         command: Command,
@@ -163,6 +164,15 @@ class CommandManager(private var plugin: JavaPlugin): CommandExecutor {
                     sender.sendMessage("§cUnknown heart type: $heartName")
                 } else {
                     sender.sendMessage("§cYou don’t have permission to use this command.")
+                }
+            }
+
+            "save" -> {
+                if (sender.isOp) {
+                    soulBound.save()
+                    sender.sendMessage("§aHearts saved successfully.")
+                } else {
+                    sender.sendMessage("§cYou don’t have permission to save hearts.")
                 }
             }
 
