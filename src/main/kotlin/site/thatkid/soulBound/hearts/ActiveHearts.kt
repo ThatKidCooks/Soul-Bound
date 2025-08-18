@@ -3,7 +3,7 @@ package site.thatkid.soulBound.hearts
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import org.bukkit.Bukkit
-import org.bukkit.GameMode
+import site.thatkid.soulBound.items.hearts.*
 import org.bukkit.entity.Player
 import site.thatkid.soulBound.items.Heart
 import site.thatkid.soulBound.json.SavedHeartData
@@ -11,6 +11,21 @@ import java.io.File
 import java.util.*
 
 object ActiveHearts {
+
+    private val allHearts: List<Heart> = listOf(
+        Aquatic,
+        Crowned,
+        Fire,
+        Frozen,
+        Golem,
+        Ghastly,
+        Haste,
+        Strength,
+        Trader,
+        Warden,
+        Wither,
+        Wise
+    )
 
     enum class AddHeartResult {
         SUCCESS,
@@ -84,6 +99,10 @@ object ActiveHearts {
     fun getHearts(playerUUID: UUID): List<Heart> {
         val heart = playerHearts[playerUUID]
         return if (heart != null) listOf(heart) else emptyList()
+    }
+
+    fun hasCooldown(playerId: UUID): Boolean {
+        return allHearts.any { it.getCooldown(playerId) > 0L }
     }
 
     fun saveToFile(file: File) {

@@ -71,7 +71,7 @@ class SoulBound : JavaPlugin() {
         witherTracker.enable()
 
         frozenTracker = FrozenHeartTracker(this)
-        frozenTracker.enable()
+        //frozenTracker.enable()
 
         trustManager = TrustStorageManager
         trustManager.load(File(dataFolder, "trusted_players.json"))

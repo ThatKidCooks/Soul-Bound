@@ -43,7 +43,11 @@ class CommandManager(private var plugin: JavaPlugin, private var soulBound: Soul
             }
 
             "drain" -> {
-
+                val hasCooldown = ActiveHearts.hasCooldown(sender.uniqueId)
+                if (hasCooldown) {
+                    sender.sendMessage("§cYou cannot drain your heart yet — cooldown active!")
+                    return true
+                }
                 ActiveHearts.remove(sender, 1)
                 sender.sendMessage("§aYour heart has been drained.")
             }
