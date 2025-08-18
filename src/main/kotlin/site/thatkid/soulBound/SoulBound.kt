@@ -77,7 +77,7 @@ class SoulBound : JavaPlugin() {
         val soulBoundDir = File(dataFolder, "Soul Bound").apply { mkdirs() }
 
         // Command Handlers
-        getCommand("soulbound")?.setExecutor(CommandManager(this))
+        getCommand("soulbound")?.setExecutor(CommandManager(this, this))
         getCommand("soulbound")?.setTabCompleter(SoulboundTabCompleter())
 
         displayHearts.runTaskTimer(this, 0, 3L)
