@@ -19,62 +19,29 @@ import java.io.File
 
 class SoulBound : JavaPlugin() {
 
-    private lateinit var crownedTracker: HeartTracker
-    private lateinit var wardenTracker: WardenHeartTracker
-    private lateinit var traderTracker: TraderHeartTracker
-    private lateinit var ghastlyTracker: GhastlyHeartTracker
-    private lateinit var hasteTracker: HasteHeartTracker
-    private lateinit var strengthTracker: StrengthHeartTracker
-    private lateinit var aquaticTracker: AquaticHeartTracker
-    private lateinit var golemTracker: GolemHeartTracker
-    private lateinit var wiseTracker: WiseHeartTracker
-    private lateinit var fireTracker: FireHeartTracker
-    private lateinit var witherTracker: WitherHeartTracker
-    private lateinit var frozenTracker: FrozenHeartTracker
-    private lateinit var trustManager: TrustStorageManager
 
     private val displayHearts: DisplayHearts = DisplayHearts(this)
     private val autoSave: AutoSave = AutoSave(this)
 
     override fun onEnable() {
-        crownedTracker = object : HeartTracker(this, Crowned, killsRequired = 5) {}
-        crownedTracker.enable()
+        HeartRegistry.crownedTracker = object : HeartTracker(this, Crowned, killsRequired = 5) {}
+        HeartRegistry.crownedTracker.enable()
 
-        wardenTracker = WardenHeartTracker(this)
-        wardenTracker.enable()
+        HeartRegistry.wardenTracker = WardenHeartTracker(this).apply { enable() }
+        HeartRegistry.traderTracker = TraderHeartTracker(this).apply { enable() }
+        HeartRegistry.ghastlyTracker = GhastlyHeartTracker(this).apply { enable() }
+        HeartRegistry.hasteTracker = HasteHeartTracker(this).apply { enable() }
+        HeartRegistry.strengthTracker = StrengthHeartTracker(this).apply { enable() }
+        HeartRegistry.aquaticTracker = AquaticHeartTracker(this).apply { enable() }
+        HeartRegistry.golemTracker = GolemHeartTracker(this).apply { enable() }
+        HeartRegistry.wiseTracker = WiseHeartTracker(this).apply { enable() }
+        HeartRegistry.fireTracker = FireHeartTracker(this).apply { enable() }
+        HeartRegistry.witherTracker = WitherHeartTracker(this).apply { enable() }
+        //HeartRegistry.frozenTracker = FrozenHeartTracker(this).apply { enable() }
 
-        traderTracker = TraderHeartTracker(this)
-        traderTracker.enable()
+        HeartRegistry.trustManager = TrustStorageManager
 
-        ghastlyTracker = GhastlyHeartTracker(this)
-        ghastlyTracker.enable()
-
-        hasteTracker = HasteHeartTracker(this)
-        hasteTracker.enable()
-
-        strengthTracker = StrengthHeartTracker(this)
-        strengthTracker.enable()
-
-        aquaticTracker = AquaticHeartTracker(this)
-        aquaticTracker.enable()
-
-        golemTracker = GolemHeartTracker(this)
-        golemTracker.enable()
-
-        wiseTracker = WiseHeartTracker(this)
-        wiseTracker.enable()
-
-        fireTracker = FireHeartTracker(this)
-        fireTracker.enable()
-
-        witherTracker = WitherHeartTracker(this)
-        witherTracker.enable()
-
-        frozenTracker = FrozenHeartTracker(this)
-        //frozenTracker.enable()
-
-        trustManager = TrustStorageManager
-        trustManager.load(File(dataFolder, "trusted_players.json"))
+        HeartRegistry.trustManager.load(File(dataFolder, "trusted_players.json"))
 
         val soulBoundDir = File(dataFolder, "Soul Bound").apply { mkdirs() }
 
@@ -99,25 +66,16 @@ class SoulBound : JavaPlugin() {
 
     override fun onDisable() {
         save()
+        HeartRegistry.disableAll()
     }
 
     fun save() {
         val soulBoundDir = File(dataFolder, "Soul Bound").apply { mkdirs() }
         ActiveHearts.saveToFile(File(soulBoundDir, "hearts.json"))
 
-        if (::crownedTracker.isInitialized) crownedTracker.disable()
-        if (::wardenTracker.isInitialized) wardenTracker.disable()
-        if (::traderTracker.isInitialized) traderTracker.disable()
-        if (::ghastlyTracker.isInitialized) ghastlyTracker.disable()
-        if (::hasteTracker.isInitialized) hasteTracker.disable()
-        if (::strengthTracker.isInitialized) strengthTracker.disable()
-        if (::aquaticTracker.isInitialized) aquaticTracker.disable()
-        if (::golemTracker.isInitialized) golemTracker.disable()
-        if (::wiseTracker.isInitialized) wiseTracker.disable()
-        if (::fireTracker.isInitialized) fireTracker.disable()
-        if (::frozenTracker.isInitialized) frozenTracker.disable()
+        HeartRegistry.saveAll()
 
-        trustManager.save(File(dataFolder, "trusted_players.json"))
+        HeartRegistry.trustManager.save(File(dataFolder, "trusted_players.json"))
         displayHearts.cleanup()
     }
 }

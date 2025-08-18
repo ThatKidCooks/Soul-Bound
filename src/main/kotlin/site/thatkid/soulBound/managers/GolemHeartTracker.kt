@@ -108,7 +108,12 @@ class GolemHeartTracker(private val plugin: JavaPlugin)
         save()
     }
 
-    private fun save() {
+    override fun getKills(uuid: UUID): Int = kills[uuid] ?: 0
+    fun hasReceived(uuid: UUID): Boolean = receivedHeart.contains(uuid)
+    fun isGloballyReceived(): Boolean = globallyReceived
+    fun getRequired(): Int = 100
+
+    override fun save() {
         val data = mutableMapOf<String, Any>()
         kills.forEach { (uuid, killCount) ->
             data[uuid.toString()] = killCount

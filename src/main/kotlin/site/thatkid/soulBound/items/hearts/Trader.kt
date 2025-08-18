@@ -3,11 +3,13 @@ package site.thatkid.soulBound.items.hearts
 import net.kyori.adventure.text.Component
 import org.bukkit.*
 import org.bukkit.entity.Player
+import org.bukkit.entity.Villager
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import site.thatkid.soulBound.HeartRegistry
 import site.thatkid.soulBound.items.Heart
 import java.util.*
 
@@ -69,6 +71,28 @@ object Trader : Heart() {
         player.world.playSound(player.location, Sound.ENTITY_VILLAGER_CELEBRATE, 1f, 1f)
         player.spawnParticle(Particle.HAPPY_VILLAGER, player.location, 40, 1.5, 1.5, 1.5, 0.1)
     }
+
+    override fun checkProgress(player: Player): String {
+        val tracker = HeartRegistry.traderTracker
+        val uuid = player.uniqueId
+
+        if (tracker.isHeartClaimed()) {
+            return if (tracker.hasReceived(uuid)) {
+                "§2Trader Heart §8| §aUnlocked by you"
+            } else {
+                val winner = tracker.getWinnerName() ?: "another player"
+                "§2Trader Heart §8| §cAlready claimed by $winner"
+            }
+        }
+
+        val progress = tracker.getProgress(uuid)
+        val total = tracker.getTotalRequired()
+
+        val percent = ((progress.toDouble() / total) * 100).toInt().coerceAtMost(100)
+
+        return "§2Trader Heart Progress: §e$progress§7/§e$total professions §8($percent%)"
+    }
+
 
     override fun clearCooldown(uuid: UUID) {
         cooldowns.remove(uuid)

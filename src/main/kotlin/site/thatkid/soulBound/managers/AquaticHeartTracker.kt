@@ -52,6 +52,13 @@ class AquaticHeartTracker(private val plugin: JavaPlugin)
 
     override fun onPlayerKill(e: org.bukkit.event.entity.PlayerDeathEvent) { /* no-op */ }
 
+    fun getDistance(playerId: UUID): Double {
+        return distances[playerId] ?: 0.0
+    }
+
+    fun getDistanceRequired(): Int = 5000
+
+
     @EventHandler
     fun onSwim(event: PlayerMoveEvent) {
         if (globallyReceived) return
@@ -124,8 +131,15 @@ class AquaticHeartTracker(private val plugin: JavaPlugin)
         save()
     }
 
+    fun hasReceived(uuid: UUID) = receivedHeart.contains(uuid)
+    fun isGloballyReceived() = globallyReceived
+    fun getGlobalWinnerName(): String? =
+        if (globallyReceived && receivedHeart.isNotEmpty())
+            Bukkit.getOfflinePlayer(receivedHeart.first()).name
+        else null
 
-    private fun save() {
+
+    override fun save() {
         val data = mutableMapOf<String, Any>()
         distances.forEach { (uuid, dist) ->
             data[uuid.toString()] = dist

@@ -42,6 +42,16 @@ class WitherHeartTracker(private val plugin: JavaPlugin) : Listener {
     plugin.logger.info("[WitherHeartTracker] Disabled – saved wither heart winner")
   }
 
+  fun getKills(uuid: UUID): Int = kills[uuid] ?: 0
+
+  fun hasReceived(uuid: UUID): Boolean = heartWinner == uuid
+
+  fun isHeartClaimed(): Boolean = heartWinner != null
+
+  fun getWinnerName(): String? =
+    heartWinner?.let { Bukkit.getOfflinePlayer(it).name }
+
+
   @EventHandler
   fun onWitherDeath(e: EntityDeathEvent) {
     // if someone already has the heart, no one else can earn it

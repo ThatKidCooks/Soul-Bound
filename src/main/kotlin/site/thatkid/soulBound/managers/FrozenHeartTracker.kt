@@ -108,7 +108,12 @@ class FrozenHeartTracker(private val plugin: JavaPlugin)
         save()
     }
 
-    private fun save() {
+    fun getIceMined(playerId: UUID): Int = iceCount[playerId] ?: 0
+    fun getRequired(): Int = 5000
+    fun hasReceived(playerId: UUID): Boolean = receivedHeart.contains(playerId)
+    fun isGloballyReceived(): Boolean = globallyReceived
+
+    override fun save() {
         val data = mutableMapOf<String, Any>()
         iceCount.forEach { (uuid, count) ->
             data[uuid.toString()] = count

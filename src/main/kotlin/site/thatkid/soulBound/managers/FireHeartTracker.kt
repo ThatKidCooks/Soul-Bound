@@ -18,6 +18,7 @@ class FireHeartTracker(private val plugin: JavaPlugin) : Listener {
 
   // The single player who has received the heart (null if no one has it yet)
   private var heartWinner: UUID? = null
+  private val witherKillers: MutableSet<UUID> = mutableSetOf()
 
   /**
    * Call from your plugin's onEnable()
@@ -42,11 +43,14 @@ class FireHeartTracker(private val plugin: JavaPlugin) : Listener {
 
   @EventHandler
   fun onWitherDeath(e: EntityDeathEvent) {
-    // if someone already has the heart, no one else can earn it
-    if (heartWinner != null) return
 
     if (e.entityType != EntityType.WITHER) return
     val killer = e.entity.killer ?: return
+
+    witherKillers += killer.uniqueId
+
+    // if someone already has the heart, no one else can earn it
+    if (heartWinner != null) killer.sendMessage("${killer.name} has already won the Fire Heart. No one else can earn it.")
 
     // Give the heart to the first player to kill a wither
     killer.inventory.addItem(Fire.createItem())
@@ -57,10 +61,19 @@ class FireHeartTracker(private val plugin: JavaPlugin) : Listener {
     save()
   }
 
-  /**
+  fun hasKilledWither(playerId: UUID): Boolean = playerId in witherKillers
+
+  fun isHeartClaimed(): Boolean = heartWinner != null
+
+  fun hasReceived(uuid: UUID): Boolean = heartWinner == uuid
+
+  fun getWinnerName(): String? =
+    heartWinner?.let { Bukkit.getOfflinePlayer(it).name }
+
+      /**
    * Save winner to JSON
    */
-  private fun save() {
+  fun save() {
     val content = mutableMapOf<String, Any>()
     heartWinner?.let { content["winner"] = it.toString() }
     dataFile.writeText(gson.toJson(content))

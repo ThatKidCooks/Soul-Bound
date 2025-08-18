@@ -16,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
+import site.thatkid.soulBound.HeartRegistry
 import site.thatkid.soulBound.items.Heart
 import java.util.*
 import com.comphenix.protocol.wrappers.Pair as ProtoPair
@@ -129,6 +130,31 @@ object Ghastly : Heart() {
                 }
             }
         }.runTaskLater(plugin, 20L * 30)
+    }
+
+    override fun checkProgress(player: Player): String {
+        val tracker = HeartRegistry.ghastlyTracker
+        val uuid = player.uniqueId
+
+        if (tracker.isGloballyReceived()) {
+            return if (tracker.hasReceived(uuid)) {
+                "§5Ghastly Heart §8| §aUnlocked by you"
+            } else {
+                "§5Ghastly Heart §8| §cAlready claimed by another player"
+            }
+        }
+
+        val returnDone = tracker.hasReturnToSender()
+        val overworldDone = tracker.hasOverworldKill()
+
+        val statusReturn = if (returnDone) "§a✔" else "§c✘"
+        val statusOverworld = if (overworldDone) "§a✔" else "§c✘"
+
+        return buildString {
+            append("§5Ghastly Heart Progress:\n")
+            append("§7Return to Sender: $statusReturn\n")
+            append("§7Overworld Ghast Kill: $statusOverworld")
+        }
     }
 
     /**

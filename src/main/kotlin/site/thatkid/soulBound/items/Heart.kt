@@ -25,4 +25,8 @@ abstract class Heart {
     open fun trustList(ownerId: UUID): Set<UUID> {
         return TrustRegistry.getTrusted(ownerId)
     }
+
+    open fun checkProgress(player: Player): String {
+        return "§7No progress to show."
+    }
 }

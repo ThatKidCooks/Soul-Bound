@@ -12,6 +12,7 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import site.thatkid.soulBound.HeartRegistry
 import site.thatkid.soulBound.hearts.ActiveHearts
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.Heart
@@ -79,6 +80,25 @@ object Frozen : Heart(), Listener {
                 player.sendMessage("§aYou froze ${entity.name} for 10 seconds!")
             }
         }
+    }
+
+    override fun checkProgress(player: Player): String {
+        val tracker = HeartRegistry.frozenTracker
+        val uuid = player.uniqueId
+
+        if (tracker.isGloballyReceived()) {
+            return if (tracker.hasReceived(uuid)) {
+                "§6Frozen Heart §8| §aUnlocked by you"
+            } else {
+                "§6Frozen Heart §8| §cAlready claimed by another player"
+            }
+        }
+
+        val mined = tracker.getIceMined(uuid)
+        val required = tracker.getRequired()
+        val percent = (mined.toDouble() / required * 100).toInt()
+
+        return "§6Frozen Heart Progress: §e$mined§7/§e$required blocks §8($percent%)"
     }
 
     override fun clearCooldown(playerId: UUID) {

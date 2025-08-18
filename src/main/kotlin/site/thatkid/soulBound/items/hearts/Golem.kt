@@ -17,6 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
+import site.thatkid.soulBound.HeartRegistry
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.Heart
 import site.thatkid.soulBound.items.hearts.Crowned.smashedBy
@@ -121,6 +122,25 @@ object Golem: Heart() {
         player.addPotionEffect(PotionEffect(PotionEffectType.STRENGTH, 10 * 20, 1, false, true)) // Strength II for 10 seconds
         player.addPotionEffect(PotionEffect(PotionEffectType.RESISTANCE, 10 * 20, 1, false, true)) // Resistance II for 10 seconds
     }
+
+    override fun checkProgress(player: Player): String {
+        val tracker = HeartRegistry.golemTracker
+        val uuid = player.uniqueId
+
+        if (tracker.isGloballyReceived()) {
+            return if (tracker.hasReceived(uuid)) {
+                "§7Golem Heart §8| §aUnlocked by you"
+            } else {
+                "§7Golem Heart §8| §cAlready claimed by another player"
+            }
+        }
+
+        val kills = tracker.getKills(uuid)
+        val required = tracker.getRequired()
+
+        return "§7Golem Heart Progress: §f$kills§7/§f$required kills §8(${(kills / required * 100).coerceAtMost(100)}%)"
+    }
+
 
     override fun clearCooldown(playerId: UUID) {
         cooldowns.remove(playerId)

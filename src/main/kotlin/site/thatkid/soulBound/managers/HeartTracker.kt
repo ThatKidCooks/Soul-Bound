@@ -36,6 +36,12 @@ abstract class HeartTracker(
     startHeartCheckLoop()
   }
 
+  open fun getKills(playerId: UUID): Int {
+    return killTracker[playerId]?.size ?: 0
+  }
+
+  fun getKillsRequired(): Int = killsRequired
+
   open fun enable() {
     plugin.dataFolder.mkdirs()
     load()
@@ -58,7 +64,14 @@ abstract class HeartTracker(
     }
   }
 
-  private fun save() {
+  fun isClaimed(): Boolean = owner != null
+
+  fun isOwner(uuid: UUID): Boolean = owner == uuid
+
+  fun getOwnerName(): String? = owner?.let { Bukkit.getOfflinePlayer(it).name }
+
+
+  open fun save() {
     val dto = mapOf(
       "owner" to owner?.toString(),
       "tracker" to killTracker.mapValues { it.value.map(UUID::toString) }

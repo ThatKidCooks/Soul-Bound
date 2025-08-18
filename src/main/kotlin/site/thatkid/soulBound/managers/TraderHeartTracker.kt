@@ -99,10 +99,18 @@ class TraderHeartTracker(private val plugin: JavaPlugin) : Listener {
         save()
     }
 
+    fun getProgress(uuid: UUID): Int = professionTrades[uuid]?.size ?: 0
+
+    fun getTotalRequired(): Int =
+        Villager.Profession.values().count { it != Villager.Profession.NONE && it != Villager.Profession.NITWIT }
+
+    fun hasReceived(uuid: UUID): Boolean = heartWinner == uuid
+
+
     /**
      * Save progress to JSON
      */
-    private fun save() {
+     fun save() {
         val content = mutableMapOf<String, Any>()
         professionTrades.forEach { (uuid, profs) ->
             content[uuid.toString()] = profs.map(Villager.Profession::toString)

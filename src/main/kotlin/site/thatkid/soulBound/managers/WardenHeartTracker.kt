@@ -57,10 +57,18 @@ class WardenHeartTracker(private val plugin: JavaPlugin) : Listener {
     save()
   }
 
+  fun hasReceived(uuid: UUID): Boolean = heartWinner == uuid
+
+  fun isHeartClaimed(): Boolean = heartWinner != null
+
+  fun getWinnerName(): String? =
+    heartWinner?.let { Bukkit.getOfflinePlayer(it).name }
+
+
   /**
    * Save winner to JSON
    */
-  private fun save() {
+  fun save() {
     val content = mutableMapOf<String, Any>()
     heartWinner?.let { content["winner"] = it.toString() }
     dataFile.writeText(gson.toJson(content))

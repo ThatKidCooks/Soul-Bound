@@ -14,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
+import site.thatkid.soulBound.HeartRegistry
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.Heart
 import java.util.*
@@ -113,6 +114,23 @@ object Warden : Heart() {
         player.sendMessage(Component.text("§bYou unleashed a §lSonic Boom§r§b!"))
         player.world.playSound(player.location, Sound.ENTITY_WARDEN_SONIC_BOOM, 2f, 0.8f)
     }
+
+    override fun checkProgress(player: org.bukkit.entity.Player): String {
+        val tracker = HeartRegistry.wardenTracker
+        val uuid = player.uniqueId
+
+        return if (tracker.isHeartClaimed()) {
+            if (tracker.hasReceived(uuid)) {
+                "§5Warden Heart §8| §aUnlocked by you"
+            } else {
+                val winner = tracker.getWinnerName() ?: "another player"
+                "§5Warden Heart §8| §cAlready claimed by $winner"
+            }
+        } else {
+            "§5Warden Heart §8| §7Slay the Warden to claim this heart"
+        }
+    }
+
 
     override fun clearCooldown(uuid: UUID) {
         cooldowns.remove(uuid)

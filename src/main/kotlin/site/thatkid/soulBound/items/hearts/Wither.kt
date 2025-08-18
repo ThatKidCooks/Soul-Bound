@@ -15,6 +15,7 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import site.thatkid.soulBound.HeartRegistry
 import site.thatkid.soulBound.hearts.ActiveHearts
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.Heart
@@ -94,6 +95,25 @@ object Wither : Heart(), Listener {
         cooldowns[player.uniqueId] = System.currentTimeMillis() + cooldownTime
         player.sendMessage("§aWither Blast unleashed!")
     }
+
+    override fun checkProgress(player: Player): String {
+        val tracker = HeartRegistry.witherTracker
+        val uuid = player.uniqueId
+
+        if (tracker.isHeartClaimed()) {
+            return if (tracker.hasReceived(uuid)) {
+                "§8Wither Heart §8| §aUnlocked by you"
+            } else {
+                val winner = tracker.getWinnerName() ?: "another player"
+                "§8Wither Heart §8| §cAlready claimed by $winner"
+            }
+        }
+
+        val kills = tracker.getKills(uuid)
+        return "§8Wither Heart Progress: §f$kills§7/§f7 Wither kills"
+    }
+
+
 
     override fun clearCooldown(playerId: UUID) {
         cooldowns.remove(playerId)

@@ -48,6 +48,11 @@ class StrengthHeartTracker(private val plugin: JavaPlugin)
         }
     }
 
+    override fun getKills(uuid: UUID): Int = killCounts[uuid] ?: 0
+    fun getRequired(): Int = 10
+    fun hasReceived(uuid: UUID): Boolean = recipient == uuid
+    fun isGloballyReceived(): Boolean = globallyReceived
+
     override fun giveHeart(uuid: UUID) {
         if (globallyReceived) return
         globallyReceived = true
@@ -80,7 +85,7 @@ class StrengthHeartTracker(private val plugin: JavaPlugin)
         save()
     }
 
-    private fun save() {
+    override fun save() {
         val data = mutableMapOf<String, Any>()
         killCounts.forEach { (uuid, count) ->
             data[uuid.toString()] = count

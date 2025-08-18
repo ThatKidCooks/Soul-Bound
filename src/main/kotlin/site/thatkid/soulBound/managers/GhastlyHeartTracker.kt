@@ -93,11 +93,16 @@ class GhastlyHeartTracker(
                 )
             )
         }
-
         save()
     }
 
-    private fun save() {
+    fun hasReturnToSender(): Boolean = returnDone
+    fun hasOverworldKill(): Boolean = overworldKillDone
+    fun hasReceived(uuid: UUID): Boolean = recipient == uuid
+    fun isGloballyReceived(): Boolean = globallyReceived
+
+
+    override fun save() {
         val data = mutableMapOf<String, Any>(
             "globallyReceived" to globallyReceived,
             "returnDone" to returnDone,

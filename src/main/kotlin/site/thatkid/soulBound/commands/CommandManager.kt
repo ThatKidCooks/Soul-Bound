@@ -5,6 +5,7 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
+import site.thatkid.soulBound.HeartRegistry
 import site.thatkid.soulBound.SoulBound
 import site.thatkid.soulBound.gui.admin.Hearts
 import site.thatkid.soulBound.hearts.ActiveHearts
@@ -162,14 +163,34 @@ class CommandManager(private var plugin: JavaPlugin, private var soulBound: Soul
                         return true
                     }
 
-                    val player = plugin.server.getPlayer(args[1])
-
                     val heartName = ActiveHearts.remove(sender, 1)
                     sender.sendMessage("§aYou have removed the $heartName heart.")
                     sender.sendMessage("§cUnknown heart type: $heartName")
                 } else {
                     sender.sendMessage("§cYou don’t have permission to use this command.")
                 }
+            }
+
+            "progress" -> {
+                if (args.size < 2) return true
+
+                val target = args[1].lowercase()
+                if (target == "all") {
+                    sender.sendMessage("§a=== Heart Progress ===")
+                    HeartRegistry.hearts.values.forEach { heart ->
+                        sender.sendMessage(heart.checkProgress(sender))
+                    }
+                    return true
+                }
+
+                val heart = HeartRegistry.hearts[target]
+                if (heart == null) {
+                    sender.sendMessage("§cUnknown heart type: $target")
+                    return true
+                }
+
+                sender.sendMessage(heart.checkProgress(sender))
+                return true
             }
 
             "save" -> {

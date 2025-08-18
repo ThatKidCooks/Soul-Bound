@@ -24,13 +24,13 @@ class WiseHeartTracker(private val plugin: JavaPlugin)
     private val dataFile = File(plugin.dataFolder, "wise_heart.json")
 
     // Track per-player progress
-    private val playerBrewedPotions = mutableMapOf<UUID, MutableSet<PotionType>>()
-    private val playerPotionKills = mutableMapOf<UUID, Int>()
-    private var globallyReceived = false
-    private var recipient: UUID? = null
+    val playerBrewedPotions = mutableMapOf<UUID, MutableSet<PotionType>>()
+    val playerPotionKills = mutableMapOf<UUID, Int>()
+    var globallyReceived = false
+    var recipient: UUID? = null
 
     // All brewable potion types (excluding UNCRAFTABLE and WATER)
-    private val allBrewablePotions = PotionType.entries
+    val allBrewablePotions = PotionType.entries
         .filterNot { potion ->
             potion == PotionType.WATER ||
                     potion.name.startsWith("STRONG_") ||
@@ -182,7 +182,7 @@ class WiseHeartTracker(private val plugin: JavaPlugin)
         save()
     }
 
-    private fun save() {
+    override fun save() {
         val data = mutableMapOf<String, Any>()
         data["globallyReceived"] = globallyReceived
         recipient?.let { data["recipient"] = it.toString() }

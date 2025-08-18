@@ -114,7 +114,12 @@ class HasteHeartTracker(private val plugin: JavaPlugin)
         save()
     }
 
-    private fun save() {
+    fun getDeepslateMined(uuid: UUID): Int = deepslateCount[uuid] ?: 0
+    fun getRequired(): Int = 5000
+    fun hasReceived(uuid: UUID): Boolean = receivedHeart.contains(uuid)
+    fun isGloballyReceived(): Boolean = globallyReceived
+
+    override fun save() {
         val data = mutableMapOf<String, Any>()
         deepslateCount.forEach { (uuid, count) ->
             data[uuid.toString()] = count
