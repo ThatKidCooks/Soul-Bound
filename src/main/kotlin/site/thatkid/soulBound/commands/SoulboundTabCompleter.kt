@@ -15,14 +15,14 @@ class SoulboundTabCompleter : TabCompleter {
 
         if (args.size == 1) {
             val normalSubcommands = listOf("help", "ability", "drain", "trust", "untrust", "trustlist", "progress")
-            val adminSubcommands = listOf("help", "ability", "cooldown", "drain", "trust", "untrust", "trustlist", "add", "remove", "save")
+            val adminSubcommands = listOf("cooldown", "add", "remove", "save")
             if (sender.isOp) {
-                return adminSubcommands.filter { it.startsWith(args[0], ignoreCase = true) }
+                return adminSubcommands.filter { it.startsWith(args[0], ignoreCase = true) } + normalSubcommands.filter { it.startsWith(args[0], ignoreCase = true) }
             }
             return normalSubcommands.filter { it.startsWith(args[0], ignoreCase = true) }
         }
 
-        if (args.size == 2 && (args[0].equals("trust", true) || args[0].equals("untrust", true))) {
+        if (args.size == 2 && (args[0].equals("trust", true) || args[0].equals("add", true) || args[0].equals("remove", true))) {
             if (sender is Player) {
                 return sender.server.onlinePlayers
                     .map { it.name }
