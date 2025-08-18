@@ -14,6 +14,7 @@ import site.thatkid.soulBound.listeners.PlayerQuitListener
 import site.thatkid.soulBound.listeners.msgs.DeathMessageListener
 import site.thatkid.soulBound.managers.*
 import site.thatkid.soulBound.items.hearts.Wither
+import site.thatkid.soulBound.listeners.AutoSave
 import java.io.File
 
 class SoulBound : JavaPlugin() {
@@ -32,7 +33,8 @@ class SoulBound : JavaPlugin() {
     private lateinit var frozenTracker: FrozenHeartTracker
     private lateinit var trustManager: TrustStorageManager
 
-    private var displayHearts: DisplayHearts = DisplayHearts(this)
+    private val displayHearts: DisplayHearts = DisplayHearts(this)
+    private val autoSave: AutoSave = AutoSave(this)
 
     override fun onEnable() {
         crownedTracker = object : HeartTracker(this, Crowned, killsRequired = 5) {}
@@ -81,6 +83,8 @@ class SoulBound : JavaPlugin() {
         getCommand("soulbound")?.setTabCompleter(SoulboundTabCompleter())
 
         displayHearts.runTaskTimer(this, 0, 3L)
+        autoSave.runTaskTimer(this, 0, 600L) // Save every 30 seconds
+
         ConstantAbilitiesCaller().runTaskTimer(this, 0, 20L)
 
         server.pluginManager.registerEvents(HeartEatListener(this), this)

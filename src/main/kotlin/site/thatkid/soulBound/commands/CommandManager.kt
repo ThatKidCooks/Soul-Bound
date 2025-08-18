@@ -43,6 +43,7 @@ class CommandManager(private var plugin: JavaPlugin, private var soulBound: Soul
             }
 
             "drain" -> {
+
                 ActiveHearts.remove(sender, 1)
                 sender.sendMessage("§aYour heart has been drained.")
             }
