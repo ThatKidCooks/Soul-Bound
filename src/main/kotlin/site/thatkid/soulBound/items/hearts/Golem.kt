@@ -111,7 +111,7 @@ object Golem: Heart() {
             val isEnemyPlayer = entity is Player
 
             if ((isHostile || isEnemyPlayer) && entity is LivingEntity) {
-                val direction = entity.location.toVector().subtract(player.location.toVector()).normalize().multiply(5)
+                val direction = entity.location.toVector().subtract(player.location.toVector()).normalize().multiply(3)
                 direction.y = 2.0
                 entity.velocity = direction
 

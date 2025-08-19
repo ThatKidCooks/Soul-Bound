@@ -90,7 +90,7 @@ object Crowned : Heart() {
                 if (entity is Player) {
                     smashedBy[entity.uniqueId] = player.uniqueId
                 }
-                val direction = entity.location.toVector().subtract(player.location.toVector()).normalize().multiply(5)
+                val direction = entity.location.toVector().subtract(player.location.toVector()).normalize().multiply(3)
                 direction.y = 0.6
                 entity.velocity = direction
 
