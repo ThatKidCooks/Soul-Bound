@@ -172,7 +172,13 @@ class CommandManager(private var plugin: JavaPlugin, private var soulBound: Soul
             }
 
             "progress" -> {
-                if (args.size < 2) return true
+                if (args.size < 2) {
+                    sender.sendMessage("§a=== Heart Progress ===")
+                    HeartRegistry.hearts.values.forEach { heart ->
+                        sender.sendMessage(heart.checkProgress(sender))
+                    }
+                    return true
+                }
 
                 val target = args[1].lowercase()
                 if (target == "all") {
