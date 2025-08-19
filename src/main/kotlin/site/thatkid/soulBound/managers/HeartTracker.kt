@@ -13,11 +13,7 @@ import site.thatkid.soulBound.items.Heart
 import java.io.File
 import java.util.UUID
 
-abstract class HeartTracker(
-  private val plugin: JavaPlugin,
-  protected val heart: Heart,
-  private val killsRequired: Int
-) : Listener {
+abstract class HeartTracker(private val plugin: JavaPlugin, protected val heart: Heart, private val killsRequired: Int) : Listener {
 
   private val gson = GsonBuilder().setPrettyPrinting().create()
   private val dataFile = File(plugin.dataFolder, "${heart.key.key}.json")
