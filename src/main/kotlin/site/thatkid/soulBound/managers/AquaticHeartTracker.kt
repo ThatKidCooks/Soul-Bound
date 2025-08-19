@@ -8,6 +8,7 @@ import org.bukkit.Sound
 import org.bukkit.block.Biome
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.items.hearts.Aquatic
@@ -50,7 +51,7 @@ class AquaticHeartTracker(private val plugin: JavaPlugin)
         plugin.logger.info("[AquaticHeartTracker] Disabled – saved ${distances.size} players' distances")
     }
 
-    override fun onPlayerKill(e: org.bukkit.event.entity.PlayerDeathEvent) { /* no-op */ }
+    override fun onPlayerKill(e: PlayerDeathEvent) { /* no-op */ }
 
     fun getDistance(playerId: UUID): Double {
         return distances[playerId] ?: 0.0

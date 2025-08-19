@@ -58,10 +58,9 @@ object Fire : Heart() {
     }
 
     override fun constantEffect(player: Player) {
-        player.addPotionEffect(PotionEffect(PotionEffectType.FIRE_RESISTANCE, 20, 0, false, false, true))
-        if (player.hasPotionEffect(PotionEffectType.STRENGTH)) return
-        if (player.world.getBlockAt(player.location).type == Material.FIRE || player.world.getBlockAt(player.location.x.toInt(), (player.location.y + 1).toInt(), player.location.z.toInt()).type == Material.LAVA || player.world.getBlockAt(player.location.x.toInt(), player.location.y.toInt(), player.location.z.toInt()).type == Material.LAVA) {
-            player.addPotionEffect(PotionEffect(PotionEffectType.STRENGTH, 60, 0, false, false, true))
+        player.addPotionEffect(PotionEffect(PotionEffectType.FIRE_RESISTANCE, 50, 0, false, false, false))
+        if (player.isInLava || player.fireTicks > 0) {
+            player.addPotionEffect(PotionEffect(PotionEffectType.STRENGTH, 50, 0, false, false, false))
         }
     }
 
