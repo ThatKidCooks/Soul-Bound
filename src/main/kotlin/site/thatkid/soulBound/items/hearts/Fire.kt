@@ -94,13 +94,11 @@ object Fire : Heart() {
             }
         }
 
-        // Visual ring to sky limit (5s) + ground ignition ring (auto-extinguish after 5s)
         val durationTicks = 100L // 5 seconds
         spawnVerticalRingParticles(player, ringRadius, ringPoints, durationTicks)
         val placed = igniteGroundRing(player, ringRadius, ringPoints)
         scheduleExtinguish(placed, durationTicks)
 
-        // Allies get Fire Resistance for the same duration
         giveAlliesFireRes(player, 16.0, durationTicks.toInt())
 
         player.sendMessage(Component.text("§aYou used §lLava Surge§r§a!"))
@@ -139,7 +137,6 @@ object Fire : Heart() {
         return cooldowns[playerId] ?: 0L
     }
 
-    // Helpers: circle points, particle column, ground ignition, allies buff, and extinguish
     private fun circlePoints(center: Location, radius: Double, points: Int): List<Location> {
         val list = ArrayList<Location>(points)
         val world = center.world
@@ -163,7 +160,7 @@ object Fire : Heart() {
 
         val task = Bukkit.getScheduler().runTaskTimer(plugin, Runnable {
             if (!player.isOnline) return@Runnable
-            val phase = tick % 6 // stagger heights to reduce load and create motion
+            val phase = tick % 6
 
             for (loc in ring) {
                 val bx = loc.x
@@ -177,7 +174,7 @@ object Fire : Heart() {
             }
 
             tick++
-        }, 0L, 2L) // run every 2 ticks
+        }, 0L, 2L)
 
         Bukkit.getScheduler().runTaskLater(plugin, Runnable { task.cancel() }, durationTicks)
     }
