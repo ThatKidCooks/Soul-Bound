@@ -1,5 +1,6 @@
 package site.thatkid.soulBound
 
+import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.items.Heart
 import site.thatkid.soulBound.items.hearts.*
 import site.thatkid.soulBound.managers.*
@@ -7,6 +8,9 @@ import site.thatkid.soulBound.managers.hearts.CrownedListener
 import javax.net.ssl.TrustManager
 
 object HeartRegistry {
+
+    private val plugin: JavaPlugin = JavaPlugin.getProvidingPlugin(HeartRegistry::class.java)
+
     val hearts: Map<String, Heart> = mapOf(
         "crowned" to Crowned,
         "warden" to Warden,
@@ -36,6 +40,11 @@ object HeartRegistry {
 //    lateinit var witherTracker: WitherHeartTracker
 //    lateinit var frozenTracker: FrozenHeartTracker
     lateinit var trustManager: TrustStorageManager
+
+    fun enableAll() {
+        if (!this::crownedTracker.isInitialized) crownedTracker = CrownedListener(plugin)
+        crownedTracker.enable()
+    }
 
 
     fun disableAll() {

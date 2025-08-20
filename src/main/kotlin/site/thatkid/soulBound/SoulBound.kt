@@ -25,26 +25,14 @@ class SoulBound : KSpigot() {
     private val autoSave: AutoSave = AutoSave(this)
 
     override fun startup() {
-//        HeartRegistry.crownedTracker = object : HeartTracker(this, Crowned, killsRequired = 5) {}
-//        HeartRegistry.crownedTracker.enable()
-//
-//        HeartRegistry.wardenTracker = WardenHeartTracker(this).apply { enable() }
-//        HeartRegistry.traderTracker = TraderHeartTracker(this).apply { enable() }
-//        HeartRegistry.ghastlyTracker = GhastlyHeartTracker(this).apply { enable() }
-//        HeartRegistry.hasteTracker = HasteHeartTracker(this).apply { enable() }
-//        HeartRegistry.strengthTracker = StrengthHeartTracker(this).apply { enable() }
-//        HeartRegistry.aquaticTracker = AquaticHeartTracker(this).apply { enable() }
-//        HeartRegistry.golemTracker = GolemHeartTracker(this).apply { enable() }
-//        HeartRegistry.wiseTracker = WiseHeartTracker(this).apply { enable() }
-//        HeartRegistry.fireTracker = FireHeartTracker(this).apply { enable() }
-//        HeartRegistry.witherTracker = WitherHeartTracker(this).apply { enable() }
-        //HeartRegistry.frozenTracker = FrozenHeartTracker(this).apply { enable() }
+
+        HeartRegistry.enableAll()
 
         HeartRegistry.trustManager = TrustStorageManager
 
-        HeartRegistry.trustManager.load(File(dataFolder, "trusted_players.json"))
-
         val soulBoundDir = File(dataFolder, "Soul Bound").apply { mkdirs() }
+
+        HeartRegistry.trustManager.load(File(dataFolder, "trusted_players.json"))
 
         // Command Handlers
         getCommand("soulbound")?.setExecutor(CommandManager(this, this))

@@ -3,8 +3,10 @@ package site.thatkid.soulBound.managers.hearts
 import net.axay.kspigot.event.listen
 import net.axay.kspigot.event.register
 import net.axay.kspigot.event.unregister
+import net.axay.kspigot.extensions.broadcast
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.plugin.java.JavaPlugin
+import site.thatkid.soulBound.HeartRegistry
 import java.util.UUID
 
 class CrownedListener(private val plugin: JavaPlugin) {
@@ -20,7 +22,16 @@ class CrownedListener(private val plugin: JavaPlugin) {
         kills[playerId] = currentKills
 
         if (currentKills >= 5) {
-
+            if (!recived) {
+                // Give the player a Crowned Heart item
+                val crownedHeart = HeartRegistry.hearts["crowned"]?.createItem()
+                if (crownedHeart != null) {
+                    player.inventory.addItem(crownedHeart)
+                    broadcast("The Crowned Heart has been awarded to ${player.name} for killing 5 Players First!")
+                }
+            }
+        } else {
+            player.sendMessage("§7You need ${5 - currentKills} more kills to receive a Crowned Heart.")
         }
     }
 
