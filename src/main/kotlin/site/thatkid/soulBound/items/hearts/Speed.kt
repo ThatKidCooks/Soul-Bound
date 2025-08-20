@@ -37,7 +37,7 @@ object Speed : Heart() {
             Component.text("§7§fSpeed IV §7and §eJump Boost II §7for §f10s"),
             Component.text("§8Cooldown: 60 seconds")
         )) // Lore
-        meta.persistentDataContainer.set(Aquatic.key, PersistentDataType.BYTE, 1)
+        meta.persistentDataContainer.set(key, PersistentDataType.BYTE, 1)
         item.itemMeta = meta
         return item
     }
