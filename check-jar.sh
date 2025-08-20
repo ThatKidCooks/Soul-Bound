@@ -12,7 +12,7 @@ PACKAGES=$(jar -tf "$JAR_FILE" | grep -v "/$" | cut -d/ -f1 | sort | uniq)
 THIRD_PARTY=$(echo "$PACKAGES" | grep -v "site" | grep -v "plugin.yml" | grep -v "META-INF")
 
 if [ -z "$THIRD_PARTY" ]; then
-    echo "✅ SUCCESS: JAR contains only your own packages!"
+    echo "✅ SUCCESS: JAR contains only own packages!"
 else
     echo "❌ ERROR: JAR contains third-party packages:"
     echo "$THIRD_PARTY"
