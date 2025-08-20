@@ -96,23 +96,23 @@ object Wither : Heart(), Listener {
         player.sendMessage("§aWither Blast unleashed!")
     }
 
-    override fun checkProgress(player: Player): String {
-        val tracker = HeartRegistry.witherTracker
-        val uuid = player.uniqueId
-
-        if (tracker.isHeartClaimed()) {
-            return if (tracker.hasReceived(uuid)) {
-                "§8Wither Heart §8| §aUnlocked by you"
-            } else {
-                val winner = tracker.getWinnerName() ?: "another player"
-                "§8Wither Heart §8| §cAlready claimed by $winner"
-            }
-        }
-
-        val kills = tracker.getKills(uuid)
-        return "§8Wither Heart Progress: §f$kills§7/§f7 Wither kills"
-    }
-
+//    override fun checkProgress(player: Player): String {
+//        val tracker = HeartRegistry.witherTracker
+//        val uuid = player.uniqueId
+//
+//        if (tracker.isHeartClaimed()) {
+//            return if (tracker.hasReceived(uuid)) {
+//                "§8Wither Heart §8| §aUnlocked by you"
+//            } else {
+//                val winner = tracker.getWinnerName() ?: "another player"
+//                "§8Wither Heart §8| §cAlready claimed by $winner"
+//            }
+//        }
+//
+//        val kills = tracker.getKills(uuid)
+//        return "§8Wither Heart Progress: §f$kills§7/§f7 Wither kills"
+//    }
+//
 
 
     override fun clearCooldown(playerId: UUID) {

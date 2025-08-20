@@ -24,19 +24,19 @@ class SoulBound : JavaPlugin() {
     private val autoSave: AutoSave = AutoSave(this)
 
     override fun onEnable() {
-        HeartRegistry.crownedTracker = object : HeartTracker(this, Crowned, killsRequired = 5) {}
-        HeartRegistry.crownedTracker.enable()
-
-        HeartRegistry.wardenTracker = WardenHeartTracker(this).apply { enable() }
-        HeartRegistry.traderTracker = TraderHeartTracker(this).apply { enable() }
-        HeartRegistry.ghastlyTracker = GhastlyHeartTracker(this).apply { enable() }
-        HeartRegistry.hasteTracker = HasteHeartTracker(this).apply { enable() }
-        HeartRegistry.strengthTracker = StrengthHeartTracker(this).apply { enable() }
-        HeartRegistry.aquaticTracker = AquaticHeartTracker(this).apply { enable() }
-        HeartRegistry.golemTracker = GolemHeartTracker(this).apply { enable() }
-        HeartRegistry.wiseTracker = WiseHeartTracker(this).apply { enable() }
-        HeartRegistry.fireTracker = FireHeartTracker(this).apply { enable() }
-        HeartRegistry.witherTracker = WitherHeartTracker(this).apply { enable() }
+//        HeartRegistry.crownedTracker = object : HeartTracker(this, Crowned, killsRequired = 5) {}
+//        HeartRegistry.crownedTracker.enable()
+//
+//        HeartRegistry.wardenTracker = WardenHeartTracker(this).apply { enable() }
+//        HeartRegistry.traderTracker = TraderHeartTracker(this).apply { enable() }
+//        HeartRegistry.ghastlyTracker = GhastlyHeartTracker(this).apply { enable() }
+//        HeartRegistry.hasteTracker = HasteHeartTracker(this).apply { enable() }
+//        HeartRegistry.strengthTracker = StrengthHeartTracker(this).apply { enable() }
+//        HeartRegistry.aquaticTracker = AquaticHeartTracker(this).apply { enable() }
+//        HeartRegistry.golemTracker = GolemHeartTracker(this).apply { enable() }
+//        HeartRegistry.wiseTracker = WiseHeartTracker(this).apply { enable() }
+//        HeartRegistry.fireTracker = FireHeartTracker(this).apply { enable() }
+//        HeartRegistry.witherTracker = WitherHeartTracker(this).apply { enable() }
         //HeartRegistry.frozenTracker = FrozenHeartTracker(this).apply { enable() }
 
         HeartRegistry.trustManager = TrustStorageManager

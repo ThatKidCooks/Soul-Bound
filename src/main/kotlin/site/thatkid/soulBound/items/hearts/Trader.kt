@@ -72,26 +72,26 @@ object Trader : Heart() {
         player.spawnParticle(Particle.HAPPY_VILLAGER, player.location, 40, 1.5, 1.5, 1.5, 0.1)
     }
 
-    override fun checkProgress(player: Player): String {
-        val tracker = HeartRegistry.traderTracker
-        val uuid = player.uniqueId
-
-        if (tracker.isHeartClaimed()) {
-            return if (tracker.hasReceived(uuid)) {
-                "§2Trader Heart §8| §aUnlocked by you"
-            } else {
-                val winner = tracker.getWinnerName() ?: "another player"
-                "§2Trader Heart §8| §cAlready claimed by $winner"
-            }
-        }
-
-        val progress = tracker.getProgress(uuid)
-        val total = tracker.getTotalRequired()
-
-        val percent = ((progress.toDouble() / total) * 100).toInt().coerceAtMost(100)
-
-        return "§2Trader Heart Progress: §e$progress§7/§e$total professions §8($percent%)"
-    }
+//    override fun checkProgress(player: Player): String {
+//        val tracker = HeartRegistry.traderTracker
+//        val uuid = player.uniqueId
+//
+//        if (tracker.isHeartClaimed()) {
+//            return if (tracker.hasReceived(uuid)) {
+//                "§2Trader Heart §8| §aUnlocked by you"
+//            } else {
+//                val winner = tracker.getWinnerName() ?: "another player"
+//                "§2Trader Heart §8| §cAlready claimed by $winner"
+//            }
+//        }
+//
+//        val progress = tracker.getProgress(uuid)
+//        val total = tracker.getTotalRequired()
+//
+//        val percent = ((progress.toDouble() / total) * 100).toInt().coerceAtMost(100)
+//
+//        return "§2Trader Heart Progress: §e$progress§7/§e$total professions §8($percent%)"
+//    }
 
 
     override fun clearCooldown(uuid: UUID) {

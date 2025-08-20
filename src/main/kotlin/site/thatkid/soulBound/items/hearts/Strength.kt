@@ -67,24 +67,24 @@ object Strength : Heart() {
         player.spawnParticle(Particle.TOTEM_OF_UNDYING, player.location, 40, 1.5, 1.5, 1.5, 0.1)
     }
 
-    override fun checkProgress(player: Player): String {
-        val tracker = HeartRegistry.strengthTracker
-        val uuid = player.uniqueId
-
-        if (tracker.isGloballyReceived()) {
-            return if (tracker.hasReceived(uuid)) {
-                "§4Strength Heart §8| §aUnlocked by you"
-            } else {
-                "§4Strength Heart §8| §cAlready claimed by another player"
-            }
-        }
-
-        val kills = tracker.getKills(uuid)
-        val required = tracker.getRequired()
-        val percent = (kills.toDouble() / required * 100).coerceAtMost(100.0)
-
-        return "§4Strength Heart Progress: §e$kills§7/§e$required PvP kills §8($percent%)"
-    }
+//    override fun checkProgress(player: Player): String {
+//        val tracker = HeartRegistry.strengthTracker
+//        val uuid = player.uniqueId
+//
+//        if (tracker.isGloballyReceived()) {
+//            return if (tracker.hasReceived(uuid)) {
+//                "§4Strength Heart §8| §aUnlocked by you"
+//            } else {
+//                "§4Strength Heart §8| §cAlready claimed by another player"
+//            }
+//        }
+//
+//        val kills = tracker.getKills(uuid)
+//        val required = tracker.getRequired()
+//        val percent = (kills.toDouble() / required * 100).coerceAtMost(100.0)
+//
+//        return "§4Strength Heart Progress: §e$kills§7/§e$required PvP kills §8($percent%)"
+//    }
 
 
     override fun clearCooldown(playerId: UUID) {
