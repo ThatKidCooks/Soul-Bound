@@ -109,8 +109,8 @@ object Ghastly : Heart() {
         }
 
         // Give speed and ensure invisibility
-        player.addPotionEffect(PotionEffect(PotionEffectType.SPEED, 20 * 30, 1, true, true, true))
-        player.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, 20 * 30, 0, true, false, false))
+        player.addPotionEffect(PotionEffect(PotionEffectType.SPEED, 20 * 15, 1, true, true, true))
+        player.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, 20 * 15, 0, true, false, false))
 
         player.sendMessage(Component.text("§5You vanish into the smoke..."))
         player.world.playSound(player.location, Sound.ENTITY_GHAST_SHOOT, 1f, 0.5f)
