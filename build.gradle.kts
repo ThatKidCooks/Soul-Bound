@@ -20,6 +20,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("net.axay:kspigot:1.21.0")
+    implementation("org.java-websocket:Java-WebSocket:1.6.0") // for discord bot integration
 
     // ← Use 5.3.0 (published) instead of 5.4.0
     compileOnly("com.comphenix.protocol:ProtocolLib:5.3.0")
