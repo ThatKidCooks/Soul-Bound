@@ -9,6 +9,7 @@ import site.thatkid.soulBound.gui.player.DisplayHearts
 import site.thatkid.soulBound.items.hearts.Crowned
 import site.thatkid.soulBound.hearts.ActiveHearts
 import site.thatkid.soulBound.hearts.ConstantAbilitiesCaller
+import site.thatkid.soulBound.items.hearts.Frozen
 import site.thatkid.soulBound.listeners.GolemKBTracker
 import site.thatkid.soulBound.listeners.PlayerDeathListener
 import site.thatkid.soulBound.listeners.PlayerQuitListener
@@ -48,7 +49,8 @@ class SoulBound : KSpigot() {
         server.pluginManager.registerEvents(PlayerDeathListener(this), this)
         server.pluginManager.registerEvents(GolemKBTracker(this), this)
         server.pluginManager.registerEvents(PlayerQuitListener(displayHearts), this)
-        server.pluginManager.registerEvents(Wither, this)
+        server.pluginManager.registerEvents(Wither, this) // Needs @EventHandler annotation in Wither object
+        server.pluginManager.registerEvents(Frozen, this) // Needs @EventHandler annotation in Frozen object
 
         ActiveHearts.loadFromFile(File(soulBoundDir, "hearts.json"))
     }
