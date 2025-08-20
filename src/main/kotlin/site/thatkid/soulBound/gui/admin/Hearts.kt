@@ -12,6 +12,7 @@ import site.thatkid.soulBound.items.hearts.Frozen
 import site.thatkid.soulBound.items.hearts.Ghastly
 import site.thatkid.soulBound.items.hearts.Golem
 import site.thatkid.soulBound.items.hearts.Haste
+import site.thatkid.soulBound.items.hearts.Speed
 import site.thatkid.soulBound.items.hearts.Strength
 import site.thatkid.soulBound.items.hearts.Trader
 import site.thatkid.soulBound.items.hearts.Warden
@@ -36,6 +37,7 @@ class Hearts(private val plugin: JavaPlugin): Listener {
         val fire = Fire.createItem()
         val wither = Wither.createItem()
         val frozen = Frozen.createItem()
+        val speed = Speed.createItem()
 
         inventory.setItem(0, crowned)
         inventory.setItem(1, warden)
@@ -49,6 +51,7 @@ class Hearts(private val plugin: JavaPlugin): Listener {
         inventory.setItem(9, fire)
         inventory.setItem(10, wither)
         inventory.setItem(11, frozen)
+        inventory.setItem(12, speed)
 
         player.openInventory(inventory)
     }
