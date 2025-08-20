@@ -19,6 +19,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation("net.axay:kspigot:1.21.0")
 
     // ← Use 5.3.0 (published) instead of 5.4.0
     compileOnly("com.comphenix.protocol:ProtocolLib:5.3.0")

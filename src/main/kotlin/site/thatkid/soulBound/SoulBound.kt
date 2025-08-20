@@ -1,6 +1,7 @@
 package site.thatkid.soulBound
 
 import HeartEatListener
+import net.axay.kspigot.main.KSpigot
 import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.commands.CommandManager
 import site.thatkid.soulBound.commands.SoulboundTabCompleter
@@ -8,6 +9,7 @@ import site.thatkid.soulBound.gui.player.DisplayHearts
 import site.thatkid.soulBound.items.hearts.Crowned
 import site.thatkid.soulBound.hearts.ActiveHearts
 import site.thatkid.soulBound.hearts.ConstantAbilitiesCaller
+import site.thatkid.soulBound.items.hearts.Frozen
 import site.thatkid.soulBound.listeners.GolemKBTracker
 import site.thatkid.soulBound.listeners.PlayerDeathListener
 import site.thatkid.soulBound.listeners.PlayerQuitListener
@@ -17,33 +19,21 @@ import site.thatkid.soulBound.items.hearts.Wither
 import site.thatkid.soulBound.listeners.AutoSave
 import java.io.File
 
-class SoulBound : JavaPlugin() {
+class SoulBound : KSpigot() {
 
 
     private val displayHearts: DisplayHearts = DisplayHearts(this)
     private val autoSave: AutoSave = AutoSave(this)
 
-    override fun onEnable() {
-        HeartRegistry.crownedTracker = object : HeartTracker(this, Crowned, killsRequired = 5) {}
-        HeartRegistry.crownedTracker.enable()
+    override fun startup() {
 
-        HeartRegistry.wardenTracker = WardenHeartTracker(this).apply { enable() }
-        HeartRegistry.traderTracker = TraderHeartTracker(this).apply { enable() }
-        HeartRegistry.ghastlyTracker = GhastlyHeartTracker(this).apply { enable() }
-        HeartRegistry.hasteTracker = HasteHeartTracker(this).apply { enable() }
-        HeartRegistry.strengthTracker = StrengthHeartTracker(this).apply { enable() }
-        HeartRegistry.aquaticTracker = AquaticHeartTracker(this).apply { enable() }
-        HeartRegistry.golemTracker = GolemHeartTracker(this).apply { enable() }
-        HeartRegistry.wiseTracker = WiseHeartTracker(this).apply { enable() }
-        HeartRegistry.fireTracker = FireHeartTracker(this).apply { enable() }
-        HeartRegistry.witherTracker = WitherHeartTracker(this).apply { enable() }
-        //HeartRegistry.frozenTracker = FrozenHeartTracker(this).apply { enable() }
+        HeartRegistry.enableAll()
 
         HeartRegistry.trustManager = TrustStorageManager
 
-        HeartRegistry.trustManager.load(File(dataFolder, "trusted_players.json"))
-
         val soulBoundDir = File(dataFolder, "Soul Bound").apply { mkdirs() }
+
+        HeartRegistry.trustManager.load(File(dataFolder, "trusted_players.json"))
 
         // Command Handlers
         getCommand("soulbound")?.setExecutor(CommandManager(this, this))
@@ -59,12 +49,13 @@ class SoulBound : JavaPlugin() {
         server.pluginManager.registerEvents(PlayerDeathListener(this), this)
         server.pluginManager.registerEvents(GolemKBTracker(this), this)
         server.pluginManager.registerEvents(PlayerQuitListener(displayHearts), this)
-        server.pluginManager.registerEvents(Wither, this)
+        server.pluginManager.registerEvents(Wither, this) // Needs @EventHandler annotation in Wither object
+        server.pluginManager.registerEvents(Frozen, this) // Needs @EventHandler annotation in Frozen object
 
         ActiveHearts.loadFromFile(File(soulBoundDir, "hearts.json"))
     }
 
-    override fun onDisable() {
+    override fun shutdown() {
         save()
         HeartRegistry.disableAll()
     }
