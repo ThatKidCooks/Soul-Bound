@@ -1,6 +1,7 @@
 package site.thatkid.soulBound
 
 import HeartEatListener
+import net.axay.kspigot.main.KSpigot
 import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.commands.CommandManager
 import site.thatkid.soulBound.commands.SoulboundTabCompleter
@@ -17,13 +18,13 @@ import site.thatkid.soulBound.items.hearts.Wither
 import site.thatkid.soulBound.listeners.AutoSave
 import java.io.File
 
-class SoulBound : JavaPlugin() {
+class SoulBound : KSpigot() {
 
 
     private val displayHearts: DisplayHearts = DisplayHearts(this)
     private val autoSave: AutoSave = AutoSave(this)
 
-    override fun onEnable() {
+    override fun startup() {
 //        HeartRegistry.crownedTracker = object : HeartTracker(this, Crowned, killsRequired = 5) {}
 //        HeartRegistry.crownedTracker.enable()
 //
@@ -64,7 +65,7 @@ class SoulBound : JavaPlugin() {
         ActiveHearts.loadFromFile(File(soulBoundDir, "hearts.json"))
     }
 
-    override fun onDisable() {
+    override fun shutdown() {
         save()
         HeartRegistry.disableAll()
     }

@@ -11,6 +11,9 @@ commands:
     usage: /soulbound <command>
     aliases: [ sb ]
 
+libraries:
+  - "net.axay:kspigot:1.21.0"
+
 authors: [ ThatKidCooks, kernelpanicdreams ]
 website: thatkid.site
 

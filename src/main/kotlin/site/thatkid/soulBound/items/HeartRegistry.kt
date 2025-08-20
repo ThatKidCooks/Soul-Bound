@@ -3,6 +3,7 @@ package site.thatkid.soulBound
 import site.thatkid.soulBound.items.Heart
 import site.thatkid.soulBound.items.hearts.*
 import site.thatkid.soulBound.managers.*
+import site.thatkid.soulBound.managers.hearts.CrownedListener
 import javax.net.ssl.TrustManager
 
 object HeartRegistry {
@@ -22,7 +23,7 @@ object HeartRegistry {
         "speed" to Speed
     )
 
-//    lateinit var crownedTracker: HeartTracker
+    lateinit var crownedTracker: CrownedListener
 //    lateinit var wardenTracker: WardenHeartTracker
 //    lateinit var traderTracker: TraderHeartTracker
 //    lateinit var ghastlyTracker: GhastlyHeartTracker
@@ -38,7 +39,7 @@ object HeartRegistry {
 
 
     fun disableAll() {
-//        if (this::crownedTracker.isInitialized) crownedTracker.disable()
+        if (this::crownedTracker.isInitialized) crownedTracker.disable()
 //        if (this::wardenTracker.isInitialized) wardenTracker.disable()
 //        if (this::traderTracker.isInitialized) traderTracker.disable()
 //        if (this::ghastlyTracker.isInitialized) ghastlyTracker.disable()
@@ -52,7 +53,7 @@ object HeartRegistry {
     }
 
     fun saveAll() {
-//        if (this::crownedTracker.isInitialized) crownedTracker.save()
+        if (this::crownedTracker.isInitialized) crownedTracker.save()
 //        if (this::wardenTracker.isInitialized) wardenTracker.save()
 //        if (this::traderTracker.isInitialized) traderTracker.save()
 //        if (this::ghastlyTracker.isInitialized) ghastlyTracker.save()
@@ -63,5 +64,9 @@ object HeartRegistry {
 //        if (this::wiseTracker.isInitialized) wiseTracker.save()
 //        if (this::fireTracker.isInitialized) fireTracker.save()
 //        if (this::frozenTracker.isInitialized) frozenTracker.save()
+    }
+
+    fun loadAll() {
+        if (this::crownedTracker.isInitialized) crownedTracker.load()
     }
 }
