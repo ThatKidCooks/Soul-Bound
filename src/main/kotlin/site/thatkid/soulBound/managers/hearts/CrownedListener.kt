@@ -11,9 +11,9 @@ import java.util.UUID
 
 class CrownedListener(private val plugin: JavaPlugin) {
 
-    private val kills: MutableMap<UUID, Int> = mutableMapOf()
+    private var kills: MutableMap<UUID, Int> = mutableMapOf()
 
-    private val recived: Boolean = false
+    private var received: Boolean = false
 
     private val listener = listen<EntityDeathEvent> {
         val player = it.entity.killer ?: return@listen
@@ -22,12 +22,13 @@ class CrownedListener(private val plugin: JavaPlugin) {
         kills[playerId] = currentKills
 
         if (currentKills >= 5) {
-            if (!recived) {
+            if (!received) {
                 // Give the player a Crowned Heart item
                 val crownedHeart = HeartRegistry.hearts["crowned"]?.createItem()
                 if (crownedHeart != null) {
                     player.inventory.addItem(crownedHeart)
                     broadcast("The Crowned Heart has been awarded to ${player.name} for killing 5 Players First!")
+                    received = true
                 }
             }
         } else {
@@ -55,7 +56,11 @@ class CrownedListener(private val plugin: JavaPlugin) {
         // save to json
     }
 
-    fun getProgress(playerId: UUID): Int {
-        return kills.getOrDefault(playerId, 0)
+    fun getProgress(playerId: UUID): String {
+        val kills = kills.getOrDefault(playerId, 0)
+        val total = 5
+        val percent = 100 * total / kills
+
+        return "§7You have killed §e$kills §7players out of $total. §f($percent%)"
     }
 }
