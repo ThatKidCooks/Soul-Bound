@@ -75,6 +75,8 @@ class CommandManager(private var plugin: JavaPlugin, private var soulBound: Soul
                     Wise.clearCooldown(sender.uniqueId)
                     Fire.clearCooldown(sender.uniqueId)
                     Wither.clearCooldown(sender.uniqueId)
+                    Frozen.clearCooldown(sender.uniqueId)
+                    Speed.clearCooldown(sender.uniqueId)
                     sender.sendMessage("§aYour heart cooldowns have been reset.")
                 } else {
                     sender.sendMessage("§cYou don’t have permission to reset cooldowns.")
