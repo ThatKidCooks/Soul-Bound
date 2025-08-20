@@ -1,3 +1,4 @@
+import com.sun.tools.javac.comp.Todo
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.event.EventHandler
@@ -23,11 +24,13 @@ class HeartEatListener(private val plugin: JavaPlugin) : Listener {
         "wise" to Wise,
         "fire" to Fire,
         "wither" to Wither,
-        "frozen" to Frozen
+        "frozen" to Frozen,
+        "speed" to Speed
     ).mapKeys { NamespacedKey(plugin, it.key) }
 
     @EventHandler
     fun onPlayerRightClick(event: PlayerInteractEvent) {
+
         if (event.action != Action.RIGHT_CLICK_AIR && event.action != Action.RIGHT_CLICK_BLOCK) return
 
         val item = event.item ?: return

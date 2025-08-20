@@ -17,7 +17,9 @@ object HeartRegistry {
         "golem" to Golem,
         "wise" to Wise,
         "fire" to Fire,
-        "wither" to Wither
+        "wither" to Wither,
+        "frozen" to Frozen,
+        "speed" to Speed
     )
 
     lateinit var crownedTracker: HeartTracker
