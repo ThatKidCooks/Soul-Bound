@@ -12,9 +12,8 @@ import site.thatkid.soulBound.HeartRegistry
 import java.io.File
 import java.util.UUID
 
-class HasteListener(private val plugin: JavaPlugin) {
-
-    private val file = File(plugin.dataFolder, "haste.json")
+class FrozenListener(private val plugin: JavaPlugin) {
+    private val file = File(plugin.dataFolder, "frozen.json")
 
     var blocksMined: MutableMap<UUID, Int> = mutableMapOf()
     private var received: Boolean = false
@@ -26,39 +25,33 @@ class HasteListener(private val plugin: JavaPlugin) {
         val received: Boolean = false
     )
 
-    private val deepslateTypes = setOf(
-        Material.DEEPSLATE,
-        Material.COBBLED_DEEPSLATE,
-        Material.DEEPSLATE_COAL_ORE,
-        Material.DEEPSLATE_IRON_ORE,
-        Material.DEEPSLATE_COPPER_ORE,
-        Material.DEEPSLATE_GOLD_ORE,
-        Material.DEEPSLATE_REDSTONE_ORE,
-        Material.DEEPSLATE_LAPIS_ORE,
-        Material.DEEPSLATE_DIAMOND_ORE,
-        Material.DEEPSLATE_EMERALD_ORE
+    private val iceTypes = setOf(
+        Material.ICE,
+        Material.BLUE_ICE,
+        Material.PACKED_ICE,
+        Material.FROSTED_ICE
     )
 
     private val listener = listen<BlockBreakEvent> {
         val player = it.player
         val playerId = player.uniqueId
         val blocks = blocksMined.computeIfAbsent(playerId) { 0 }
-        if (!deepslateTypes.contains(it.block.type)) return@listen
+        if (!iceTypes.contains(it.block.type)) return@listen
         blocksMined[playerId] = blocks + 1 // increment the block count for the player
 
         if (blocksMined[playerId]!! >= 10000) { // check if the player has mined enough blocks
             if (!received) {
-                // Give the player a Haste Heart item
-                val hasteHeart = HeartRegistry.hearts["haste"]?.createItem()
-                if (hasteHeart != null) {
-                    player.inventory.addItem(hasteHeart)
-                    Bukkit.broadcastMessage("The Haste Heart has been awarded to ${player.name} for mining 10,000 Deepslate Blocks First!")
-                    received = true // no one else can receive the Haste Heart after this
+                // Give the player a Frozen Heart item
+                val frozenHeart = HeartRegistry.hearts["frozen"]?.createItem()
+                if (frozenHeart != null) {
+                    player.inventory.addItem(frozenHeart)
+                    Bukkit.broadcastMessage("The Frozen Heart has been awarded to ${player.name} for mining 10,000 Ice Blocks First!")
+                    received = true // no one else can receive the Frozen Heart after this
                     save() // save the state after giving the heart
                 }
             }
         } else {
-            player.sendMessage("§7You need ${100 - blocksMined[playerId]!!} more blocks to receive the Haste Heart.") // feedback message
+            player.sendMessage("§7You need ${100 - blocksMined[playerId]!!} more blocks to receive the Frozen Heart.") // feedback message
         }
     }
 
@@ -79,9 +72,9 @@ class HasteListener(private val plugin: JavaPlugin) {
             val saveData = gson.fromJson(json, SaveData::class.java) // convert the saved JSON to SaveData object
             blocksMined = saveData.blocksMined.toMutableMap() // set the kills map
             received = saveData.received // set the received state
-            plugin.logger.info("Haste data loaded from ${file.absolutePath}") // log the load
+            plugin.logger.info("Frozen data loaded from ${file.absolutePath}") // log the load
         } catch (ex: Exception) {
-            plugin.logger.warning("Failed to load haste.json: ${ex.message}")
+            plugin.logger.warning("Failed to load frozen.json: ${ex.message}")
             blocksMined = mutableMapOf()
             received = false
         }
@@ -93,9 +86,9 @@ class HasteListener(private val plugin: JavaPlugin) {
             val json = gson.toJson(saveData) // convert the SaveData object to JSON
             file.parentFile?.mkdirs() // ensure the directory exists
             file.writeText(json) // write the JSON to the file
-            plugin.logger.info("Haste data saved to ${file.absolutePath}") // log the save
+            plugin.logger.info("Frozen data saved to ${file.absolutePath}") // log the save
         } catch (ex: Exception) {
-            plugin.logger.warning("Failed to save haste.json: ${ex.message}")
+            plugin.logger.warning("Failed to save frozen.json: ${ex.message}")
         }
     }
 

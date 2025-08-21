@@ -4,8 +4,8 @@ import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.items.Heart
 import site.thatkid.soulBound.items.hearts.*
 import site.thatkid.soulBound.managers.*
-import site.thatkid.soulBound.managers.hearts.kill.CrownedListener
-import site.thatkid.soulBound.managers.hearts.kill.StrengthListener
+import site.thatkid.soulBound.managers.hearts.kill.*
+import site.thatkid.soulBound.managers.hearts.mine.*
 
 object HeartRegistry {
 
@@ -36,6 +36,7 @@ object HeartRegistry {
 
     lateinit var crownedListener: CrownedListener
     lateinit var strengthListener: StrengthListener
+    lateinit var hasteListener: HasteListener
     lateinit var trustManager: TrustStorageManager
 
     fun enableAll() {
@@ -46,6 +47,9 @@ object HeartRegistry {
         if (!this::strengthListener.isInitialized) {
             strengthListener = StrengthListener(plugin)
         }
+        if (!this::hasteListener.isInitialized) {
+            hasteListener = HasteListener(plugin)
+        }
 
         // just for crowned and strength, they are linked
         crownedListener.strengthListener = strengthListener
@@ -54,6 +58,7 @@ object HeartRegistry {
         // enable the listeners
         crownedListener.enable()
         strengthListener.enable()
+        hasteListener.enable()
     }
 
 
