@@ -42,7 +42,7 @@ class CrownedListener(private val plugin: JavaPlugin) {
                 val crownedHeart = HeartRegistry.hearts["crowned"]?.createItem()
                 if (crownedHeart != null) {
                     killer.inventory.addItem(crownedHeart)
-                    broadcast("The Crowned Heart has been awarded to ${killer.name} for killing 5 Players First!")
+                    broadcast("The Crowned Heart has been awarded to ${killer.name} for killing 15 Players First!")
                     received = true // no one else can receive the Crowned Heart after this
                     save() // save the state after giving the heart
                 }
