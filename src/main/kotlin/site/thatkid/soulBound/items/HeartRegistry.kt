@@ -4,9 +4,8 @@ import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.items.Heart
 import site.thatkid.soulBound.items.hearts.*
 import site.thatkid.soulBound.managers.*
-import site.thatkid.soulBound.managers.hearts.CrownedListener
-import site.thatkid.soulBound.managers.hearts.StrengthListener
-import javax.net.ssl.TrustManager
+import site.thatkid.soulBound.managers.hearts.kill.CrownedListener
+import site.thatkid.soulBound.managers.hearts.kill.StrengthListener
 
 object HeartRegistry {
 

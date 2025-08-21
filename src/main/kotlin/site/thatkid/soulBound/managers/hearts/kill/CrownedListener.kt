@@ -1,4 +1,4 @@
-package site.thatkid.soulBound.managers.hearts
+package site.thatkid.soulBound.managers.hearts.kill
 
 import com.google.gson.GsonBuilder
 import net.axay.kspigot.event.listen
@@ -12,19 +12,19 @@ import site.thatkid.soulBound.HeartRegistry
 import java.io.File
 import java.util.UUID
 
-class StrengthListener(private val plugin: JavaPlugin) {
+class CrownedListener(private val plugin: JavaPlugin) {
 
-    private data class SaveData(
+    private data class SaveData (
         val kills: MutableMap<UUID, MutableList<UUID>> = mutableMapOf(),
         val received: Boolean = false
     )
 
-    lateinit var crownedListener: CrownedListener
+    lateinit var strengthListener: StrengthListener
 
-    private val file = File(plugin.dataFolder, "strength.json")
+    private val file = File(plugin.dataFolder, "crowned.json")
 
-    private var kills: MutableMap<UUID, MutableList<UUID>> = mutableMapOf()
-    var received: Boolean = false
+    var kills: MutableMap<UUID, MutableList<UUID>> = mutableMapOf()
+    private var received: Boolean = false
 
     val gson = GsonBuilder().setPrettyPrinting().create()
 
@@ -34,24 +34,27 @@ class StrengthListener(private val plugin: JavaPlugin) {
         val killer = it.entity.killer ?: return@listen
         val killerId = killer.uniqueId
         val victims = kills.computeIfAbsent(killerId) { mutableListOf() }
+        if (!strengthListener.received) { // don't allow Crowned Heart to be given before Strength Heart
+            killer.sendMessage("You killed $victim, however this kill will go to the strength heart progress as that hasn't been earned yet.")
+            return@listen
+        }
         if (!victims.contains(victimId)) {
             victims.add(victimId)
         }
 
-        if (victims.size >= 10) {
+        if (victims.size >= 15) {
             if (!received) {
-                // Give the player a Strength Heart item
-                val strengthHeart = HeartRegistry.hearts["strength"]?.createItem()
-                if (strengthHeart != null) {
-                    killer.inventory.addItem(strengthHeart)
-                    broadcast("The Strength Heart has been awarded to ${killer.name} for killing 10 Players First!")
-                    received = true // no one else can receive the Strength Heart after this
+                // Give the player a Crowned Heart item
+                val crownedHeart = HeartRegistry.hearts["crowned"]?.createItem()
+                if (crownedHeart != null) {
+                    killer.inventory.addItem(crownedHeart)
+                    broadcast("The Crowned Heart has been awarded to ${killer.name} for killing 15 Players First!")
+                    received = true // no one else can receive the Crowned Heart after this
                     save() // save the state after giving the heart
-                    crownedListener.kills.clear() // needs to get 15 kills after getting the strength heart.
                 }
             }
         } else {
-            killer.sendMessage("§7You need ${5 - victims.size} more kills to receive the Strength Heart.") // feedback message
+            killer.sendMessage("§7You need ${5 - victims.size} more kills to receive the Crowned Heart.") // feedback message
         }
     }
 
@@ -72,9 +75,9 @@ class StrengthListener(private val plugin: JavaPlugin) {
             val saveData = gson.fromJson(json, SaveData::class.java) // convert the saved JSON to SaveData object
             kills = saveData.kills.toMutableMap() // set the kills map
             received = saveData.received // set the received state
-            plugin.logger.info("Strength data loaded from ${file.absolutePath}") // log the load
+            plugin.logger.info("Crowned data loaded from ${file.absolutePath}") // log the load
         } catch (ex: Exception) {
-            plugin.logger.warning("Failed to load strength.json: ${ex.message}")
+            plugin.logger.warning("Failed to load crowned.json: ${ex.message}")
             kills = mutableMapOf()
             received = false
         }
@@ -86,20 +89,16 @@ class StrengthListener(private val plugin: JavaPlugin) {
             val json = gson.toJson(saveData) // convert the SaveData object to JSON
             file.parentFile?.mkdirs() // ensure the directory exists
             file.writeText(json) // write the JSON to the file
-            plugin.logger.info("Strength data saved to ${file.absolutePath}") // log the save
+            plugin.logger.info("Crowned data saved to ${file.absolutePath}") // log the save
         } catch (ex: Exception) {
-            plugin.logger.warning("Failed to save strength.json: ${ex.message}")
+            plugin.logger.warning("Failed to save crowned.json: ${ex.message}")
         }
     }
 
-    fun getProgress(playerId: UUID): String {
+    fun getProgress(playerId: UUID): String { // this seems easy to understand
         val victims = kills.computeIfAbsent(playerId) { mutableListOf() }
-        val total = 15
-        val percent = 100 * total / victims.size
-
-        if (received) {
-            return "§cThe Strength heart has already been received."
-        }
+        val total = 5
+        val percent = (100 * total / victims.size).coerceAtMost(100)
 
         return "§${Bukkit.getPlayer(playerId)} has killed §e$kills §7players out of $total. §f($percent%)"
     }
