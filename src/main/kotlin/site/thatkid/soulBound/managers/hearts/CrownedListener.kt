@@ -36,7 +36,7 @@ class CrownedListener(private val plugin: JavaPlugin) {
             victims.add(victimId)
         }
 
-        if (victims.size >= 5) {
+        if (victims.size >= 15) {
             if (!received) {
                 // Give the player a Crowned Heart item
                 val crownedHeart = HeartRegistry.hearts["crowned"]?.createItem()
