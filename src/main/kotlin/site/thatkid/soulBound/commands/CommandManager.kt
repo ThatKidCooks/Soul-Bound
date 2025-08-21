@@ -12,17 +12,57 @@ import site.thatkid.soulBound.hearts.ActiveHearts
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.hearts.*
 
+/**
+ * Handles all commands for the SoulBound plugin.
+ * 
+ * This class processes both player and administrator commands for managing hearts,
+ * trust relationships, and progress tracking.
+ * 
+ * **Player Commands:**
+ * - `/soulbound help` - Shows available commands
+ * - `/soulbound ability` - Uses the special ability of their active heart
+ * - `/soulbound drain` - Removes their currently active heart
+ * - `/soulbound trust <player>` - Trusts a player (prevents heart effects on them)
+ * - `/soulbound untrust <player>` - Removes trust from a player
+ * - `/soulbound trustlist` - Lists all trusted players
+ * - `/soulbound progress [heart]` - Shows progress toward obtaining hearts
+ * 
+ * **Admin Commands (OP only):**
+ * - `/soulbound` (no args) - Opens admin GUI for managing hearts
+ * - `/soulbound cooldown` - Resets all heart cooldowns
+ * - `/soulbound add <player> <heart>` - Gives a specific heart to a player
+ * - `/soulbound remove <player>` - Removes a player's active heart
+ * - `/soulbound save` - Manually saves all plugin data
+ * 
+ * @param plugin Reference to the main JavaPlugin instance
+ * @param soulBound Reference to the SoulBound plugin instance for access to save functionality
+ */
 class CommandManager(private var plugin: JavaPlugin, private var soulBound: SoulBound): CommandExecutor {
+    
+    /**
+     * Processes all /soulbound commands and their subcommands.
+     * 
+     * This method routes commands to appropriate handlers based on the first argument.
+     * Only players can use most commands (not console), and some commands require OP permissions.
+     * 
+     * @param sender The entity that executed the command
+     * @param command The command that was executed
+     * @param label The alias of the command that was used
+     * @param args Arguments passed to the command
+     * @return true if command was handled successfully, false otherwise
+     */
     override fun onCommand(
         sender: CommandSender,
         command: Command,
         label: String,
         args: Array<out String>
     ): Boolean {
+        // Only players can use these commands (not console)
         if (sender !is Player) {
             return true
         }
 
+        // Handle command with no arguments - show admin GUI for OPs, help for others
         if (args.isEmpty()) {
             if (sender.isOp) {
                 Hearts(plugin).open(sender)
@@ -32,6 +72,7 @@ class CommandManager(private var plugin: JavaPlugin, private var soulBound: Soul
             return true
         }
 
+        // Route to specific command handlers based on first argument
         when (args[0].lowercase()) {
             "help" -> {
                 sender.sendMessage("§aSoulbound Commands:")
@@ -43,6 +84,7 @@ class CommandManager(private var plugin: JavaPlugin, private var soulBound: Soul
                 sender.sendMessage("§e/soulbound trustlist - List trusted players.")
             }
 
+            // Remove player's active heart (has cooldown protection)
             "drain" -> {
                 val hasCooldown = ActiveHearts.hasCooldown(sender.uniqueId)
                 if (hasCooldown) {
@@ -83,6 +125,7 @@ class CommandManager(private var plugin: JavaPlugin, private var soulBound: Soul
                 }
             }
 
+            // Add a player to the trust list (prevents heart abilities from affecting them)
             "trust" -> {
                 if (args.size != 2) {
                     sender.sendMessage("§cUsage: /soulbound trust <player>")
@@ -97,6 +140,7 @@ class CommandManager(private var plugin: JavaPlugin, private var soulBound: Soul
                 }
             }
 
+            // Remove a player from the trust list
             "untrust" -> {
                 if (args.size != 2) {
                     sender.sendMessage("§cUsage: /soulbound untrust <player>")
@@ -111,6 +155,7 @@ class CommandManager(private var plugin: JavaPlugin, private var soulBound: Soul
                 }
             }
 
+            // Display list of all trusted players
             "trustlist" -> {
                 val trusted = TrustRegistry.getTrusted(sender.uniqueId)
 

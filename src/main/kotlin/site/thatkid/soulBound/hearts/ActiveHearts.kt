@@ -10,8 +10,23 @@ import site.thatkid.soulBound.hearts.SavedHeartData
 import java.io.File
 import java.util.*
 
+/**
+ * Manages the active hearts for all players on the server.
+ * 
+ * This singleton object handles:
+ * - Tracking which heart each player currently has active
+ * - Adding and removing hearts with cooldown protection
+ * - Persisting heart data to/from JSON files
+ * - Providing lookup methods for other systems
+ * 
+ * Key Rules:
+ * - Players can only have one heart active at a time
+ * - Switching hearts has a cooldown period to prevent abuse
+ * - Heart data persists across server restarts
+ */
 object ActiveHearts {
 
+    /** List of all available heart types in the plugin */
     private val allHearts: List<Heart> = listOf(
         Aquatic,
         Crowned,
@@ -27,38 +42,53 @@ object ActiveHearts {
         Wise
     )
 
+    /** Result codes for adding hearts to players */
     enum class AddHeartResult {
-        SUCCESS,
-        SAME_HEART,
-        COOLDOWN_ACTIVE
+        SUCCESS,        // Heart successfully added
+        SAME_HEART,     // Player already has this heart type
+        COOLDOWN_ACTIVE // Player must wait before switching hearts
     }
 
+    /** Flag to track if initialization is complete */
     private var done: Boolean = false
 
+    /** JSON serializer for saving/loading heart data */
     private val gson: Gson = GsonBuilder()
         .setPrettyPrinting()
         .create()
 
+    /** Maps player UUIDs to their currently active heart */
     private val playerHearts: MutableMap<UUID, Heart> = mutableMapOf()
 
+    /**
+     * Attempts to give a heart to a player.
+     * 
+     * @param playerUUID The UUID of the player to give the heart to
+     * @param heart The heart type to give
+     * @return AddHeartResult indicating success or reason for failure
+     */
     fun add(playerUUID: UUID, heart: Heart): AddHeartResult {
         val currentHeart = playerHearts[playerUUID]
 
+        // Check if player already has this exact heart type
         if (currentHeart != null && currentHeart::class == heart::class) {
             return AddHeartResult.SAME_HEART
         }
 
+        // Check if current heart has an active cooldown (prevents heart swapping abuse)
         currentHeart?.getCooldown(playerUUID)?.let { cooldown ->
             if (cooldown > 0L) {
                 return AddHeartResult.COOLDOWN_ACTIVE
             }
         }
 
+        // If player has a different heart, give them back the item before switching
         if (currentHeart != null) {
             val player = Bukkit.getPlayer(playerUUID)
             player?.inventory?.addItem(currentHeart.createItem())
         }
 
+        // Assign the new heart
         playerHearts[playerUUID] = heart
         return AddHeartResult.SUCCESS
     }

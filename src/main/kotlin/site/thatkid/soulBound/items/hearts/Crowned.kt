@@ -18,15 +18,42 @@ import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.Heart
 import java.util.*
 
+/**
+ * The Crowned Heart - obtained by getting 5 player kills.
+ * 
+ * **Passive Abilities:**
+ * - Permanent Speed I (faster movement)
+ * 
+ * **Special Ability - Smash:**
+ * - Damages all enemies within 6 blocks
+ * - Deals 3 hearts (6 HP) to both mobs and players
+ * - Creates sweep attack particles for visual effect
+ * - Cooldown: 40 seconds
+ * 
+ * This is a PvP-focused heart that rewards aggressive gameplay. The area damage
+ * makes it effective against multiple enemies, while the speed boost helps with
+ * both chasing and escaping.
+ * 
+ * Requirements: 5 player kills
+ */
 object Crowned : Heart() {
 
+    /** Used for tracking remaining cooldown time in user messages */
     private var remaining: Long = 0L
+    
+    /** Plugin instance for creating namespaced keys */
     private val plugin: JavaPlugin = JavaPlugin.getProvidingPlugin(Crowned::class.java)
 
+    /** Unique identifier for this heart type */
     override val key = NamespacedKey(plugin, "crowned")
+    
+    /** Tracks cooldowns for each player's Smash ability usage */
     private val cooldowns = mutableMapOf<UUID, Long>()
+    
+    /** Cooldown time for the Smash ability (40 seconds) */
     private var cooldownTime = 40 * 1000L // 40 seconds in milliseconds
 
+    /** Tracks which players have been damaged by each Smash user (for kill attribution) */
     val smashedBy = mutableMapOf<UUID, UUID>()
 
     override fun createItem(): ItemStack {

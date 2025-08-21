@@ -12,15 +12,48 @@ import site.thatkid.soulBound.HeartRegistry
 import site.thatkid.soulBound.items.Heart
 import java.util.*
 
+/**
+ * The Strength Heart - obtained by killing 10 players in PvP.
+ * 
+ * **Passive Abilities:**
+ * - Permanent Strength I (increased melee damage)
+ * 
+ * **Special Ability - Unstoppable Force:**
+ * - Grants Strength II and Speed II for 15 seconds
+ * - Creates dramatic totem particle effects
+ * - Cooldown: 60 seconds
+ * 
+ * This is an advanced PvP heart that requires more kills than the Crowned Heart.
+ * The permanent strength boost makes the holder more dangerous in combat, while
+ * the special ability can turn the tide of battle with its powerful temporary buffs.
+ * 
+ * Requirements: 10 player kills
+ */
 object Strength : Heart() {
 
+    /** Plugin instance for creating namespaced keys */
     private val plugin = JavaPlugin.getProvidingPlugin(Strength::class.java)
+    
+    /** Unique identifier for this heart type */
     override val key = NamespacedKey(plugin, "strength")
 
+    /** Tracks cooldowns for each player's Unstoppable Force ability */
     private val cooldowns = mutableMapOf<UUID, Long>()
+    
+    /** Cooldown time for Unstoppable Force (60 seconds) */
     private const val COOLDOWN = 60_000L
+    
+    /** Duration of the Unstoppable Force buff (15 seconds in ticks) */
     private const val DURATION = 15 * 20L // 15 seconds in ticks
 
+    /**
+     * Creates the Strength Heart item with appropriate display properties.
+     * 
+     * Shows the PvP requirement and clearly lists both the passive strength
+     * boost and the powerful Unstoppable Force ability.
+     * 
+     * @return ItemStack representing the Strength Heart
+     */
     override fun createItem(): ItemStack {
         val item = ItemStack(Material.APPLE)
         val meta = item.itemMeta!!
