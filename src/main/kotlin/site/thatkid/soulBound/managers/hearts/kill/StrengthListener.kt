@@ -96,14 +96,15 @@ class StrengthListener(private val plugin: JavaPlugin) {
 
     fun getProgress(playerId: UUID): String {
         val victims = kills.computeIfAbsent(playerId) { mutableListOf() }
-        val total = 15
+        val total = 10
         val percent = (100 * total / victims.size).coerceAtMost(100)
 
-        if (received) {
-            return "§cThe Strength heart has already been received."
-        }
+        val msg = "§${Bukkit.getPlayer(playerId)} has killed §e$kills §7players out of $total. §f($percent%)"
 
-        return "§${Bukkit.getPlayer(playerId)} has killed §e$kills §7players out of $total. §f($percent%)"
+        if (received) {
+            return "$msg §cThe Strength heart has already been received by a player."
+        }
+        return msg
     }
 
     fun setGlobalReceived(received: Boolean) {

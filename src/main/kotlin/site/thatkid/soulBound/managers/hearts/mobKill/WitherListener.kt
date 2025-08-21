@@ -18,7 +18,7 @@ class WitherListener(private val plugin: JavaPlugin) {
         val received: Boolean = false
     )
 
-    lateinit var witherListener: WitherListener
+    lateinit var fireListener: FireListener
 
     var withersKilled: MutableMap<UUID, Int> = mutableMapOf()
     private var received: Boolean = false
@@ -34,6 +34,10 @@ class WitherListener(private val plugin: JavaPlugin) {
         if (victim.type.name != "WITHER") return@listen // only process Wither deaths
 
         if (!received) {
+            if (!fireListener.received) {
+                killer.sendMessage("You killed a Wither, however this kill will go to the Fire Heart progress as that hasn't been earned yet.")
+                return@listen
+            }
             withersKilled[killerId] = withersKilled.getOrDefault(killerId, 0) + 1 // increment the count of Withers killed by the player
             if (withersKilled[killerId]!! < 7) {
                 killer.sendMessage("§7You need to kill 7 Withers to receive the Wither Heart. ${7 - withersKilled[killerId]!!} to go!") // feedback message
@@ -92,7 +96,12 @@ class WitherListener(private val plugin: JavaPlugin) {
         val total = 7
         val percent = ((withersKilledCount * 100) / total).coerceAtMost(100)
 
-        return "§${Bukkit.getPlayer(playerId)} has killed $withersKilledCount out of $total Withers. §f($percent%)"
+        val msg = "§${Bukkit.getPlayer(playerId)} has killed $withersKilledCount out of $total Withers. §f($percent%)"
+
+        if (received) {
+            return "$msg §cThe Wither heart has already been received by a player."
+        }
+        return msg
     }
 
     fun setGlobalReceived(received: Boolean) {

@@ -99,7 +99,12 @@ class FrozenListener(private val plugin: JavaPlugin) {
         val total = 10000
         val percent = ((blocks * 100) / total).coerceAtMost(100)
 
-        return "§${Bukkit.getPlayer(playerId)} has mined §e$blocks §blocks out of $total. §f($percent%)"
+        val msg = "§${Bukkit.getPlayer(playerId)} has mined §e$blocks §blocks out of $total. §f($percent%)"
+
+        if (received) {
+            return "$msg §cThe Frozen heart has already been received by a player."
+        }
+        return msg
     }
 
     fun setGlobalReceived(received: Boolean) {

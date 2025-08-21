@@ -12,36 +12,33 @@ import site.thatkid.soulBound.HeartRegistry
 import java.io.File
 import java.util.UUID
 
-class FireListener(private val plugin: JavaPlugin) {
+class WardenListener(private val plugin: JavaPlugin) {
 
     private data class SaveData (
         val received: Boolean = false
     )
 
-    lateinit var witherListener: WitherListener
-
     var received: Boolean = false
 
-    private val file = File(plugin.dataFolder, "fire.json")
+    private val file = File(plugin.dataFolder, "warden.json")
     private val gson = GsonBuilder().setPrettyPrinting().create()
 
     val listener = listen<EntityDeathEvent> {
         val victim = it.entity
         val killer = it.entity.killer ?: return@listen
 
-        if (victim.type.name != "WITHER") return@listen // only process Wither deaths
+        if (victim.type.name != "WARDEN") return@listen // only process Warden deaths
 
         if (!received) {
-            val fireHeart = HeartRegistry.hearts["fire"]?.createItem() // get the Fire Heart item
-            if (fireHeart != null) {
-                killer.inventory.addItem(fireHeart)
-                broadcast("The Fire Heart has been awarded to ${killer.name} for killing a Wither First!")
-                received = true // no one else can receive the Fire Heart after this
+            val wardenHeart = HeartRegistry.hearts["warden"]?.createItem() // get the Warden Heart item
+            if (wardenHeart != null) {
+                killer.inventory.addItem(wardenHeart)
+                broadcast("The Warden Heart has been awarded to ${killer.name} for killing a Warden First!")
+                received = true // no one else can receive the Warden Heart after this
                 save() // save the state after giving the heart
-                witherListener.withersKilled.clear() // reset the kills for the Wither Heart
             }
         } else {
-            killer.sendMessage("§7Someone already received the Fire Heart.") // feedback message
+            killer.sendMessage("§7Someone already received the Warden Heart.") // feedback message
         }
     }
 
@@ -61,9 +58,9 @@ class FireListener(private val plugin: JavaPlugin) {
             val json = file.readText()
             val saveData = gson.fromJson(json, SaveData::class.java) // convert the saved JSON to SaveData object
             received = saveData.received // set the received state from the loaded data
-            plugin.logger.info("Fire data loaded from ${file.absolutePath}") // log the load
+            plugin.logger.info("Warden data loaded from ${file.absolutePath}") // log the load
         } catch (ex: Exception) {
-            plugin.logger.warning("Failed to load fire.json: ${ex.message}")
+            plugin.logger.warning("Failed to load warden.json: ${ex.message}")
             received = false
         }
     }
@@ -74,17 +71,17 @@ class FireListener(private val plugin: JavaPlugin) {
             val json = gson.toJson(saveData) // convert the SaveData object to JSON
             file.parentFile?.mkdirs() // ensure the directory exists
             file.writeText(json) // write the JSON to the file
-            plugin.logger.info("Fire data saved to ${file.absolutePath}") // log the save
+            plugin.logger.info("Warden data saved to ${file.absolutePath}") // log the save
         } catch (ex: Exception) {
-            plugin.logger.warning("Failed to save fire.json: ${ex.message}")
+            plugin.logger.warning("Failed to save warden.json: ${ex.message}")
         }
     }
 
     fun getProgress(playerId: UUID): String { // this seems easy to understand
-        val msg = "§${Bukkit.getPlayer(playerId)} hasn't got the Fire Heart yet."
+        val msg = "§${Bukkit.getPlayer(playerId)} hasn't got the Warden Heart yet."
 
         if (received) {
-            return "$msg §cThe Fire heart has already been received by a player."
+            return "$msg §cThe Warden heart has already been received by a player."
         }
         return msg
     }

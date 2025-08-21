@@ -99,10 +99,15 @@ class CrownedListener(private val plugin: JavaPlugin) {
 
     fun getProgress(playerId: UUID): String { // this seems easy to understand
         val victims = kills.computeIfAbsent(playerId) { mutableListOf() }
-        val total = 5
+        val total = 15
         val percent = (100 * total / victims.size).coerceAtMost(100)
 
-        return "§${Bukkit.getPlayer(playerId)} has killed §e$kills §7players out of $total. §f($percent%)"
+        val msg = "§${Bukkit.getPlayer(playerId)} has killed §e$kills §7players out of $total. §f($percent%)"
+
+        if (received) {
+            return "$msg §cThe Crowned heart has already been received by a player."
+        }
+        return msg
     }
 
     fun setGlobalReceived(received: Boolean) {

@@ -6,6 +6,7 @@ import site.thatkid.soulBound.items.hearts.*
 import site.thatkid.soulBound.managers.*
 import site.thatkid.soulBound.managers.hearts.kill.*
 import site.thatkid.soulBound.managers.hearts.mine.*
+import site.thatkid.soulBound.managers.hearts.mobKill.*
 
 object HeartRegistry {
 
@@ -37,6 +38,9 @@ object HeartRegistry {
     lateinit var crownedListener: CrownedListener
     lateinit var strengthListener: StrengthListener
     lateinit var hasteListener: HasteListener
+    lateinit var fireListener: FireListener
+    lateinit var witherListener: WitherListener
+    //lateinit var wardenListener: WardenListener
     lateinit var trustManager: TrustStorageManager
 
     fun enableAll() {
@@ -50,30 +54,50 @@ object HeartRegistry {
         if (!this::hasteListener.isInitialized) {
             hasteListener = HasteListener(plugin)
         }
+        if (!this::fireListener.isInitialized) {
+            fireListener = FireListener(plugin)
+        }
+        if (!this::witherListener.isInitialized) {
+            witherListener = WitherListener(plugin)
+        }
 
         // just for crowned and strength, they are linked
         crownedListener.strengthListener = strengthListener
         strengthListener.crownedListener = crownedListener
+        // just for wither and fire, they are linked
+        fireListener.witherListener = witherListener
+        witherListener.fireListener = fireListener
 
         // enable the listeners
         crownedListener.enable()
         strengthListener.enable()
         hasteListener.enable()
+        fireListener.enable()
+        witherListener.enable()
     }
 
 
     fun disableAll() {
         if (this::crownedListener.isInitialized) crownedListener.disable()
         if (this::strengthListener.isInitialized) strengthListener.disable()
+        if (this::hasteListener.isInitialized) hasteListener.disable()
+        if (this::fireListener.isInitialized) fireListener.disable()
+        if (this::witherListener.isInitialized) witherListener.disable()
     }
 
     fun saveAll() {
         if (this::crownedListener.isInitialized) crownedListener.save()
         if (this::strengthListener.isInitialized) strengthListener.save()
+        if (this::hasteListener.isInitialized) hasteListener.save()
+        if (this::fireListener.isInitialized) fireListener.save()
+        if (this::witherListener.isInitialized) witherListener.save()
     }
 
     fun loadAll() {
         if (this::crownedListener.isInitialized) crownedListener.load()
         if (this::strengthListener.isInitialized) strengthListener.load()
+        if (this::hasteListener.isInitialized) hasteListener.load()
+        if (this::fireListener.isInitialized) fireListener.load()
+        if (this::witherListener.isInitialized) witherListener.load()
     }
 }
