@@ -1,6 +1,7 @@
 package site.thatkid.soulBound.items.hearts
 
 import com.comphenix.protocol.wrappers.EnumWrappers
+import net.axay.kspigot.extensions.bukkit.isFeetInWater
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -69,7 +70,7 @@ object Aquatic: Heart() {
         cooldowns[player.uniqueId] = now
         player.sendMessage(Component.text("§bYou feel a surge of aquatic energy!"))
 
-        if (player.isInWater) {
+        if (player.isInWaterOrRain || player.isInWater || player.isFeetInWater) {
             player.addPotionEffect(PotionEffect(PotionEffectType.STRENGTH, 5 * 20, 2, false, false))
         }
     }
