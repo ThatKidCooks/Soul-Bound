@@ -17,4 +17,4 @@ libraries:
 authors: [ ThatKidCooks, kernelpanicdreams ]
 website: thatkid.site
 
-debug: true
+debug: false

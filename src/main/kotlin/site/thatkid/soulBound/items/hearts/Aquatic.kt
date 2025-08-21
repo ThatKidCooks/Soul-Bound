@@ -19,7 +19,8 @@ import java.util.UUID
 object Aquatic: Heart() {
     private val plugin: JavaPlugin = JavaPlugin.getProvidingPlugin(Aquatic::class.java) // Get the plugin instance
 
-    override val key: NamespacedKey = NamespacedKey(plugin, "aquatic")
+    override val key: NamespacedKey
+        get() = NamespacedKey(plugin, "aquatic")
 
     private val cooldowns = mutableMapOf<UUID, Long>()
     private val cooldownTime = 100 * 1000L // 20 seconds in milliseconds

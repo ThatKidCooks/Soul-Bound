@@ -19,7 +19,8 @@ import site.thatkid.soulBound.items.Heart
 import java.util.UUID
 
 object Frozen : Heart(), Listener {
-    private val plugin: JavaPlugin = JavaPlugin.getProvidingPlugin(Frozen::class.java)
+    private val plugin: JavaPlugin
+        get() = JavaPlugin.getProvidingPlugin(Frozen::class.java)
 
     private val cooldowns = mutableMapOf<UUID, Long>()
     private var remaining: Long = 0L

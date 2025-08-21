@@ -20,16 +20,10 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("net.axay:kspigot:1.21.0")
-    implementation("org.java-websocket:Java-WebSocket:1.6.0") // for discord bot integration
+    implementation("org.java-websocket:Java-WebSocket:1.6.0") // Discord bot integration
 
     // ← Use 5.3.0 (published) instead of 5.4.0
     compileOnly("com.comphenix.protocol:ProtocolLib:5.3.0")
-}
-
-tasks {
-    runServer {
-        minecraftVersion("1.21")
-    }
 }
 
 val targetJavaVersion = 21
@@ -37,15 +31,29 @@ kotlin {
     jvmToolchain(targetJavaVersion)
 }
 
-tasks.build {
-    dependsOn("shadowJar")
-}
+tasks {
+    runServer {
+        minecraftVersion("1.21")
+    }
 
-tasks.processResources {
-    val props = mapOf("version" to version)
-    inputs.properties(props)
-    filteringCharset = "UTF-8"
-    filesMatching("plugin.yml") {
-        expand(props)
+    shadowJar {
+        archiveClassifier.set("") // replaces default "-all" so Paper loads it normally
+        mergeServiceFiles()       // merge META-INF/services if needed
+
+        // Relocate WebSocket classes to avoid conflicts with other plugins
+        relocate("org.java_websocket", "site.thatkid.soulBound.libs.java_websocket")
+    }
+
+    build {
+        dependsOn(shadowJar)
+    }
+
+    processResources {
+        val props = mapOf("version" to version)
+        inputs.properties(props)
+        filteringCharset = "UTF-8"
+        filesMatching("plugin.yml") {
+            expand(props)
+        }
     }
 }

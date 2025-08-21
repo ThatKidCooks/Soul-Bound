@@ -29,7 +29,8 @@ import kotlin.math.sin
 
 object Fire : Heart() {
 
-    private val plugin: JavaPlugin = JavaPlugin.getProvidingPlugin(Fire::class.java)
+    private val plugin: JavaPlugin
+        get() = JavaPlugin.getProvidingPlugin(Fire::class.java)
 
     private val cooldowns = mutableMapOf<UUID, Long>()
     private var remaining: Long = 0L

@@ -21,9 +21,11 @@ import java.util.*
 object Crowned : Heart() {
 
     private var remaining: Long = 0L
-    private val plugin: JavaPlugin = JavaPlugin.getProvidingPlugin(Crowned::class.java)
+    private val plugin: JavaPlugin
+        get() = JavaPlugin.getProvidingPlugin(Crowned::class.java)
 
-    override val key = NamespacedKey(plugin, "crowned")
+    override val key: NamespacedKey
+        get() = NamespacedKey(plugin, "crowned")
     private val cooldowns = mutableMapOf<UUID, Long>()
     private var cooldownTime = 40 * 1000L // 40 seconds in milliseconds
 

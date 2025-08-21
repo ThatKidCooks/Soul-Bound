@@ -12,12 +12,14 @@ import site.thatkid.soulBound.HeartRegistry
 import java.io.File
 import java.util.UUID
 
-class StrengthListener(private val plugin: JavaPlugin, private val crownedListener: CrownedListener) {
+class StrengthListener(private val plugin: JavaPlugin) {
 
     private data class SaveData(
-        val kills: MutableMap<UUID, MutableList<UUID>>,
-        val received: Boolean
+        val kills: MutableMap<UUID, MutableList<UUID>> = mutableMapOf(),
+        val received: Boolean = false
     )
+
+    lateinit var crownedListener: CrownedListener
 
     private val file = File(plugin.dataFolder, "strength.json")
 
@@ -38,12 +40,12 @@ class StrengthListener(private val plugin: JavaPlugin, private val crownedListen
 
         if (victims.size >= 10) {
             if (!received) {
-                // Give the player a Crowned Heart item
+                // Give the player a Strength Heart item
                 val strengthHeart = HeartRegistry.hearts["strength"]?.createItem()
                 if (strengthHeart != null) {
                     killer.inventory.addItem(strengthHeart)
                     broadcast("The Strength Heart has been awarded to ${killer.name} for killing 10 Players First!")
-                    received = true // no one else can receive the Crowned Heart after this
+                    received = true // no one else can receive the Strength Heart after this
                     save() // save the state after giving the heart
                     crownedListener.kills.clear() // needs to get 15 kills after getting the strength heart.
                 }
@@ -65,20 +67,29 @@ class StrengthListener(private val plugin: JavaPlugin, private val crownedListen
 
     fun load() {
         if (!file.exists()) return
-
-        val json = file.readText() // read the JSON from the file
-        val saveData = gson.fromJson(json, SaveData::class.java) // convert the JSON to SaveData object
-        kills = saveData.kills.toMutableMap() // set the kills map
-        received = saveData.received // set the received status
-        plugin.logger.info("Strength data loaded from ${file.absolutePath}") // log the load
+        try {
+            val json = file.readText()
+            val saveData = gson.fromJson(json, SaveData::class.java) // convert the saved JSON to SaveData object
+            kills = saveData.kills.toMutableMap() // set the kills map
+            received = saveData.received // set the received state
+            plugin.logger.info("Strength data loaded from ${file.absolutePath}") // log the load
+        } catch (ex: Exception) {
+            plugin.logger.warning("Failed to load strength.json: ${ex.message}")
+            kills = mutableMapOf()
+            received = false
+        }
     }
 
     fun save() {
-        val saveData = SaveData(kills, received) // set the data to save
-        val json = gson.toJson(saveData) // convert the data to JSON
-        if (!file.exists()) file.createNewFile() // create the file if it doesn't exist
-        file.writeText(json) // write the JSON to the file
-        plugin.logger.info("Strength data saved to ${file.absolutePath}") // log the save
+        try {
+            val saveData = SaveData(kills, received) // create a SaveData object with current state
+            val json = gson.toJson(saveData) // convert the SaveData object to JSON
+            file.parentFile?.mkdirs() // ensure the directory exists
+            file.writeText(json) // write the JSON to the file
+            plugin.logger.info("Strength data saved to ${file.absolutePath}") // log the save
+        } catch (ex: Exception) {
+            plugin.logger.warning("Failed to save strength.json: ${ex.message}")
+        }
     }
 
     fun getProgress(playerId: UUID): String {

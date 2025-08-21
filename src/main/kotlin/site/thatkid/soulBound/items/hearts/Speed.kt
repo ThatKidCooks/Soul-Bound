@@ -14,10 +14,11 @@ import java.util.UUID
 
 object Speed : Heart() {
 
-    private val plugin: JavaPlugin = JavaPlugin.getProvidingPlugin(Speed::class.java) // Get the plugin instance
+    private val plugin: JavaPlugin
+        get() = JavaPlugin.getProvidingPlugin(Speed::class.java) // Get the plugin instance
 
     private val cooldowns = mutableMapOf<UUID, Long>() // Cooldown map to track when players used their special ability
-    private var cooldownTime = 30 * 1000L // 30 seconds in milliseconds
+    private var cooldownTime = 100 * 1000L // 30 seconds in milliseconds
     private var remaining: Long = 0L // Remaining cooldown time
 
     override val key: NamespacedKey

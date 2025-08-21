@@ -26,7 +26,8 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 object Golem: Heart() {
-    private val plugin: JavaPlugin = JavaPlugin.getProvidingPlugin(Golem::class.java)
+    private val plugin: JavaPlugin
+        get() = JavaPlugin.getProvidingPlugin(Golem::class.java)
 
     override val key: NamespacedKey = NamespacedKey(plugin, "golem")
 

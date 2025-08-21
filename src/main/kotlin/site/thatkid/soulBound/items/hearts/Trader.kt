@@ -15,8 +15,10 @@ import java.util.*
 
 object Trader : Heart() {
 
-    private val plugin = JavaPlugin.getProvidingPlugin(Trader::class.java)
-    override val key = NamespacedKey(plugin, "trader")
+    private val plugin: JavaPlugin
+        get() = JavaPlugin.getProvidingPlugin(Trader::class.java)
+    override val key
+        get() = NamespacedKey(plugin, "trader")
 
     private val cooldowns = mutableMapOf<UUID, Long>()
     private const val COOLDOWN = 150 * 1000L

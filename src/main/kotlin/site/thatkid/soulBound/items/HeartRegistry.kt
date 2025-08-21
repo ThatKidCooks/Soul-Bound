@@ -10,32 +10,50 @@ import javax.net.ssl.TrustManager
 
 object HeartRegistry {
 
-    private val plugin: JavaPlugin = JavaPlugin.getProvidingPlugin(HeartRegistry::class.java)
+    private lateinit var plugin: JavaPlugin
 
-    val hearts: Map<String, Heart> = mapOf(
-        "crowned" to Crowned,
-        "warden" to Warden,
-        "trader" to Trader,
-        "ghastly" to Ghastly,
-        "haste" to Haste,
-        "strength" to Strength,
-        "aquatic" to Aquatic,
-        "golem" to Golem,
-        "wise" to Wise,
-        "fire" to Fire,
-        "wither" to Wither,
-        "frozen" to Frozen,
-        "speed" to Speed
-    )
+    lateinit var hearts: Map<String, Heart>
+        private set
+
+    fun init(plugin: JavaPlugin) {
+        this.plugin = plugin
+
+        hearts = mapOf(
+            "crowned" to Crowned,
+            "warden" to Warden,
+            "trader" to Trader,
+            "ghastly" to Ghastly,
+            "haste" to Haste,
+            "strength" to Strength,
+            "aquatic" to Aquatic,
+            "golem" to Golem,
+            "wise" to Wise,
+            "fire" to Fire,
+            "wither" to Wither,
+            "frozen" to Frozen,
+            "speed" to Speed
+        )
+    }
 
     lateinit var crownedListener: CrownedListener
     lateinit var strengthListener: StrengthListener
     lateinit var trustManager: TrustStorageManager
 
     fun enableAll() {
-        if (!this::crownedListener.isInitialized) crownedListener = CrownedListener(plugin, strengthListener)
+        // Initialize the listeners if they are not already initialized
+        if (!this::crownedListener.isInitialized) {
+            crownedListener = CrownedListener(plugin)
+        }
+        if (!this::strengthListener.isInitialized) {
+            strengthListener = StrengthListener(plugin)
+        }
+
+        // just for crowned and strength, they are linked
+        crownedListener.strengthListener = strengthListener
+        strengthListener.crownedListener = crownedListener
+
+        // enable the listeners
         crownedListener.enable()
-        if (!this::strengthListener.isInitialized) strengthListener = StrengthListener(plugin, crownedListener)
         strengthListener.enable()
     }
 

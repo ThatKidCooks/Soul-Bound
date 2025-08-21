@@ -12,12 +12,15 @@ import site.thatkid.soulBound.HeartRegistry
 import java.io.File
 import java.util.UUID
 
-class CrownedListener(private val plugin: JavaPlugin, private val strengthListener: StrengthListener) {
+class CrownedListener(private val plugin: JavaPlugin) {
 
-    private data class SaveData(
-        val kills: MutableMap<UUID, MutableList<UUID>>,
-        val received: Boolean
+    private data class SaveData (
+        val kills: MutableMap<UUID, MutableList<UUID>> = mutableMapOf(),
+        val received: Boolean = false
     )
+
+    lateinit var strengthListener: StrengthListener
+
 
     private val file = File(plugin.dataFolder, "crowned.json")
 
@@ -68,23 +71,32 @@ class CrownedListener(private val plugin: JavaPlugin, private val strengthListen
 
     fun load() {
         if (!file.exists()) return
-
-        val json = file.readText() // read the JSON from the file
-        val saveData = gson.fromJson(json, SaveData::class.java) // convert the JSON to SaveData object
-        kills = saveData.kills.toMutableMap() // set the kills map
-        received = saveData.received // set the received status
-        plugin.logger.info("Crowned data loaded from ${file.absolutePath}") // log the load
+        try {
+            val json = file.readText()
+            val saveData = gson.fromJson(json, SaveData::class.java) // convert the saved JSON to SaveData object
+            kills = saveData.kills.toMutableMap() // set the kills map
+            received = saveData.received // set the received state
+            plugin.logger.info("Crowned data loaded from ${file.absolutePath}") // log the load
+        } catch (ex: Exception) {
+            plugin.logger.warning("Failed to load crowned.json: ${ex.message}")
+            kills = mutableMapOf()
+            received = false
+        }
     }
 
     fun save() {
-        val saveData = SaveData(kills, received) // set the data to save
-        val json = gson.toJson(saveData) // convert the data to JSON
-        if (!file.exists()) file.createNewFile() // create the file if it doesn't exist
-        file.writeText(json) // write the JSON to the file
-        plugin.logger.info("Crowned data saved to ${file.absolutePath}") // log the save
+        try {
+            val saveData = SaveData(kills, received) // create a SaveData object with current state
+            val json = gson.toJson(saveData) // convert the SaveData object to JSON
+            file.parentFile?.mkdirs() // ensure the directory exists
+            file.writeText(json) // write the JSON to the file
+            plugin.logger.info("Crowned data saved to ${file.absolutePath}") // log the save
+        } catch (ex: Exception) {
+            plugin.logger.warning("Failed to save crowned.json: ${ex.message}")
+        }
     }
 
-    fun getProgress(playerId: UUID): String {
+    fun getProgress(playerId: UUID): String { // this seems easy to understand
         val victims = kills.computeIfAbsent(playerId) { mutableListOf() }
         val total = 5
         val percent = 100 * total / victims.size

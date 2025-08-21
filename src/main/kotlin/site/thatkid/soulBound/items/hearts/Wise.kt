@@ -18,7 +18,8 @@ import site.thatkid.soulBound.items.Heart
 import java.util.UUID
 
 object Wise : Heart() {
-    private val plugin : JavaPlugin = JavaPlugin.getProvidingPlugin(Wise::class.java)
+    private val plugin : JavaPlugin
+        get() = JavaPlugin.getProvidingPlugin(Wise::class.java)
 
     private val cooldowns = mutableMapOf<UUID, Long>()
     private val cooldownAmount = 180 * 1000L // 3 minutes in milliseconds

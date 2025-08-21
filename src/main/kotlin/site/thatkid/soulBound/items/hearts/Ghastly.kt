@@ -22,12 +22,13 @@ import java.util.*
 import com.comphenix.protocol.wrappers.Pair as ProtoPair
 
 object Ghastly : Heart() {
-    private val plugin: JavaPlugin = JavaPlugin.getProvidingPlugin(Ghastly::class.java)
+    private val plugin: JavaPlugin
+        get() = JavaPlugin.getProvidingPlugin(Ghastly::class.java)
     override val key = NamespacedKey(plugin, "ghastly")
 
     private val cooldowns = mutableMapOf<UUID, Long>()
     private val specialActive = mutableSetOf<UUID>()
-    private val cooldownTime = 45_000L
+    private val cooldownTime = 120_000L
 
     // Safe ProtocolLib manager - lazy initialization with null safety
     private val protocolManager: ProtocolManager? by lazy {

@@ -14,7 +14,8 @@ import java.util.*
 
 object Haste : Heart() {
 
-    private val plugin: JavaPlugin = JavaPlugin.getProvidingPlugin(Haste::class.java)
+    private val plugin: JavaPlugin
+        get() = JavaPlugin.getProvidingPlugin(Haste::class.java)
 
     override val key = NamespacedKey(plugin, "haste")
 

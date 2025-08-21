@@ -22,9 +22,12 @@ import java.util.*
 object Warden : Heart() {
 
     var remaining: Long = 0L
-    private val plugin: JavaPlugin = JavaPlugin.getProvidingPlugin(Warden::class.java)
+    private val plugin: JavaPlugin
+        get() = JavaPlugin.getProvidingPlugin(Warden::class.java)
 
-    override val key = NamespacedKey(plugin, "warden")
+    override val key: NamespacedKey
+        get() = NamespacedKey(plugin, "warden")
+
     private val cooldowns = mutableMapOf<UUID, Long>()
     val cooldownTime = 150 * 1000L // 2.5 minutes in milliseconds
     val obliteratedBy = mutableMapOf<UUID, UUID>()

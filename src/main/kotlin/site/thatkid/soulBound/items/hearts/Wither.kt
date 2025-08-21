@@ -22,7 +22,8 @@ import site.thatkid.soulBound.items.Heart
 import java.util.UUID
 
 object Wither : Heart(), Listener {
-    private val plugin: JavaPlugin = JavaPlugin.getProvidingPlugin(Wither::class.java)
+    private val plugin: JavaPlugin
+        get() = JavaPlugin.getProvidingPlugin(Wither::class.java)
 
     private val cooldowns = mutableMapOf<UUID, Long>()
     val cooldownTime = 120 * 1000L // 2 minutes in milliseconds

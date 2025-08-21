@@ -14,8 +14,10 @@ import java.util.*
 
 object Strength : Heart() {
 
-    private val plugin = JavaPlugin.getProvidingPlugin(Strength::class.java)
-    override val key = NamespacedKey(plugin, "strength")
+    private val plugin: JavaPlugin
+        get() = JavaPlugin.getProvidingPlugin(Strength::class.java)
+    override val key: NamespacedKey
+        get() = NamespacedKey(plugin, "strength")
 
     private val cooldowns = mutableMapOf<UUID, Long>()
     private const val COOLDOWN = 60_000L
