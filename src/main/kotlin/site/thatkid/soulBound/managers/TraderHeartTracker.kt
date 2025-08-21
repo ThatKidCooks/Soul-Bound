@@ -71,7 +71,6 @@ class TraderHeartTracker(private val plugin: JavaPlugin) : Listener {
      * 
      * Should be called from the plugin's onDisable() method.
      */
-     */
     fun disable() {
         save()
         plugin.logger.info("[TraderHeartTracker] Disabled – saved ${professionTrades.size} players' progress")
