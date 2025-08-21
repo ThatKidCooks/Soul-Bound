@@ -1,4 +1,4 @@
-package site.thatkid.soulBound.json
+package site.thatkid.soulBound.hearts
 
 import java.util.UUID
 

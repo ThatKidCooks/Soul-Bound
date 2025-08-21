@@ -76,7 +76,7 @@ object Frozen : Heart(), Listener {
         location.world.getNearbyEntities(location, radius, radius, radius).forEach { entity ->
             if (entity is Player && entity != player) {
                 if (TrustRegistry.getTrusted(player.uniqueId).contains(entity.uniqueId)) return@forEach
-                entity.freezeTicks = 2000 // 10-second freeze
+                entity.freezeTicks = 200 // 10-second freeze
                 entity.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS, 200, 1, true, false, false))
                 player.sendMessage("§aYou froze ${entity.name} for 10 seconds!")
             }
