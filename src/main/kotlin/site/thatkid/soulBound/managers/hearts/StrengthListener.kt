@@ -86,6 +86,10 @@ class StrengthListener(private val plugin: JavaPlugin, private val crownedListen
         val total = 15
         val percent = 100 * total / victims.size
 
+        if (received) {
+            return "§cThe Strength heart has already been received."
+        }
+
         return "§${Bukkit.getPlayer(playerId)} has killed §e$kills §7players out of $total. §f($percent%)"
     }
 

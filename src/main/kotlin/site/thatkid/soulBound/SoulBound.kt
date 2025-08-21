@@ -2,11 +2,9 @@ package site.thatkid.soulBound
 
 import HeartEatListener
 import net.axay.kspigot.main.KSpigot
-import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.commands.CommandManager
 import site.thatkid.soulBound.commands.SoulboundTabCompleter
 import site.thatkid.soulBound.gui.player.DisplayHearts
-import site.thatkid.soulBound.items.hearts.Crowned
 import site.thatkid.soulBound.hearts.ActiveHearts
 import site.thatkid.soulBound.hearts.ConstantAbilitiesCaller
 import site.thatkid.soulBound.items.hearts.Frozen
@@ -26,20 +24,22 @@ class SoulBound : KSpigot() {
     private val displayHearts: DisplayHearts = DisplayHearts(this)
     private val autoSave: AutoSave = AutoSave(this)
 
+    private val heartRegistry = HeartRegistry
+
     override fun startup() {
         val BOTIP: String = config.getString("botip") ?: "localhost"
         val BOTPORT: Int = config.getInt("botport")
 
-        HeartRegistry.enableAll()
+        heartRegistry.enableAll()
 
         bridge = DiscordBot(this, "https://$BOTIP:$BOTPORT")
         bridge.connect()
 
-        HeartRegistry.trustManager = TrustStorageManager
+        heartRegistry.trustManager = TrustStorageManager
 
         val soulBoundDir = File(dataFolder, "Soul Bound").apply { mkdirs() }
 
-        HeartRegistry.trustManager.load(File(dataFolder, "trusted_players.json"))
+        heartRegistry.trustManager.load(File(dataFolder, "trusted_players.json"))
 
         // Command Handlers
         getCommand("soulbound")?.setExecutor(CommandManager(this, this))
@@ -66,16 +66,16 @@ class SoulBound : KSpigot() {
 
     override fun shutdown() {
         save()
-        HeartRegistry.disableAll()
+        heartRegistry.disableAll()
     }
 
     fun save() {
         val soulBoundDir = File(dataFolder, "Soul Bound").apply { mkdirs() }
         ActiveHearts.saveToFile(File(soulBoundDir, "hearts.json"))
 
-        HeartRegistry.saveAll()
+        heartRegistry.saveAll()
 
-        HeartRegistry.trustManager.save(File(dataFolder, "trusted_players.json"))
+        heartRegistry.trustManager.save(File(dataFolder, "trusted_players.json"))
         displayHearts.cleanup()
     }
 }
