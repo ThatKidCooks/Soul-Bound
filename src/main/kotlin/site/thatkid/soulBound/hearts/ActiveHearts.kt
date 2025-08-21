@@ -6,7 +6,7 @@ import org.bukkit.Bukkit
 import site.thatkid.soulBound.items.hearts.*
 import org.bukkit.entity.Player
 import site.thatkid.soulBound.items.Heart
-import site.thatkid.soulBound.json.SavedHeartData
+import site.thatkid.soulBound.hearts.SavedHeartData
 import java.io.File
 import java.util.*
 
