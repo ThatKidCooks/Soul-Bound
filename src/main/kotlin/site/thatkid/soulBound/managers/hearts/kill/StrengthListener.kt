@@ -49,6 +49,8 @@ class StrengthListener(private val plugin: JavaPlugin) {
                     save() // save the state after giving the heart
                     crownedListener.kills.clear() // needs to get 15 kills after getting the strength heart.
                 }
+            } else {
+                killer.sendMessage("§7Someone already received the Strength Heart.") // feedback message
             }
         } else {
             killer.sendMessage("§7You need ${5 - victims.size} more kills to receive the Strength Heart.") // feedback message

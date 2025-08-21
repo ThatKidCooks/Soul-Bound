@@ -52,6 +52,8 @@ class CrownedListener(private val plugin: JavaPlugin) {
                     received = true // no one else can receive the Crowned Heart after this
                     save() // save the state after giving the heart
                 }
+            } else {
+                killer.sendMessage("§7Someone already received the Crowned Heart.") // feedback message
             }
         } else {
             killer.sendMessage("§7You need ${5 - victims.size} more kills to receive the Crowned Heart.") // feedback message
