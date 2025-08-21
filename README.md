@@ -8,7 +8,7 @@ How this plugin works is there is unique hearts that you can get from different 
 
 - 📜 **Aquatic**: Swim 5000 blocks in the water
 
-- 📜 **Crowned**: 5 Kills
+- 📜 **Crowned**: 15 Kills
 
 - 📜 **Ghastly**: Get the returned to sender advancement & Uneasy Alliance achievement
 
