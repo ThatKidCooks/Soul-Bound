@@ -27,13 +27,12 @@ class SoulBound : KSpigot() {
     private val autoSave: AutoSave = AutoSave(this)
 
     override fun startup() {
-
-        val BOTIP: String = "localhost"
-        val BOTPORT: Int = 8080
+        val BOTIP: String = config.getString("botip") ?: "localhost"
+        val BOTPORT: Int = config.getInt("botport")
 
         HeartRegistry.enableAll()
 
-        bridge = DiscordBot(this, "ws://$BOTIP:$BOTPORT")
+        bridge = DiscordBot(this, "https://$BOTIP:$BOTPORT")
         bridge.connect()
 
         HeartRegistry.trustManager = TrustStorageManager

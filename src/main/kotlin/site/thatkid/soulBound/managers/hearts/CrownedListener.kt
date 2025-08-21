@@ -6,7 +6,7 @@ import net.axay.kspigot.event.register
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.broadcast
 import org.bukkit.Bukkit
-import org.bukkit.event.entity.EntityDeathEvent
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.HeartRegistry
 import java.io.File
@@ -15,36 +15,40 @@ import java.util.UUID
 class CrownedListener(private val plugin: JavaPlugin) {
 
     private data class SaveData(
-        val kills: MutableMap<UUID, Int>,
+        val kills: MutableMap<UUID, MutableList<UUID>>,
         val received: Boolean
     )
 
     private val file = File(plugin.dataFolder, "crowned.json")
 
-    private var kills: MutableMap<UUID, Int> = mutableMapOf()
+    private var kills: MutableMap<UUID, MutableList<UUID>> = mutableMapOf()
     private var received: Boolean = false
 
     val gson = GsonBuilder().setPrettyPrinting().create()
 
-    private val listener = listen<EntityDeathEvent> {
-        val player = it.entity.killer ?: return@listen
-        val playerId = player.uniqueId
-        val currentKills = kills.getOrDefault(playerId, 0) + 1
-        kills[playerId] = currentKills
+    private val listener = listen<PlayerDeathEvent> {
+        val victim = it.entity
+        val victimId = victim.uniqueId
+        val killer = it.entity.killer ?: return@listen
+        val killerId = killer.uniqueId
+        val victims = kills.computeIfAbsent(killerId) { mutableListOf() }
+        if (!victims.contains(victimId)) {
+            victims.add(victimId)
+        }
 
-        if (currentKills >= 5) {
+        if (victims.size >= 5) {
             if (!received) {
                 // Give the player a Crowned Heart item
                 val crownedHeart = HeartRegistry.hearts["crowned"]?.createItem()
                 if (crownedHeart != null) {
-                    player.inventory.addItem(crownedHeart)
-                    broadcast("The Crowned Heart has been awarded to ${player.name} for killing 5 Players First!")
+                    killer.inventory.addItem(crownedHeart)
+                    broadcast("The Crowned Heart has been awarded to ${killer.name} for killing 5 Players First!")
                     received = true // no one else can receive the Crowned Heart after this
                     save() // save the state after giving the heart
                 }
             }
         } else {
-            player.sendMessage("§7You need ${5 - currentKills} more kills to receive a Crowned Heart.") // feedback message
+            killer.sendMessage("§7You need ${5 - victims.size} more kills to receive a Crowned Heart.") // feedback message
         }
     }
 
@@ -77,16 +81,11 @@ class CrownedListener(private val plugin: JavaPlugin) {
     }
 
     fun getProgress(playerId: UUID): String {
-        val kills = kills.getOrDefault(playerId, 0)
+        val victims = kills.computeIfAbsent(playerId) { mutableListOf() }
         val total = 5
-        val percent = 100 * total / kills
+        val percent = 100 * total / victims.size
 
         return "§${Bukkit.getPlayer(playerId)} has killed §e$kills §7players out of $total. §f($percent%)"
-    }
-
-    fun setProgress(playerId: UUID, kills: Int): String {
-        this.kills[playerId] = kills // set the kills for the player
-        return getProgress(playerId) // return the progress message
     }
 
     fun setGlobalReceived(received: Boolean) {

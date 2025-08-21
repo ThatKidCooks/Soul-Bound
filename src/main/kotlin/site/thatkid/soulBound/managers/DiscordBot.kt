@@ -1,14 +1,10 @@
 package site.thatkid.soulBound.managers
 
-import net.axay.kspigot.commands.command
-import net.axay.kspigot.runnables.task
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
-import java.net.HttpURLConnection
 import java.net.URI
-import java.net.URL
 
 
 class DiscordBot(private val plugin: JavaPlugin, private val uri: String) {
