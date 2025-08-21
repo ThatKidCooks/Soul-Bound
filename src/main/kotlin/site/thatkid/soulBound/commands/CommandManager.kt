@@ -205,15 +205,21 @@ class CommandManager(private var plugin: JavaPlugin, private var soulBound: Soul
                 if (sender.isOp) {
                     soulBound.save()
                     sender.sendMessage("§aHearts saved successfully.")
+                    return true
                 } else {
                     sender.sendMessage("§cYou don’t have permission to save hearts.")
+                    return true
                 }
+            }
+
+            "" -> {
+
             }
 
             else -> {
                 sender.sendMessage("§cUnknown subcommand. Use /soulbound help for help.")
             }
         }
-        return true
+        return false
     }
 }

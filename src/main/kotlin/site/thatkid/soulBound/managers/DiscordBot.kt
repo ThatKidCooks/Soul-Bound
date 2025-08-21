@@ -1,5 +1,6 @@
 package site.thatkid.soulBound.managers
 
+import net.axay.kspigot.commands.command
 import net.axay.kspigot.runnables.task
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
@@ -10,14 +11,14 @@ import java.net.URI
 import java.net.URL
 
 
-class DiscordBot(private val plugin: JavaPlugin, private val uri: URI) {
+class DiscordBot(private val plugin: JavaPlugin, private val uri: String) {
 
     private var client: WebSocketClient? = null
     private val pluginRef = plugin
 
     init {
         try {
-            client = object : WebSocketClient(uri) {
+            client = object : WebSocketClient(URI(uri)) {
                 override fun onOpen(handshakedata: ServerHandshake?) {
                     plugin.logger.info("[DiscordBridge] Connected to Discord bot WebSocket!")
                 }
@@ -26,7 +27,7 @@ class DiscordBot(private val plugin: JavaPlugin, private val uri: URI) {
                     message?.let {
                         plugin.logger.info("[DiscordBridge] Received message: $it") // log to see if it works
 
-                        // add stuff we recieve later
+                        plugin.server.dispatchCommand(plugin.server.consoleSender, message) // command - add some checks later.
                     }
                 }
 
@@ -40,6 +41,22 @@ class DiscordBot(private val plugin: JavaPlugin, private val uri: URI) {
             }
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    fun connect() {
+        client?.connect()
+    }
+
+    fun disconnect() {
+        if (client?.isOpen == true) {
+            client?.close()
+        }
+    }
+
+    fun sendMessage(msg: String) {
+        if (client?.isOpen == true) {
+            client?.send(msg)
         }
     }
 }

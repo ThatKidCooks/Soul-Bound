@@ -21,13 +21,20 @@ import java.io.File
 
 class SoulBound : KSpigot() {
 
+    private lateinit var bridge: DiscordBot
 
     private val displayHearts: DisplayHearts = DisplayHearts(this)
     private val autoSave: AutoSave = AutoSave(this)
 
     override fun startup() {
 
+        val BOTIP: String = "localhost"
+        val BOTPORT: Int = 8080
+
         HeartRegistry.enableAll()
+
+        bridge = DiscordBot(this, "ws://$BOTIP:$BOTPORT")
+        bridge.connect()
 
         HeartRegistry.trustManager = TrustStorageManager
 
@@ -37,7 +44,7 @@ class SoulBound : KSpigot() {
 
         // Command Handlers
         getCommand("soulbound")?.setExecutor(CommandManager(this, this))
-        getCommand("soulbound")?.setTabCompleter(SoulboundTabCompleter())
+        getCommand("soulbound")?.tabCompleter = SoulboundTabCompleter()
 
         displayHearts.runTaskTimer(this, 0, 3L)
         autoSave.runTaskTimer(this, 0, 600L) // Save every 30 seconds
@@ -53,6 +60,9 @@ class SoulBound : KSpigot() {
         server.pluginManager.registerEvents(Frozen, this) // Needs @EventHandler annotation in Frozen object
 
         ActiveHearts.loadFromFile(File(soulBoundDir, "hearts.json"))
+
+        saveResource("config.yml", false)
+        saveDefaultConfig()
     }
 
     override fun shutdown() {
