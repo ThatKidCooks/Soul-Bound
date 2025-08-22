@@ -65,6 +65,7 @@ object Frozen : Heart(), Listener {
             if (TrustRegistry.getTrusted(attacker.uniqueId).contains(entity.uniqueId)) return
             plugin.logger.info("Frozen Heart hit event: Inflicting Frozen on ${entity.name} by ${attacker.name}")
             entity.freezeTicks = 1000 // 5-second freeze - hoping this works
+            entity.addPotionEffect(PotionEffect(PotionEffectType.SLOWNESS, 200, 1, true, false, false))
             attacker.sendMessage("§aYou froze ${entity.name}!")
         }
     }
