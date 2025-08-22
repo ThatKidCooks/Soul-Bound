@@ -6,6 +6,7 @@ import site.thatkid.soulBound.managers.hearts.statistic.listeners.*
 class Caller(statistic: Statistic) {
 
     lateinit var aquaticListener: AquaticListener
+    lateinit var golemListener: GolemListener
 
     val task = task(
         sync = true,
@@ -15,6 +16,7 @@ class Caller(statistic: Statistic) {
         safe = true,
     ) {
         aquaticListener.check(statistic)
+        golemListener.check(statistic)
         // add more statistic based checks later
     }
 }

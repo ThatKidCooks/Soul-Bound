@@ -2,15 +2,14 @@ package site.thatkid.soulBound.managers.hearts.statistic.listeners
 
 import com.google.gson.GsonBuilder
 import net.kyori.adventure.text.Component
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.HeartRegistry
-import site.thatkid.soulBound.managers.hearts.mine.FrozenListener
-import site.thatkid.soulBound.managers.hearts.mine.FrozenListener.SaveData
 import site.thatkid.soulBound.managers.hearts.statistic.Statistic
 import java.io.File
 
-class AquaticListener {
+class GolemListener {
 
     data class SaveData(
         val received: Boolean = false
@@ -19,22 +18,22 @@ class AquaticListener {
     var received = false
 
     private val gson = GsonBuilder().setPrettyPrinting().create()
-    private val file = File(plugin.dataFolder, "aquatic.json")
+    private val file = File(plugin.dataFolder, "golem.json")
 
     val plugin: JavaPlugin
         get() = JavaPlugin.getProvidingPlugin(AquaticListener::class.java)
 
     fun check(statistic: Statistic) {
         for (player in plugin.server.onlinePlayers) {
-            val stat = statistic.getStatistic(player, org.bukkit.Statistic.SWIM_ONE_CM)
+            val stat = statistic.getStatistic(player, org.bukkit.Statistic.KILL_ENTITY, EntityType.IRON_GOLEM)
 
-            if (stat >= (5000 * 100)) {
+            if (stat >= 100) {
                 if (!received) {
-                    val aquaticHeart = HeartRegistry.hearts["aquatic"]?.createItem()
-                    if (aquaticHeart == null) return
+                    val golemHeart = HeartRegistry.hearts["golem"]?.createItem()
+                    if (golemHeart == null) return
 
-                    player.inventory.addItem(aquaticHeart)
-                    plugin.server.broadcast(Component.text("&c$player was the First Person to swim 5000 blocks and has obtained the Aquatic Heart"))
+                    player.inventory.addItem(golemHeart)
+                    plugin.server.broadcast(Component.text("&c$player was the First Person to kill 100 naturally spawned Iron Golems and has earned the Golem Heart"))
                     received = true
                 }
             }
@@ -47,9 +46,9 @@ class AquaticListener {
             val json = gson.toJson(saveData) // convert the SaveData object to JSON
             file.parentFile?.mkdirs() // ensure the directory exists
             file.writeText(json) // write the JSON to the file
-            plugin.logger.info("Aquatic data saved to ${file.absolutePath}") // log the save
+            plugin.logger.info("Golem data saved to ${file.absolutePath}") // log the save
         } catch (ex: Exception) {
-            plugin.logger.warning("Failed to save aquatic.json: ${ex.message}")
+            plugin.logger.warning("Failed to save golem.json: ${ex.message}")
         }
     }
 
@@ -59,9 +58,9 @@ class AquaticListener {
             val json = file.readText()
             val saveData = gson.fromJson(json, SaveData::class.java) // convert the saved JSON to SaveData object
             received = saveData.received // set the received state
-            plugin.logger.info("Aquatic data loaded from ${file.absolutePath}") // log the load
+            plugin.logger.info("Golem data loaded from ${file.absolutePath}") // log the load
         } catch (ex: Exception) {
-            plugin.logger.warning("Failed to load aquatic.json: ${ex.message}")
+            plugin.logger.warning("Failed to load golem.json: ${ex.message}")
             received = false
         }
     }

@@ -1,16 +1,18 @@
 package site.thatkid.soulBound.managers.hearts.statistic
 
 import org.bukkit.Statistic
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 
 class Statistic {
 
-    fun getStatistic(player: Player, statistic: Statistic): Int {
-        val stat = player.getStatistic(statistic) // how did I not know player.getStatistic wasn't a thing lol
+    fun getStatistic(player: Player, statistic: Statistic, entity: EntityType = EntityType.FALLING_BLOCK): Int {
 
-        // maybe need to add something if it returns not in blocks - I think it will return in centimetres as it returns Int
+        if (entity == EntityType.FALLING_BLOCK) {
+            return player.getStatistic(statistic) // for statistics that don't require an entity type, like distance walked
+        }
 
-        return stat
+        return player.getStatistic(statistic, entity) // how did I not know player.getStatistic wasn't a thing lol
     }
 
     fun setStatistic(player: Player, statistic: Statistic, value: Int) {
