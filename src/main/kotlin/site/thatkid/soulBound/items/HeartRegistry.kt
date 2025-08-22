@@ -7,6 +7,9 @@ import site.thatkid.soulBound.managers.*
 import site.thatkid.soulBound.managers.hearts.kill.*
 import site.thatkid.soulBound.managers.hearts.mine.*
 import site.thatkid.soulBound.managers.hearts.mobKill.*
+import site.thatkid.soulBound.managers.hearts.statistic.Caller
+import site.thatkid.soulBound.managers.hearts.statistic.Statistic
+import site.thatkid.soulBound.managers.hearts.statistic.listeners.AquaticListener
 
 object HeartRegistry {
 
@@ -40,7 +43,13 @@ object HeartRegistry {
     lateinit var hasteListener: HasteListener
     lateinit var fireListener: FireListener
     lateinit var witherListener: WitherListener
-    //lateinit var wardenListener: WardenListener
+    lateinit var wardenListener: WardenListener
+    lateinit var frozenListener: FrozenListener
+    lateinit var aquaticListener: AquaticListener
+
+    lateinit var statistic: Statistic
+    lateinit var caller: Caller
+
     lateinit var trustManager: TrustStorageManager
 
     fun enableAll() {
@@ -60,6 +69,15 @@ object HeartRegistry {
         if (!this::witherListener.isInitialized) {
             witherListener = WitherListener(plugin)
         }
+        if (!this::frozenListener.isInitialized) {
+            frozenListener = FrozenListener(plugin)
+        }
+        if (!this::wardenListener.isInitialized) {
+            wardenListener = WardenListener(plugin)
+        }
+        if (!this::aquaticListener.isInitialized) {
+            aquaticListener = AquaticListener()
+        }
 
         // just for crowned and strength, they are linked
         crownedListener.strengthListener = strengthListener
@@ -74,6 +92,17 @@ object HeartRegistry {
         hasteListener.enable()
         fireListener.enable()
         witherListener.enable()
+        frozenListener.enable()
+        wardenListener.enable()
+
+        // set statistic and caller
+        statistic = Statistic()
+        caller = Caller(statistic)
+
+        // do statistic based hearts
+        caller.aquaticListener = aquaticListener
+
+        caller.task
     }
 
 

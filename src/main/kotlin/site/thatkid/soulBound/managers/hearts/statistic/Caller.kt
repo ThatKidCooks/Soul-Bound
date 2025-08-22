@@ -1,9 +1,12 @@
 package site.thatkid.soulBound.managers.hearts.statistic
 
 import net.axay.kspigot.runnables.task
-import site.thatkid.soulBound.managers.hearts.statistic.listeners.AquaticListener
+import site.thatkid.soulBound.managers.hearts.statistic.listeners.*
 
-class Caller(aquaticListener: AquaticListener, statistic: Statistic) {
+class Caller(statistic: Statistic) {
+
+    lateinit var aquaticListener: AquaticListener
+
     val task = task(
         sync = true,
         delay = 25,
