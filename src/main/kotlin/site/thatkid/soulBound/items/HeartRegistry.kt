@@ -5,7 +5,23 @@ import site.thatkid.soulBound.items.hearts.*
 import site.thatkid.soulBound.managers.*
 import javax.net.ssl.TrustManager
 
+/**
+ * Central registry for all heart types and their associated trackers.
+ * 
+ * This singleton object manages:
+ * - A map of all available heart types by name
+ * - References to all heart progress trackers
+ * - Bulk operations for saving/disabling all trackers
+ * 
+ * The registry allows easy lookup of hearts by string names (used in commands)
+ * and provides centralized management of the tracking systems that monitor
+ * player progress toward obtaining each heart.
+ */
 object HeartRegistry {
+    /** 
+     * Map of heart names to Heart objects for easy command-line lookup.
+     * Used by commands like '/soulbound add <player> <heart_name>'
+     */
     val hearts: Map<String, Heart> = mapOf(
         "crowned" to Crowned,
         "warden" to Warden,
@@ -22,6 +38,7 @@ object HeartRegistry {
         "speed" to Speed
     )
 
+    // Heart progress trackers - these monitor quest requirements for each heart type
     lateinit var crownedTracker: HeartTracker
     lateinit var wardenTracker: WardenHeartTracker
     lateinit var traderTracker: TraderHeartTracker
@@ -34,9 +51,16 @@ object HeartRegistry {
     lateinit var fireTracker: FireHeartTracker
     lateinit var witherTracker: WitherHeartTracker
     lateinit var frozenTracker: FrozenHeartTracker
+    
+    /** Trust system manager for handling player relationships */
     lateinit var trustManager: TrustStorageManager
 
-
+    /**
+     * Disables all heart trackers, stopping event monitoring and cleaning up resources.
+     * 
+     * Called during plugin shutdown to ensure all trackers are properly closed
+     * and no event handlers remain registered.
+     */
     fun disableAll() {
         if (this::crownedTracker.isInitialized) crownedTracker.disable()
         if (this::wardenTracker.isInitialized) wardenTracker.disable()
@@ -51,6 +75,12 @@ object HeartRegistry {
         if (this::frozenTracker.isInitialized) frozenTracker.disable()
     }
 
+    /**
+     * Saves all heart tracker data to disk.
+     * 
+     * Ensures all player progress is persisted across server restarts.
+     * Called during plugin shutdown and periodic auto-saves.
+     */
     fun saveAll() {
         if (this::crownedTracker.isInitialized) crownedTracker.save()
         if (this::wardenTracker.isInitialized) wardenTracker.save()

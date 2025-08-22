@@ -13,31 +13,63 @@ import site.thatkid.soulBound.items.hearts.Trader
 import java.io.File
 import java.util.*
 
+/**
+ * Tracks progress toward obtaining the Trader Heart.
+ * 
+ * **Requirements for Trader Heart:**
+ * - Trade with all 13 different villager professions
+ * - Must be the first player to complete this requirement
+ * 
+ * **Villager Professions Required:**
+ * Armorer, Butcher, Cartographer, Cleric, Farmer, Fisherman, Fletcher,
+ * Leatherworker, Librarian, Mason, Shepherd, Toolsmith, Weaponsmith
+ * 
+ * This tracker monitors villager trading GUI interactions and tracks
+ * which professions each player has traded with. When a player completes
+ * all 13 professions and no one else has the heart yet, they are awarded
+ * the Trader Heart.
+ * 
+ * **Data Persistence:**
+ * - Player progress saved to trader_heart.json
+ * - Tracks both individual progress and the global winner
+ * 
+ * @param plugin Reference to the main plugin instance for file management
+ */
 class TraderHeartTracker(private val plugin: JavaPlugin) : Listener {
 
+    /** JSON serializer for saving/loading data */
     private val gson = GsonBuilder().setPrettyPrinting().create()
+    
+    /** File where trader progress is saved */
     private val dataFile = File(plugin.dataFolder, "trader_heart.json")
 
-    // Tracks which professions each player has traded with
+    /** Tracks which professions each player has traded with */
     private val professionTrades: MutableMap<UUID, MutableSet<Villager.Profession>> = mutableMapOf()
-    // The single player who has received the heart (null if no one has it yet)
+    
+    /** The single player who has received the heart (null if no one has it yet) */
     private var heartWinner: UUID? = null
 
     /**
-     * Call from your plugin's onEnable()
+     * Initializes the tracker and starts monitoring trading events.
+     * 
+     * Should be called from the plugin's onEnable() method.
      */
     fun enable() {
-        // ensure plugin folder exists
+        // Ensure plugin folder exists
         plugin.dataFolder.mkdirs()
-        // load saved data
+        
+        // Load any existing saved data
         load()
-        // register this listener
+        
+        // Register this class as an event listener
         plugin.server.pluginManager.registerEvents(this, plugin)
         plugin.logger.info("[TraderHeartTracker] Enabled – listening for villager trade clicks")
     }
 
     /**
-     * Call from your plugin's onDisable()
+     * Saves all data and performs cleanup.
+     * 
+     * Should be called from the plugin's onDisable() method.
      */
     fun disable() {
         save()
