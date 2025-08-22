@@ -72,7 +72,7 @@ object Aquatic: Heart() {
         player.sendMessage(Component.text("§bYou feel a surge of aquatic energy!"))
 
         if (player.isInWaterOrRain || player.isInWater || player.isFeetInWater) {
-            player.addPotionEffect(PotionEffect(PotionEffectType.STRENGTH, 5 * 20, 2, false, false))
+            player.addPotionEffect(PotionEffect(PotionEffectType.STRENGTH, 10 * 20, 2, false, false))
         }
     }
 
