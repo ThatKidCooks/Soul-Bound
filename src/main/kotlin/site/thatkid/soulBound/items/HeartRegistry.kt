@@ -49,6 +49,7 @@ object HeartRegistry {
     lateinit var aquaticListener: AquaticListener
     lateinit var golemListener: GolemListener
     lateinit var ghastlyListener: GhastlyListener
+    lateinit var speedListener: SpeedListener
 
     lateinit var statistic: Statistic
     lateinit var caller: Caller
@@ -87,6 +88,9 @@ object HeartRegistry {
         if (!this::ghastlyListener.isInitialized) {
             ghastlyListener = GhastlyListener(plugin)
         }
+        if (!this::speedListener.isInitialized) {
+            speedListener = SpeedListener()
+        }
 
         // just for crowned and strength, they are linked
         crownedListener.strengthListener = strengthListener
@@ -103,7 +107,7 @@ object HeartRegistry {
         witherListener.enable()
         frozenListener.enable()
         wardenListener.enable()
-        ghastlyListener
+        ghastlyListener.enable()
 
         // set statistic and caller
         statistic = Statistic()
@@ -112,6 +116,7 @@ object HeartRegistry {
         // do statistic based hearts
         caller.aquaticListener = aquaticListener
         caller.golemListener = golemListener
+        caller.speedListener = speedListener
 
         caller.task
     }
@@ -127,7 +132,10 @@ object HeartRegistry {
         if (this::frozenListener.isInitialized) frozenListener.disable()
         if (this::aquaticListener.isInitialized) aquaticListener.save()
         if (this::golemListener.isInitialized) golemListener.save()
-        if (this::ghastlyListener.isInitialized) ghastlyListener.onDisable()
+        if (this::ghastlyListener.isInitialized) ghastlyListener.disable()
+
+        // disable caller task
+        caller.task?.cancel()
     }
 
     fun saveAll() {
@@ -141,6 +149,7 @@ object HeartRegistry {
         if (this::aquaticListener.isInitialized) aquaticListener.save()
         if (this::golemListener.isInitialized) golemListener.save()
         if (this::ghastlyListener.isInitialized) ghastlyListener.save()
+        if (this::speedListener.isInitialized) speedListener.save()
     }
 
     fun loadAll() {
@@ -154,5 +163,6 @@ object HeartRegistry {
         if (this::aquaticListener.isInitialized) aquaticListener.load()
         if (this::golemListener.isInitialized) golemListener.load()
         if (this::ghastlyListener.isInitialized) ghastlyListener.load()
+        if (this::speedListener.isInitialized) speedListener.load()
     }
 }

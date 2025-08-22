@@ -54,12 +54,12 @@ class GhastlyListener(private val plugin: JavaPlugin) {
         }
     }
 
-    fun onEnable() {
+    fun enable() {
         listener.register()
         load()
     }
 
-    fun onDisable() {
+    fun disable() {
         listener.unregister()
         save()
     }

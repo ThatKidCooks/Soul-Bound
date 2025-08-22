@@ -7,6 +7,7 @@ class Caller(statistic: Statistic) {
 
     lateinit var aquaticListener: AquaticListener
     lateinit var golemListener: GolemListener
+    lateinit var speedListener: SpeedListener
 
     val task = task(
         sync = true,
@@ -17,6 +18,7 @@ class Caller(statistic: Statistic) {
     ) {
         aquaticListener.check(statistic)
         golemListener.check(statistic)
+        speedListener.check(statistic)
         // add more statistic based checks later
     }
 }

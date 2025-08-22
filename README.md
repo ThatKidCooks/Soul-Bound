@@ -30,6 +30,8 @@ How this plugin works is there is unique hearts that you can get from different 
 
 - 📜 **Frozen**: Mine 10000 Ice
 
+- 📜 **Sprint**: Sprint 10000 blocks
+
                                                             
 **Remember wherever you use this only 1 of each heart can be obtained so time is of the essence!**
 
