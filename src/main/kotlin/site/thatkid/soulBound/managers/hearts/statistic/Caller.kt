@@ -1,5 +1,6 @@
 package site.thatkid.soulBound.managers.hearts.statistic
 
+import kotlinx.coroutines.NonCancellable.cancel
 import net.axay.kspigot.runnables.task
 import site.thatkid.soulBound.managers.hearts.statistic.listeners.*
 
@@ -20,5 +21,9 @@ class Caller(statistic: Statistic) {
         golemListener.check(statistic)
         speedListener.check(statistic)
         // add more statistic based checks later
+
+        if (aquaticListener.received && golemListener.received && speedListener.received) {
+            cancel() // stop the task if there is no reason to run it.
+        }
     }
 }

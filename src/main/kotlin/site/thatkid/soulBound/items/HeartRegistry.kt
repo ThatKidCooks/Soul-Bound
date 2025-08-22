@@ -8,6 +8,7 @@ import site.thatkid.soulBound.managers.hearts.advancments.GhastlyListener
 import site.thatkid.soulBound.managers.hearts.kill.*
 import site.thatkid.soulBound.managers.hearts.mine.*
 import site.thatkid.soulBound.managers.hearts.mobKill.*
+import site.thatkid.soulBound.managers.hearts.potion.WiseListener
 import site.thatkid.soulBound.managers.hearts.statistic.Caller
 import site.thatkid.soulBound.managers.hearts.statistic.Statistic
 import site.thatkid.soulBound.managers.hearts.statistic.listeners.*
@@ -50,6 +51,7 @@ object HeartRegistry {
     lateinit var golemListener: GolemListener
     lateinit var ghastlyListener: GhastlyListener
     lateinit var speedListener: SpeedListener
+    lateinit var wiseListener: WiseListener
 
     lateinit var statistic: Statistic
     lateinit var caller: Caller
@@ -91,6 +93,9 @@ object HeartRegistry {
         if (!this::speedListener.isInitialized) {
             speedListener = SpeedListener()
         }
+        if (!this::wiseListener.isInitialized) {
+            wiseListener = WiseListener(plugin)
+        }
 
         // just for crowned and strength, they are linked
         crownedListener.strengthListener = strengthListener
@@ -108,6 +113,7 @@ object HeartRegistry {
         frozenListener.enable()
         wardenListener.enable()
         ghastlyListener.enable()
+        wiseListener.enable()
 
         // set statistic and caller
         statistic = Statistic()
@@ -133,6 +139,7 @@ object HeartRegistry {
         if (this::aquaticListener.isInitialized) aquaticListener.save()
         if (this::golemListener.isInitialized) golemListener.save()
         if (this::ghastlyListener.isInitialized) ghastlyListener.disable()
+        if (this::wiseListener.isInitialized) wiseListener.disable()
 
         // disable caller task
         caller.task?.cancel()
@@ -150,6 +157,7 @@ object HeartRegistry {
         if (this::golemListener.isInitialized) golemListener.save()
         if (this::ghastlyListener.isInitialized) ghastlyListener.save()
         if (this::speedListener.isInitialized) speedListener.save()
+        if (this::wiseListener.isInitialized) wiseListener.save()
     }
 
     fun loadAll() {
@@ -164,5 +172,6 @@ object HeartRegistry {
         if (this::golemListener.isInitialized) golemListener.load()
         if (this::ghastlyListener.isInitialized) ghastlyListener.load()
         if (this::speedListener.isInitialized) speedListener.load()
+        if (this::wiseListener.isInitialized) wiseListener.load()
     }
 }
