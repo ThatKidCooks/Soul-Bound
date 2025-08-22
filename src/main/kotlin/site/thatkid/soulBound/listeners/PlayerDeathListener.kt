@@ -1,5 +1,6 @@
 package site.thatkid.soulBound.listeners
 
+import org.bukkit.GameRule
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
@@ -13,6 +14,8 @@ class PlayerDeathListener(private val plugin: JavaPlugin) : Listener {
         val victim = event.entity
 
         val heartsToDrop = ActiveHearts.getHearts(victim.uniqueId).toList()
+
+        if (victim.world.getGameRuleValue(GameRule.KEEP_INVENTORY)?: return) return
 
         for (heart in heartsToDrop) {
             event.drops.add(heart.createItem())

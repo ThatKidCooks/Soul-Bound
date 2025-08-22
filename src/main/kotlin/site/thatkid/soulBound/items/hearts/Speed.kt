@@ -62,7 +62,7 @@ object Speed : Heart() {
         player.velocity = player.location.direction.multiply(3) // Dash forward
 
         player.addPotionEffect(PotionEffect(PotionEffectType.SPEED, 20 * 10, 3, false, false, false)) // Add speed IV
-        player.addPotionEffect(PotionEffect(PotionEffectType.JUMP_BOOST, 20 * 10, 2, false, false, false)) // Add jump boost II
+        player.addPotionEffect(PotionEffect(PotionEffectType.JUMP_BOOST, 20 * 10, 1, false, false, false)) // Add jump boost II
     }
 
     override fun clearCooldown(playerId: UUID) {
