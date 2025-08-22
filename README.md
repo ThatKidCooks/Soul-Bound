@@ -28,6 +28,8 @@ How this plugin works is there is unique hearts that you can get from different 
 
 - 📜 **Wither**: Kill 7 Withers
 
+- 📜 **Frozen**: Mine 10000 Ice
+
                                                             
 **Remember wherever you use this only 1 of each heart can be obtained so time is of the essence!**
 
@@ -45,15 +47,17 @@ How this plugin works is there is unique hearts that you can get from different 
 
 - **⚔️ Trader:** Constant is Hero of the village I and it's special is villager prices is 1 emerald
 
-- **⚔️ Warden:** Special is a sonic boom that deals 7.5 hearts of damage ignoring armour.
+- **⚔️ Warden:** Special is a sonic boom that deals 3.75 hearts of damage ignoring armour.
 
 - **⚔️ Golem:** Constant is permanent Resistance I and it's Special is knocking back all players and getting Resistance II and Strength II for seconds.
 
-- **⚔️ Wise:** Constant is permanent Luck I, and it's Special is making all untrusted players glow around you as well as giving you Regeneration II and Absorption II for 10 sec.
+- **⚔️ Wise:** Constant is permanent Health Boost (2 hearts), and it's Special is making all untrusted players glow around you as well as giving you Regeneration II and Absorption II for 10 sec.
 
 - **⚔️ Fire:** Constant is Fire Resistance, and it's Special is a Fire Tornado and all trusted players get fire resistance.
 
 - **⚔️ Wither:** Constant is a 10% chance to apply Wither I on hit and it's Special is shooting 5 Wither Skulls.
+
+- **⚔️ Frozen:** Constant is a 10% chance to freeze your opponents on hit and it's Special is freezing all enemies in a 10 block radius.
   
 
 
@@ -75,5 +79,6 @@ How this plugin works is there is unique hearts that you can get from different 
 - **/sb** - Aliases of /soulbound.
 - **/sb cooldown** - Resets the cooldown of all your hearts. (Useful for testing)
 - **/sb add <player> <heart>** - Adds a heart to a player.
+- **/sb remove <player> <hearts>** - Removes a heart from a player.
 
 # Enjoy!
