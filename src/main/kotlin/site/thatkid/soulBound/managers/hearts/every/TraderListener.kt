@@ -6,6 +6,7 @@ import net.axay.kspigot.event.listen
 import net.axay.kspigot.event.register
 import net.axay.kspigot.event.unregister
 import net.kyori.adventure.text.Component
+import org.bukkit.Bukkit
 import org.bukkit.entity.Villager
 import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.HeartRegistry
@@ -92,5 +93,19 @@ class TraderListener(private val plugin: JavaPlugin) {
             plugin.logger.severe("Failed to load TraderListener data: ${e.message}")
             e.printStackTrace()
         }
+    }
+
+    fun getProgress(playerId: UUID): String {
+        val msg = "§${Bukkit.getPlayer(playerId)} has gotten the following ${villagerTraded[playerId]?.size} out of 13 villager professions: \n" +
+                (villagerTraded[playerId]?.joinToString("\n") { "§a- ${it.key}" } ?: "§cNo professions traded yet.")
+
+        if (received) {
+            return "$msg §cThe Trader Heart has already been received by a player."
+        }
+        return msg
+    }
+
+    fun setReceived(received: Boolean) {
+        this.received = received
     }
 }

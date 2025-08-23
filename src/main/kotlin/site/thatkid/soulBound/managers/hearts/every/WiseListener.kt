@@ -23,7 +23,7 @@ class WiseListener(private val plugin: JavaPlugin) {
 
     data class SaveData(
         val brewedPotions: MutableMap<UUID, MutableSet<PotionEffectType>> = mutableMapOf(),
-        val lastBrewer: MutableMap<Location, UUID> = mutableMapOf(),
+        val lastBrewer: MutableMap<String, UUID> = mutableMapOf(),
         val received: Boolean = false
     )
 
@@ -35,6 +35,18 @@ class WiseListener(private val plugin: JavaPlugin) {
     private var received = false
 
     private var lastBrewer: MutableMap<Location, UUID> = mutableMapOf()
+
+    // Helper functions to convert between Location and String because Json cannot serialize Location objects - like why??????
+    private fun locationToString(location: Location): String {
+        return "${location.world?.name}:${location.blockX}:${location.blockY}:${location.blockZ}"
+    }
+
+    private fun stringToLocation(locationString: String): Location? {
+        val parts = locationString.split(":")
+        if (parts.size != 4) return null
+        val world = Bukkit.getWorld(parts[0]) ?: return null
+        return Location(world, parts[1].toDouble(), parts[2].toDouble(), parts[3].toDouble())
+    }
 
     val inventoryClick = listen<InventoryClickEvent> { event ->
         val stand = event.inventory.holder as? BrewingStand ?: return@listen
@@ -50,6 +62,7 @@ class WiseListener(private val plugin: JavaPlugin) {
             if (item == null) continue
             val meta = item.itemMeta
             if (meta is PotionMeta) {
+                println("1")
                 val effect = meta.basePotionType?.effectType ?: continue
 
                 println("Potion brewed by ${brewer.name}: $effect") // debug
@@ -88,7 +101,9 @@ class WiseListener(private val plugin: JavaPlugin) {
 
     fun save() {
         try {
-            val saveData = SaveData(brewedPotions, lastBrewer, received)
+            // Convert Location keys to String keys for serialization
+            val lastBrewerStrings = lastBrewer.mapKeys { locationToString(it.key) }.toMutableMap()
+            val saveData = SaveData(brewedPotions, lastBrewerStrings, received)
             val json = gson.toJson(saveData)
             file.parentFile.mkdirs()
             file.writeText(json)
@@ -105,7 +120,10 @@ class WiseListener(private val plugin: JavaPlugin) {
             val json = file.readText()
             val saveData = gson.fromJson(json, SaveData::class.java)
             brewedPotions = saveData.brewedPotions
-            lastBrewer = saveData.lastBrewer
+            // Convert String keys back to Location keys
+            lastBrewer = saveData.lastBrewer.mapNotNull { (locationString, uuid) ->
+                stringToLocation(locationString)?.let { it to uuid }
+            }.toMap().toMutableMap()
             received = saveData.received
             plugin.logger.info("WiseListener data loaded from ${file.absolutePath}")
         } catch (e: IOException) {
