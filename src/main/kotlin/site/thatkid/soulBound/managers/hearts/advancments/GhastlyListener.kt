@@ -50,8 +50,6 @@ class GhastlyListener(private val plugin: JavaPlugin) {
             } else {
                 player.sendMessage("§cA player has already received the Ghastly Heart.")
             }
-        } else {
-           player.sendMessage("You need to complete both advancements: Return to Sender and Uneasy Alliance to unlock the Ghastly Heart.")
         }
     }
 
