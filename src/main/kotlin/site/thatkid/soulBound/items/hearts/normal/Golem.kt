@@ -1,4 +1,4 @@
-package site.thatkid.soulBound.items.hearts
+package site.thatkid.soulBound.items.hearts.normal
 
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
@@ -16,14 +16,9 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import org.bukkit.util.Vector
-import site.thatkid.soulBound.HeartRegistry
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.Heart
-import site.thatkid.soulBound.items.hearts.Crowned.smashedBy
 import java.util.UUID
-import kotlin.math.cos
-import kotlin.math.sin
 
 object Golem: Heart() {
     private val plugin: JavaPlugin

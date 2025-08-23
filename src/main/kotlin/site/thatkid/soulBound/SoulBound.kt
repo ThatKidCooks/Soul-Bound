@@ -7,13 +7,13 @@ import site.thatkid.soulBound.commands.SoulboundTabCompleter
 import site.thatkid.soulBound.gui.player.DisplayHearts
 import site.thatkid.soulBound.hearts.ActiveHearts
 import site.thatkid.soulBound.hearts.ConstantAbilitiesCaller
-import site.thatkid.soulBound.items.hearts.Frozen
+import site.thatkid.soulBound.items.hearts.normal.Frozen
 import site.thatkid.soulBound.listeners.GolemKBTracker
 import site.thatkid.soulBound.listeners.PlayerDeathListener
 import site.thatkid.soulBound.listeners.PlayerQuitListener
 import site.thatkid.soulBound.listeners.msgs.DeathMessageListener
 import site.thatkid.soulBound.managers.*
-import site.thatkid.soulBound.items.hearts.Wither
+import site.thatkid.soulBound.items.hearts.normal.Wither
 import site.thatkid.soulBound.listeners.AutoSave
 import java.io.File
 

@@ -7,7 +7,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.util.Vector
-import site.thatkid.soulBound.items.hearts.Golem
+import site.thatkid.soulBound.items.hearts.normal.Golem
 
 class GolemKBTracker(val plugin: JavaPlugin): Listener {
 

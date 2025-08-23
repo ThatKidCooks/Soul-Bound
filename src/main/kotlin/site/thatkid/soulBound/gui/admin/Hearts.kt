@@ -5,19 +5,19 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
-import site.thatkid.soulBound.items.hearts.Aquatic
-import site.thatkid.soulBound.items.hearts.Crowned
-import site.thatkid.soulBound.items.hearts.Fire
-import site.thatkid.soulBound.items.hearts.Frozen
-import site.thatkid.soulBound.items.hearts.Ghastly
-import site.thatkid.soulBound.items.hearts.Golem
-import site.thatkid.soulBound.items.hearts.Haste
-import site.thatkid.soulBound.items.hearts.Speed
-import site.thatkid.soulBound.items.hearts.Strength
-import site.thatkid.soulBound.items.hearts.Trader
-import site.thatkid.soulBound.items.hearts.Warden
-import site.thatkid.soulBound.items.hearts.Wise
-import site.thatkid.soulBound.items.hearts.Wither
+import site.thatkid.soulBound.items.hearts.normal.Aquatic
+import site.thatkid.soulBound.items.hearts.normal.Crowned
+import site.thatkid.soulBound.items.hearts.normal.Fire
+import site.thatkid.soulBound.items.hearts.normal.Frozen
+import site.thatkid.soulBound.items.hearts.normal.Ghastly
+import site.thatkid.soulBound.items.hearts.normal.Golem
+import site.thatkid.soulBound.items.hearts.normal.Haste
+import site.thatkid.soulBound.items.hearts.normal.Speed
+import site.thatkid.soulBound.items.hearts.normal.Strength
+import site.thatkid.soulBound.items.hearts.normal.Trader
+import site.thatkid.soulBound.items.hearts.normal.Warden
+import site.thatkid.soulBound.items.hearts.normal.Wise
+import site.thatkid.soulBound.items.hearts.normal.Wither
 
 class Hearts(private val plugin: JavaPlugin): Listener {
     private val TITLE = Component.text("§bHearts")

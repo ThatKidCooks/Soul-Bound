@@ -35,6 +35,7 @@ class GolemListener {
                     player.inventory.addItem(golemHeart)
                     plugin.server.broadcast(Component.text("&c$player was the First Person to kill 100 naturally spawned Iron Golems and has earned the Golem Heart"))
                     received = true
+                    save()
                 }
             }
         }

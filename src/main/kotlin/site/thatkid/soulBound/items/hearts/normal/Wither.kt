@@ -1,21 +1,19 @@
-package site.thatkid.soulBound.items.hearts
+package site.thatkid.soulBound.items.hearts.normal
 
 import net.kyori.adventure.text.Component
-import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
+import org.bukkit.entity.WitherSkull
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import site.thatkid.soulBound.HeartRegistry
 import site.thatkid.soulBound.hearts.ActiveHearts
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.Heart
@@ -86,7 +84,7 @@ object Wither : Heart(), Listener {
 
         for (i in 0 until numHeads) {
             val location = player.location.clone().add(0.0, 1.0, 0.0)
-            val head = player.world.spawnEntity(location, EntityType.WITHER_SKULL) as org.bukkit.entity.WitherSkull
+            val head = player.world.spawnEntity(location, EntityType.WITHER_SKULL) as WitherSkull
             head.isCharged = true
             head.yield = 0f
             head.shooter = player

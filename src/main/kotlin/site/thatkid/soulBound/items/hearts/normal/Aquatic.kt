@@ -1,6 +1,5 @@
-package site.thatkid.soulBound.items.hearts
+package site.thatkid.soulBound.items.hearts.normal
 
-import com.comphenix.protocol.wrappers.EnumWrappers
 import net.axay.kspigot.extensions.bukkit.isFeetInWater
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
@@ -12,7 +11,6 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import site.thatkid.soulBound.HeartRegistry
 import site.thatkid.soulBound.items.Heart
 import java.util.UUID
 

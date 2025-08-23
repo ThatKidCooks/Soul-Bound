@@ -36,6 +36,7 @@ class SpeedListener {
                     player.inventory.addItem(speedHeart)
                     plugin.server.broadcast(Component.text("&c$player was the First Person to sprint 10000 blockss and has obtained the Speed Heart"))
                     received = true
+                    save()
                 }
             }
         }

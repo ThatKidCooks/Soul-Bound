@@ -36,6 +36,7 @@ class AquaticListener {
                     player.inventory.addItem(aquaticHeart)
                     plugin.server.broadcast(Component.text("&c$player was the First Person to swim 5000 blocks and has obtained the Aquatic Heart"))
                     received = true
+                    save()
                 }
             }
         }

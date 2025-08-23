@@ -1,9 +1,10 @@
-package site.thatkid.soulBound.managers.hearts.potion
+package site.thatkid.soulBound.managers.hearts.every
 
 import com.google.gson.GsonBuilder
 import net.axay.kspigot.event.listen
 import net.axay.kspigot.event.register
 import net.axay.kspigot.event.unregister
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.block.BrewingStand
@@ -13,6 +14,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffectType
+import site.thatkid.soulBound.HeartRegistry
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -61,8 +63,14 @@ class WiseListener(private val plugin: JavaPlugin) {
             .filterNotNull().toSet()
 
         if (!received && brewedPotions.values.any { it.containsAll(craftablePotionEffects) }) {
+            plugin.server.broadcast(Component.text("§a${brewer.name} has brewed all possible potion effects and received the Wise Heart!"))
+            val wiseHeart = HeartRegistry.hearts["wise"]?.createItem()
+
+            if (wiseHeart != null) {
+                brewer.inventory.addItem(wiseHeart)
+            }
             received = true
-            plugin.logger.info("All craftable potions have been brewed! Setting received to true.")
+            save()
         }
     }
 

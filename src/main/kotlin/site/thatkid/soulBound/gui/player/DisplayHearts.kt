@@ -1,14 +1,25 @@
 package site.thatkid.soulBound.gui.player
 
 import org.bukkit.Bukkit
-import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
 import site.thatkid.soulBound.hearts.ActiveHearts
-import site.thatkid.soulBound.items.hearts.*
+import site.thatkid.soulBound.items.hearts.normal.Aquatic
+import site.thatkid.soulBound.items.hearts.normal.Crowned
+import site.thatkid.soulBound.items.hearts.normal.Fire
+import site.thatkid.soulBound.items.hearts.normal.Frozen
+import site.thatkid.soulBound.items.hearts.normal.Ghastly
+import site.thatkid.soulBound.items.hearts.normal.Golem
+import site.thatkid.soulBound.items.hearts.normal.Haste
+import site.thatkid.soulBound.items.hearts.normal.Speed
+import site.thatkid.soulBound.items.hearts.normal.Strength
+import site.thatkid.soulBound.items.hearts.normal.Trader
+import site.thatkid.soulBound.items.hearts.normal.Warden
+import site.thatkid.soulBound.items.hearts.normal.Wise
+import site.thatkid.soulBound.items.hearts.normal.Wither
 import java.util.*
 
 class DisplayHearts(private val plugin: JavaPlugin) : BukkitRunnable() {

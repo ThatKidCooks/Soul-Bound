@@ -2,13 +2,26 @@ package site.thatkid.soulBound
 
 import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.items.Heart
-import site.thatkid.soulBound.items.hearts.*
+import site.thatkid.soulBound.items.hearts.normal.Aquatic
+import site.thatkid.soulBound.items.hearts.normal.Crowned
+import site.thatkid.soulBound.items.hearts.normal.Fire
+import site.thatkid.soulBound.items.hearts.normal.Frozen
+import site.thatkid.soulBound.items.hearts.normal.Ghastly
+import site.thatkid.soulBound.items.hearts.normal.Golem
+import site.thatkid.soulBound.items.hearts.normal.Haste
+import site.thatkid.soulBound.items.hearts.normal.Speed
+import site.thatkid.soulBound.items.hearts.normal.Strength
+import site.thatkid.soulBound.items.hearts.normal.Trader
+import site.thatkid.soulBound.items.hearts.normal.Warden
+import site.thatkid.soulBound.items.hearts.normal.Wise
+import site.thatkid.soulBound.items.hearts.normal.Wither
 import site.thatkid.soulBound.managers.*
 import site.thatkid.soulBound.managers.hearts.advancments.GhastlyListener
+import site.thatkid.soulBound.managers.hearts.every.TraderListener
 import site.thatkid.soulBound.managers.hearts.kill.*
 import site.thatkid.soulBound.managers.hearts.mine.*
 import site.thatkid.soulBound.managers.hearts.mobKill.*
-import site.thatkid.soulBound.managers.hearts.potion.WiseListener
+import site.thatkid.soulBound.managers.hearts.every.WiseListener
 import site.thatkid.soulBound.managers.hearts.statistic.Caller
 import site.thatkid.soulBound.managers.hearts.statistic.Statistic
 import site.thatkid.soulBound.managers.hearts.statistic.listeners.*
@@ -52,6 +65,7 @@ object HeartRegistry {
     lateinit var ghastlyListener: GhastlyListener
     lateinit var speedListener: SpeedListener
     lateinit var wiseListener: WiseListener
+    lateinit var traderListener: TraderListener
 
     lateinit var statistic: Statistic
     lateinit var caller: Caller
@@ -96,6 +110,9 @@ object HeartRegistry {
         if (!this::wiseListener.isInitialized) {
             wiseListener = WiseListener(plugin)
         }
+        if (!this::traderListener.isInitialized) {
+            traderListener = TraderListener(plugin)
+        }
 
         // just for crowned and strength, they are linked
         crownedListener.strengthListener = strengthListener
@@ -114,6 +131,7 @@ object HeartRegistry {
         wardenListener.enable()
         ghastlyListener.enable()
         wiseListener.enable()
+        traderListener.enable()
 
         // set statistic and caller
         statistic = Statistic()
@@ -140,6 +158,7 @@ object HeartRegistry {
         if (this::golemListener.isInitialized) golemListener.save()
         if (this::ghastlyListener.isInitialized) ghastlyListener.disable()
         if (this::wiseListener.isInitialized) wiseListener.disable()
+        if (this::traderListener.isInitialized) traderListener.disable()
 
         // disable caller task
         caller.task?.cancel()
@@ -158,6 +177,7 @@ object HeartRegistry {
         if (this::ghastlyListener.isInitialized) ghastlyListener.save()
         if (this::speedListener.isInitialized) speedListener.save()
         if (this::wiseListener.isInitialized) wiseListener.save()
+        if (this::traderListener.isInitialized) traderListener.save()
     }
 
     fun loadAll() {
@@ -173,5 +193,6 @@ object HeartRegistry {
         if (this::ghastlyListener.isInitialized) ghastlyListener.load()
         if (this::speedListener.isInitialized) speedListener.load()
         if (this::wiseListener.isInitialized) wiseListener.load()
+        if (this::traderListener.isInitialized) traderListener.load()
     }
 }

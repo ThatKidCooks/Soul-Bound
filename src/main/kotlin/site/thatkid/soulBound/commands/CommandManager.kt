@@ -10,7 +10,19 @@ import site.thatkid.soulBound.SoulBound
 import site.thatkid.soulBound.gui.admin.Hearts
 import site.thatkid.soulBound.hearts.ActiveHearts
 import site.thatkid.soulBound.hearts.TrustRegistry
-import site.thatkid.soulBound.items.hearts.*
+import site.thatkid.soulBound.items.hearts.normal.Aquatic
+import site.thatkid.soulBound.items.hearts.normal.Crowned
+import site.thatkid.soulBound.items.hearts.normal.Fire
+import site.thatkid.soulBound.items.hearts.normal.Frozen
+import site.thatkid.soulBound.items.hearts.normal.Ghastly
+import site.thatkid.soulBound.items.hearts.normal.Golem
+import site.thatkid.soulBound.items.hearts.normal.Haste
+import site.thatkid.soulBound.items.hearts.normal.Speed
+import site.thatkid.soulBound.items.hearts.normal.Strength
+import site.thatkid.soulBound.items.hearts.normal.Trader
+import site.thatkid.soulBound.items.hearts.normal.Warden
+import site.thatkid.soulBound.items.hearts.normal.Wise
+import site.thatkid.soulBound.items.hearts.normal.Wither
 
 class CommandManager(private var plugin: JavaPlugin, private var soulBound: SoulBound): CommandExecutor {
     override fun onCommand(

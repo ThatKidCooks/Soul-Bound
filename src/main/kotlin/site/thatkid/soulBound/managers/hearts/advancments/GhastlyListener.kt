@@ -45,6 +45,7 @@ class GhastlyListener(private val plugin: JavaPlugin) {
                     player.inventory.addItem(ghastlyHeart)
                     player.server.broadcast(Component.text("§aThe Ghastly Heart has been awarded to ${player.name} for completing the required advancements!"))
                     received = true // no one else can receive the Ghastly Heart after this
+                    save()
                 }
             } else {
                 player.sendMessage("§cA player has already received the Ghastly Heart.")

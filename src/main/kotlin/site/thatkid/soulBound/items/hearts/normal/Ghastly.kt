@@ -1,4 +1,4 @@
-package site.thatkid.soulBound.items.hearts
+package site.thatkid.soulBound.items.hearts.normal
 
 import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.ProtocolManager
@@ -16,7 +16,6 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
-import site.thatkid.soulBound.HeartRegistry
 import site.thatkid.soulBound.items.Heart
 import java.util.*
 import com.comphenix.protocol.wrappers.Pair as ProtoPair
