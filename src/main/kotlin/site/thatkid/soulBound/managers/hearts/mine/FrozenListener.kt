@@ -53,7 +53,7 @@ class FrozenListener(private val plugin: JavaPlugin) {
                 player.sendMessage("§7Someone already received the Frozen Heart.") // feedback message
             }
         } else {
-            player.sendMessage("§7You need ${100 - blocksMined[playerId]!!} more blocks to receive the Frozen Heart.") // feedback message
+            player.sendMessage("§7You need ${10000 - blocksMined[playerId]!!} more blocks to receive the Frozen Heart.") // feedback message
         }
     }
 

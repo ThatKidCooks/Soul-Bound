@@ -18,6 +18,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.Heart
+import site.thatkid.soulBound.items.ItemCreator
 import java.util.UUID
 
 object Golem: Heart() {
@@ -31,23 +32,7 @@ object Golem: Heart() {
     private val knockbackImmune = mutableMapOf<UUID, Long>()
 
     override fun createItem(): ItemStack {
-        val item = ItemStack(Material.APPLE)
-        val meta = item.itemMeta!!
-        meta.displayName(Component.text("§7Golem Heart"))
-        meta.lore(listOf(
-            Component.text("§7Forged from iron and determination."),
-            Component.text(""),
-            Component.text("§f✧ §7Permanent §fResistance I"),
-            Component.text(""),
-            Component.text("§7§lPower — Iron Might"),
-            Component.text("§7Slam the ground, knocking back enemies"),
-            Component.text("§7and gaining §cStrength II §7and §fResistance II §7for §f10s"),
-            Component.text("§7Also grants §fknockback immunity §7for §f10s"),
-            Component.text("§8Cooldown: 90 seconds")
-        ))
-        meta.persistentDataContainer.set(key, PersistentDataType.BYTE, 1)
-        item.itemMeta = meta
-        return item
+        return ItemCreator.itemCreator(6)
     }
 
 

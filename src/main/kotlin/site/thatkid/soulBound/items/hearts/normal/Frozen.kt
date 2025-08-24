@@ -15,6 +15,7 @@ import org.bukkit.potion.PotionEffectType
 import site.thatkid.soulBound.hearts.ActiveHearts
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.Heart
+import site.thatkid.soulBound.items.ItemCreator
 import java.util.UUID
 
 object Frozen : Heart(), Listener {
@@ -29,22 +30,7 @@ object Frozen : Heart(), Listener {
         get() = NamespacedKey(plugin, "frozen")
 
     override fun createItem(): ItemStack {
-        val item = ItemStack(Material.APPLE)
-        val meta = item.itemMeta!!
-        meta.displayName(Component.text("§1Frozen"))
-        meta.lore(listOf(
-            Component.text("§7Born in the Icy Lakes"),
-            Component.text(""),
-            Component.text("§f✧ §7Permanent §7Freeze Resistance §7& §7and a 10% chance to"),
-            Component.text("§7freeze an entity on hit for §f5 seconds"),
-            Component.text(""),
-            Component.text("§3§lPower — Frozen Surge"),
-            Component.text("§cFreeze all nearby entities making it so they can't jump for §f10 seconds"),
-            Component.text("§8Cooldown: 100 seconds")
-        ))
-        meta.persistentDataContainer.set(key, PersistentDataType.BYTE, 1)
-        item.itemMeta = meta
-        return item
+        return ItemCreator.itemCreator(4)
     }
 
     override fun constantEffect(player: Player) {

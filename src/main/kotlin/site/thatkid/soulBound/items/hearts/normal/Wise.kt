@@ -14,6 +14,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.Heart
+import site.thatkid.soulBound.items.ItemCreator
 import java.util.UUID
 
 object Wise : Heart() {
@@ -26,22 +27,7 @@ object Wise : Heart() {
     override val key: NamespacedKey = NamespacedKey(plugin, "wise")
 
     override fun createItem(): ItemStack {
-        val item = ItemStack(Material.APPLE)
-        val meta = item.itemMeta!!
-        meta.displayName(Component.text("§fWise Heart"))
-        meta.lore(listOf(
-            Component.text("§7Wise doesn't mean old."),
-            Component.text(""),
-            Component.text("§f✧ §7Permanent §aHealth Boost"),
-            Component.text(""),
-            Component.text("§6§lPower — Arcane Insight"),
-            Component.text("§7Reveal nearby players with §eGlowing§7,"),
-            Component.text("§7Gain §dRegeneration II §7and §eAbsorption II §7for §f10s"),
-            Component.text("§8Cooldown: 3 minutes")
-        ))
-        meta.persistentDataContainer.set(key, PersistentDataType.BYTE, 1)
-        item.itemMeta = meta
-        return item
+        return ItemCreator.itemCreator(12)
     }
 
     override fun constantEffect(player: Player) {

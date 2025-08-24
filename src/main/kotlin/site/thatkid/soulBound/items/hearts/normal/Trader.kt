@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import site.thatkid.soulBound.items.Heart
+import site.thatkid.soulBound.items.ItemCreator
 import java.util.*
 
 object Trader : Heart() {
@@ -23,22 +24,7 @@ object Trader : Heart() {
     private const val DURATION = 100 * 20L  // 100 seconds in ticks
 
     override fun createItem(): ItemStack {
-        val item = ItemStack(Material.APPLE)
-        val meta = item.itemMeta!!
-        meta.displayName(Component.text("§2Trader Heart"))
-        meta.lore(listOf(
-            Component.text("§7Unlock by earning the"),
-            Component.text("§fHero of the Village §7advancement."),
-            Component.text(""),
-            Component.text("§f✧ §7Permanent §aHero of the Village I"),
-            Component.text(""),
-            Component.text("§2§lPower — Royal Bargain"),
-            Component.text("§7Grants §aHero of the Village 255 §7for §f100s"),
-            Component.text("§8Cooldown: 2m 30s")
-        ))
-        meta.persistentDataContainer.set(key, PersistentDataType.BYTE, 1)
-        item.itemMeta = meta
-        return item
+        return ItemCreator.itemCreator(10)
     }
 
 
