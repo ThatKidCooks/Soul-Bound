@@ -78,7 +78,7 @@ object Wither : Heart(), Listener {
             return
         }
 
-        val direction = player.location.direction
+        val direction = player.location.clone().direction
         val numHeads = 5 // Number of wither heads to shoot - this one is so obvious
         val spacing = 1 // Distance between heads duh - then again that isn't really a duh
 
@@ -88,7 +88,7 @@ object Wither : Heart(), Listener {
             head.isCharged = true
             head.yield = 0f
             head.shooter = player
-            head.velocity = direction.clone().multiply(1.5 + i * spacing)
+            head.velocity = direction.multiply(5 + i * spacing)
         }
 
         cooldowns[player.uniqueId] = System.currentTimeMillis() + cooldownTime
