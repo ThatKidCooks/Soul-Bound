@@ -98,7 +98,7 @@ object Warden : Heart() {
                             continue
                     }
 
-                    val damage = 7.5 // 3.75 hearts
+                    val damage = 10 // 5 hearts
 
                     val newHealth = (entity.health - damage).coerceAtLeast(0.0)
                     entity.health = newHealth
