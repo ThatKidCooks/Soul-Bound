@@ -6,7 +6,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.items.hearts.normal.Aquatic
-import site.thatkid.soulBound.items.hearts.normal.Crowned
+import site.thatkid.soulBound.items.hearts.rare.Crowned
 import site.thatkid.soulBound.items.hearts.normal.Fire
 import site.thatkid.soulBound.items.hearts.normal.Frozen
 import site.thatkid.soulBound.items.hearts.normal.Ghastly
@@ -15,9 +15,9 @@ import site.thatkid.soulBound.items.hearts.normal.Haste
 import site.thatkid.soulBound.items.hearts.normal.Speed
 import site.thatkid.soulBound.items.hearts.normal.Strength
 import site.thatkid.soulBound.items.hearts.normal.Trader
-import site.thatkid.soulBound.items.hearts.normal.Warden
-import site.thatkid.soulBound.items.hearts.normal.Wise
-import site.thatkid.soulBound.items.hearts.normal.Wither
+import site.thatkid.soulBound.items.hearts.legendary.Warden
+import site.thatkid.soulBound.items.hearts.rare.Wise
+import site.thatkid.soulBound.items.hearts.legendary.Wither
 
 class Hearts(private val plugin: JavaPlugin): Listener {
     private val TITLE = Component.text("§bHearts")

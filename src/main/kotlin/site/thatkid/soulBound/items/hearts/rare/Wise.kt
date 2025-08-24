@@ -1,4 +1,4 @@
-package site.thatkid.soulBound.items.hearts.normal
+package site.thatkid.soulBound.items.hearts.rare
 
 import net.kyori.adventure.text.Component
 import org.bukkit.Material

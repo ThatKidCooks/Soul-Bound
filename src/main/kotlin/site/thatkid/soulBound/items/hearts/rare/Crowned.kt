@@ -1,7 +1,10 @@
-package site.thatkid.soulBound.items.hearts.normal
+package site.thatkid.soulBound.items.hearts.rare
 
 import net.kyori.adventure.text.Component
-import org.bukkit.*
+import org.bukkit.Material
+import org.bukkit.NamespacedKey
+import org.bukkit.Particle
+import org.bukkit.Sound
 import org.bukkit.entity.Ghast
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Monster
@@ -15,7 +18,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.Heart
-import java.util.*
+import java.util.UUID
 
 object Crowned : Heart() {
 

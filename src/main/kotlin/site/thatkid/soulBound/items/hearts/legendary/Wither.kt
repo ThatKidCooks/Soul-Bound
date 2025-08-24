@@ -1,4 +1,4 @@
-package site.thatkid.soulBound.items.hearts.normal
+package site.thatkid.soulBound.items.hearts.legendary
 
 import net.kyori.adventure.text.Component
 import org.bukkit.Material
@@ -71,7 +71,7 @@ object Wither : Heart(), Listener {
         }
     }
 
-    
+
     override fun specialEffect(player: Player) {
         if (cooldowns.containsKey(player.uniqueId) && System.currentTimeMillis() < cooldowns[player.uniqueId]!!) {
             player.sendMessage("§cYou must wait before using Wither Blast again.")
