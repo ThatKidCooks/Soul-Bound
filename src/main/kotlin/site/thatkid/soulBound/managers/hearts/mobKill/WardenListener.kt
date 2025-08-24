@@ -9,10 +9,11 @@ import org.bukkit.Bukkit
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.HeartRegistry
+import site.thatkid.soulBound.managers.DiscordBot
 import java.io.File
 import java.util.UUID
 
-class WardenListener(private val plugin: JavaPlugin) {
+class WardenListener(private val plugin: JavaPlugin, private val discordBot: DiscordBot) {
 
     private data class SaveData (
         val received: Boolean = false
@@ -34,6 +35,7 @@ class WardenListener(private val plugin: JavaPlugin) {
             if (wardenHeart != null) {
                 killer.inventory.addItem(wardenHeart)
                 broadcast("The Warden Heart has been awarded to ${killer.name} for killing a Warden First!")
+                discordBot.sendMessage("The Warden Heart has been awarded to ${killer.name} for killing a Warden First!")
                 received = true // no one else can receive the Warden Heart after this
                 save() // save the state after giving the heart
             }

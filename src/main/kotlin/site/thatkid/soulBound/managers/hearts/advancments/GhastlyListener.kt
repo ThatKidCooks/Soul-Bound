@@ -10,10 +10,11 @@ import org.bukkit.advancement.Advancement
 import org.bukkit.event.player.PlayerAdvancementDoneEvent
 import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.HeartRegistry
+import site.thatkid.soulBound.managers.DiscordBot
 import java.io.File
 import java.util.UUID
 
-class GhastlyListener(private val plugin: JavaPlugin) {
+class GhastlyListener(private val plugin: JavaPlugin, private val discordBot: DiscordBot) {
 
     data class SaveData(
         val returnDone: MutableMap<UUID, Boolean> = mutableMapOf(),
@@ -44,6 +45,7 @@ class GhastlyListener(private val plugin: JavaPlugin) {
                 if (ghastlyHeart != null) {
                     player.inventory.addItem(ghastlyHeart)
                     player.server.broadcast(Component.text("§aThe Ghastly Heart has been awarded to ${player.name} for completing the required advancements!"))
+                    discordBot.sendMessage("The Ghastly Heart has been awarded to ${player.name} for completing the required advancements!")
                     received = true // no one else can receive the Ghastly Heart after this
                     save()
                 }

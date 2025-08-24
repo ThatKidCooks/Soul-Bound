@@ -5,12 +5,13 @@ import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.HeartRegistry
+import site.thatkid.soulBound.managers.DiscordBot
 import site.thatkid.soulBound.managers.hearts.mine.FrozenListener
 import site.thatkid.soulBound.managers.hearts.mine.FrozenListener.SaveData
 import site.thatkid.soulBound.managers.hearts.statistic.Statistic
 import java.io.File
 
-class AquaticListener {
+class AquaticListener(private val discordBot: DiscordBot) {
 
     data class SaveData(
         val received: Boolean = false
@@ -35,6 +36,7 @@ class AquaticListener {
 
                     player.inventory.addItem(aquaticHeart)
                     plugin.server.broadcast(Component.text("&c$player was the First Person to swim 5000 blocks and has obtained the Aquatic Heart"))
+                    discordBot.sendMessage("The Aquatic Heart has been awarded to ${player.name} for swimming 5000 blocks first!")
                     received = true
                     save()
                 }

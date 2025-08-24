@@ -10,10 +10,11 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Villager
 import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.HeartRegistry
+import site.thatkid.soulBound.managers.DiscordBot
 import java.io.File
 import java.util.UUID
 
-class TraderListener(private val plugin: JavaPlugin) {
+class TraderListener(private val plugin: JavaPlugin, private val discordBot: DiscordBot) {
 
     data class SaveData(
         val received: Boolean = false,
@@ -46,6 +47,7 @@ class TraderListener(private val plugin: JavaPlugin) {
                 }
 
                 plugin.server.broadcast(Component.text("${player.name} has traded with all villager professions and has received the Trader Heart!"))
+                discordBot.sendMessage("${player.name} has traded with all villager professions and has received the Trader Heart!")
                 val traderHeart = HeartRegistry.hearts["trader"]?.createItem()
 
                 if (traderHeart == null) return@listen

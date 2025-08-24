@@ -5,12 +5,13 @@ import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.HeartRegistry
+import site.thatkid.soulBound.managers.DiscordBot
 import site.thatkid.soulBound.managers.hearts.mine.FrozenListener
 import site.thatkid.soulBound.managers.hearts.mine.FrozenListener.SaveData
 import site.thatkid.soulBound.managers.hearts.statistic.Statistic
 import java.io.File
 
-class SpeedListener {
+class SpeedListener(private val discordBot: DiscordBot) {
 
     data class SaveData(
         val received: Boolean = false
@@ -34,7 +35,8 @@ class SpeedListener {
                     if (speedHeart == null) return
 
                     player.inventory.addItem(speedHeart)
-                    plugin.server.broadcast(Component.text("&c$player was the First Person to sprint 10000 blockss and has obtained the Speed Heart"))
+                    plugin.server.broadcast(Component.text("&c$player was the First Person to sprint 10000 blocks and has obtained the Speed Heart"))
+                    discordBot.sendMessage("The Speed Heart has been awarded to ${player.name} for sprinting 10000 blocks first!")
                     received = true
                     save()
                 }

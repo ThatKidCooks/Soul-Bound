@@ -30,7 +30,7 @@ class SoulBound : KSpigot() {
         val BOTIP: String = config.getString("botip") ?: "localhost"
         val BOTPORT: Int = config.getInt("botport")
 
-        heartRegistry.init(this)
+        heartRegistry.init(this, bridge)
         heartRegistry.enableAll()
 
         bridge = DiscordBot(this, "https://$BOTIP:$BOTPORT")

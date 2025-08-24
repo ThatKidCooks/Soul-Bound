@@ -1,6 +1,7 @@
 package site.thatkid.soulBound.managers.hearts.every
 
 import com.google.gson.GsonBuilder
+import io.papermc.paper.command.brigadier.argument.ArgumentTypes.player
 import net.axay.kspigot.event.listen
 import net.axay.kspigot.event.register
 import net.axay.kspigot.event.unregister
@@ -15,11 +16,12 @@ import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffectType
 import site.thatkid.soulBound.HeartRegistry
+import site.thatkid.soulBound.managers.DiscordBot
 import java.io.File
 import java.io.IOException
 import java.util.*
 
-class WiseListener(private val plugin: JavaPlugin) {
+class WiseListener(private val plugin: JavaPlugin, discordBot: DiscordBot) {
 
     data class SaveData(
         val brewedPotions: MutableMap<UUID, MutableSet<String>> = mutableMapOf(), // Store as String names
@@ -91,6 +93,8 @@ class WiseListener(private val plugin: JavaPlugin) {
 
             if (!received && brewedPotions[brewerId]?.count()!! > 15) {
                 plugin.server.broadcast(Component.text("§a${brewer.name} has brewed all possible potion effects and received the Wise Heart!"))
+                discordBot.sendMessage("${brewer.name} has brewed all possible potion effects and received the Wise Heart!")
+
                 val wiseHeart = HeartRegistry.hearts["wise"]?.createItem()
 
                 if (wiseHeart != null) {

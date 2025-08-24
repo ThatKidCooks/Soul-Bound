@@ -6,10 +6,11 @@ import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.HeartRegistry
+import site.thatkid.soulBound.managers.DiscordBot
 import site.thatkid.soulBound.managers.hearts.statistic.Statistic
 import java.io.File
 
-class GolemListener {
+class GolemListener(private val discordBot: DiscordBot) {
 
     data class SaveData(
         val received: Boolean = false
@@ -34,6 +35,7 @@ class GolemListener {
 
                     player.inventory.addItem(golemHeart)
                     plugin.server.broadcast(Component.text("&c$player was the First Person to kill 100 naturally spawned Iron Golems and has earned the Golem Heart"))
+                    discordBot.sendMessage("The Golem Heart has been awarded to ${player.name} for killing 100 naturally spawned Iron Golems first!")
                     received = true
                     save()
                 }

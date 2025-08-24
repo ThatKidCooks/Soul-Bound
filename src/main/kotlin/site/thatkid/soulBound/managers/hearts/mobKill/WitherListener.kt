@@ -9,10 +9,11 @@ import org.bukkit.Bukkit
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.HeartRegistry
+import site.thatkid.soulBound.managers.DiscordBot
 import java.io.File
 import java.util.UUID
 
-class WitherListener(private val plugin: JavaPlugin) {
+class WitherListener(private val plugin: JavaPlugin, private val discordBot: DiscordBot) {
     private data class SaveData (
         val withersKilled: MutableMap<UUID, Int> = mutableMapOf(),
         val received: Boolean = false
@@ -47,6 +48,7 @@ class WitherListener(private val plugin: JavaPlugin) {
             if (fireHeart != null) {
                 killer.inventory.addItem(fireHeart)
                 broadcast("The Wither Heart has been awarded to ${killer.name} for killing 7 Withers First!")
+                discordBot.sendMessage("The Wither Heart has been awarded to ${killer.name} for killing 7 Withers First!")
                 received = true // no one else can receive the Fire Heart after this
                 save() // save the state after giving the heart
             }

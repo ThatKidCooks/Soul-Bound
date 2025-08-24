@@ -29,11 +29,13 @@ import site.thatkid.soulBound.managers.hearts.statistic.listeners.*
 object HeartRegistry {
 
     private lateinit var plugin: JavaPlugin
+    private lateinit var discordBot: DiscordBot
 
     lateinit var hearts: Map<String, Heart>
         private set
 
-    fun init(plugin: JavaPlugin) {
+    fun init(plugin: JavaPlugin, discordBot: DiscordBot) {
+        this.discordBot = discordBot
         this.plugin = plugin
 
         hearts = mapOf(
@@ -75,43 +77,43 @@ object HeartRegistry {
     fun enableAll() {
         // Initialize the listeners if they are not already initialized
         if (!this::crownedListener.isInitialized) {
-            crownedListener = CrownedListener(plugin)
+            crownedListener = CrownedListener(plugin, discordBot)
         }
         if (!this::strengthListener.isInitialized) {
-            strengthListener = StrengthListener(plugin)
+            strengthListener = StrengthListener(plugin, discordBot)
         }
         if (!this::hasteListener.isInitialized) {
-            hasteListener = HasteListener(plugin)
+            hasteListener = HasteListener(plugin, discordBot)
         }
         if (!this::fireListener.isInitialized) {
-            fireListener = FireListener(plugin)
+            fireListener = FireListener(plugin, discordBot)
         }
         if (!this::witherListener.isInitialized) {
-            witherListener = WitherListener(plugin)
+            witherListener = WitherListener(plugin, discordBot)
         }
         if (!this::frozenListener.isInitialized) {
-            frozenListener = FrozenListener(plugin)
+            frozenListener = FrozenListener(plugin, discordBot)
         }
         if (!this::wardenListener.isInitialized) {
-            wardenListener = WardenListener(plugin)
+            wardenListener = WardenListener(plugin, discordBot)
         }
         if (!this::aquaticListener.isInitialized) {
-            aquaticListener = AquaticListener()
+            aquaticListener = AquaticListener(discordBot)
         }
         if (!this::golemListener.isInitialized) {
-            golemListener = GolemListener()
+            golemListener = GolemListener(discordBot)
         }
         if (!this::ghastlyListener.isInitialized) {
-            ghastlyListener = GhastlyListener(plugin)
+            ghastlyListener = GhastlyListener(plugin, discordBot)
         }
         if (!this::speedListener.isInitialized) {
-            speedListener = SpeedListener()
+            speedListener = SpeedListener(discordBot)
         }
         if (!this::wiseListener.isInitialized) {
-            wiseListener = WiseListener(plugin)
+            wiseListener = WiseListener(plugin, discordBot)
         }
         if (!this::traderListener.isInitialized) {
-            traderListener = TraderListener(plugin)
+            traderListener = TraderListener(plugin, discordBot)
         }
 
         // just for crowned and strength, they are linked

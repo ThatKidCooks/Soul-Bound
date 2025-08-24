@@ -9,10 +9,11 @@ import org.bukkit.Material
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.HeartRegistry
+import site.thatkid.soulBound.managers.DiscordBot
 import java.io.File
 import java.util.UUID
 
-class FrozenListener(private val plugin: JavaPlugin) {
+class FrozenListener(private val plugin: JavaPlugin, private val discordBot: DiscordBot) {
     private val file = File(plugin.dataFolder, "frozen.json")
 
     var blocksMined: MutableMap<UUID, Int> = mutableMapOf()
@@ -46,6 +47,7 @@ class FrozenListener(private val plugin: JavaPlugin) {
                 if (frozenHeart != null) {
                     player.inventory.addItem(frozenHeart)
                     Bukkit.broadcastMessage("The Frozen Heart has been awarded to ${player.name} for mining 10,000 Ice Blocks First!")
+                    discordBot.sendMessage("The Frozen Heart has been awarded to ${player.name} for mining 10,000 Ice Blocks First!")
                     received = true // no one else can receive the Frozen Heart after this
                     save() // save the state after giving the heart
                 }

@@ -9,10 +9,11 @@ import org.bukkit.Bukkit
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.HeartRegistry
+import site.thatkid.soulBound.managers.DiscordBot
 import java.io.File
 import java.util.UUID
 
-class CrownedListener(private val plugin: JavaPlugin) {
+class CrownedListener(private val plugin: JavaPlugin, private val discordBot: DiscordBot) {
 
     private data class SaveData (
         val kills: MutableMap<UUID, MutableList<UUID>> = mutableMapOf(),
@@ -49,6 +50,7 @@ class CrownedListener(private val plugin: JavaPlugin) {
                 if (crownedHeart != null) {
                     killer.inventory.addItem(crownedHeart)
                     broadcast("The Crowned Heart has been awarded to ${killer.name} for killing 15 Players First!")
+                    discordBot.sendMessage("The Crowned Heart has been awarded to ${killer.name} for killing 15 Players First!")
                     received = true // no one else can receive the Crowned Heart after this
                     save() // save the state after giving the heart
                 }
