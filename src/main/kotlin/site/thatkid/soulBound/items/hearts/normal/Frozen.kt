@@ -70,6 +70,15 @@ object Frozen : Heart(), Listener {
     }
 
     override fun specialEffect(player: Player) {
+
+        val now = System.currentTimeMillis()
+
+        if (cooldowns[player.uniqueId]?.let { now - it < cooldownTime } == true) {
+            val remaining = (cooldownTime - (now - cooldowns[player.uniqueId]!!)) / 1000
+            player.sendMessage(Component.text("§cAbility on cooldown! Wait $remaining seconds."))
+            return
+        }
+
         val location = player.location.clone()
         val radius = 10.0 // 10 blocks radius - editable
 

@@ -27,7 +27,7 @@ class WardenListener(private val plugin: JavaPlugin) {
         val victim = it.entity
         val killer = it.entity.killer ?: return@listen
 
-        if (victim.type.name != "WARDEN") return@listen // only process Warden deaths
+        if (victim.type.name != "WARDEN") return@listen // only process Warden deaths)
 
         if (!received) {
             val wardenHeart = HeartRegistry.hearts["warden"]?.createItem() // get the Warden Heart item
