@@ -69,9 +69,16 @@ class SpeedListener(private val discordBot: DiscordBot) {
         }
     }
 
-    fun getProgress(player: Player): Int {
+    fun getProgress(player: Player): String {
         val stat = player.getStatistic(org.bukkit.Statistic.SPRINT_ONE_CM)
-        return (stat / 100)
+
+        val msg = "$player has sprinted ${stat / 100} / 10000 blocks."
+
+        if (received) {
+            return "$msg The Speed Heart has already been claimed."
+        }
+
+        return msg
     }
 
     fun setGlobalReceived(received: Boolean) {

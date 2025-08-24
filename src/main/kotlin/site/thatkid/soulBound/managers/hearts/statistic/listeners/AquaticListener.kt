@@ -2,6 +2,7 @@ package site.thatkid.soulBound.managers.hearts.statistic.listeners
 
 import com.google.gson.GsonBuilder
 import net.kyori.adventure.text.Component
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.HeartRegistry
@@ -69,9 +70,16 @@ class AquaticListener(private val discordBot: DiscordBot) {
         }
     }
 
-    fun getProgress(player: Player): Int {
+    fun getProgress(player: Player): String {
         val stat = player.getStatistic(org.bukkit.Statistic.SWIM_ONE_CM)
-        return (stat / 100)
+
+        val msg = "$player has swum ${stat / 100} / 5000 blocks."
+
+        if (received) {
+            return "$msg The Aquatic Heart has already been claimed."
+        }
+
+        return msg
     }
 
     fun setGlobalReceived(received: Boolean) {

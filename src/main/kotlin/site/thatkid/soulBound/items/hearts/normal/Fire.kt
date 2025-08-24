@@ -19,6 +19,7 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import site.thatkid.soulBound.HeartRegistry.fireListener
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.Heart
 import java.util.UUID
@@ -105,26 +106,9 @@ object Fire : Heart() {
         player.world.playSound(player.location, Sound.ENTITY_BLAZE_SHOOT, 1.0f, 0.7f)
     }
 
-//    override fun checkProgress(player: Player): String {
-//        val tracker = HeartRegistry.fireTracker
-//        val uuid = player.uniqueId
-//
-//        return if (tracker.isHeartClaimed()) {
-//            if (tracker.hasReceived(uuid)) {
-//                "§cFire Heart §8| §aUnlocked by you"
-//            } else {
-//                val winner = tracker.getWinnerName() ?: "another player"
-//                "§cFire Heart §8| §cAlready claimed by $winner"
-//            }
-//        } else {
-//            val status = if (tracker.hasKilledWither(uuid)) {
-//                "§a✓ Requirement complete — awaiting award"
-//            } else {
-//                "§7Kill a Wither to qualify"
-//            }
-//            "§cFire Heart Progress: $status"
-//        }
-//    }
+    override fun checkProgress(player: Player): String {
+        return fireListener.getProgress(player.uniqueId)
+    }
 
 
 

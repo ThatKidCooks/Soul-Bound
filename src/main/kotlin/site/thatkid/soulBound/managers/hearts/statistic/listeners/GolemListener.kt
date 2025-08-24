@@ -68,9 +68,16 @@ class GolemListener(private val discordBot: DiscordBot) {
         }
     }
 
-    fun getProgress(player: Player): Int {
-        val stat = player.getStatistic(org.bukkit.Statistic.SWIM_ONE_CM)
-        return (stat / 100)
+    fun getProgress(player: Player): String {
+        val stat = player.getStatistic(org.bukkit.Statistic.KILL_ENTITY, EntityType.IRON_GOLEM)
+
+        val msg = "$player has killed $stat/100 naturally spawned Iron Golems"
+
+        if (received) {
+            return "$msg The Golem Heart has already been claimed."
+        }
+
+        return msg
     }
 
     fun setGlobalReceived(received: Boolean) {
