@@ -19,8 +19,6 @@ class FireListener(private val plugin: JavaPlugin, private val discordBot: Disco
         val received: Boolean = false
     )
 
-    lateinit var witherListener: WitherListener
-
     var received: Boolean = false
 
     private val file = File(plugin.dataFolder, "fire.json")
@@ -40,7 +38,6 @@ class FireListener(private val plugin: JavaPlugin, private val discordBot: Disco
                 discordBot.sendMessage("The Fire Heart has been awarded to ${killer.name} for killing a Wither First!")
                 received = true // no one else can receive the Fire Heart after this
                 save() // save the state after giving the heart
-                witherListener.withersKilled.clear() // reset the kills for the Wither Heart
             }
         } else {
             killer.sendMessage("§7Someone already received the Fire Heart.") // feedback message

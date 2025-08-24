@@ -13,6 +13,7 @@ repositories {
     // Dmulloy’s repo only hosts up through 5.3.0:
     maven("https://repo.dmulloy2.net/repository/public/") { name = "dmulloy2-repo" }
     maven("https://repo.papermc.io/repository/maven-public/") { name = "papermc-repo" }
+    maven(url = "https://mvn.lumine.io/repository/maven-public/")
 }
 
 dependencies {
@@ -24,6 +25,7 @@ dependencies {
 
     // ← Use 5.3.0 (published) instead of 5.4.0
     compileOnly("com.comphenix.protocol:ProtocolLib:5.3.0")
+    compileOnly("io.lumine:Mythic-Dist:5.6.1")
 }
 
 val targetJavaVersion = 21
