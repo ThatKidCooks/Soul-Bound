@@ -59,8 +59,6 @@ object HeartRegistry {
     lateinit var strengthListener: StrengthListener
     lateinit var hasteListener: HasteListener
     lateinit var fireListener: FireListener
-    lateinit var witherListener: WitherListener
-    lateinit var wardenListener: WardenListener
     lateinit var frozenListener: FrozenListener
     lateinit var aquaticListener: AquaticListener
     lateinit var golemListener: GolemListener
@@ -88,14 +86,8 @@ object HeartRegistry {
         if (!this::fireListener.isInitialized) {
             fireListener = FireListener(plugin, discordBot)
         }
-        if (!this::witherListener.isInitialized) {
-            witherListener = WitherListener(plugin, discordBot)
-        }
         if (!this::frozenListener.isInitialized) {
             frozenListener = FrozenListener(plugin, discordBot)
-        }
-        if (!this::wardenListener.isInitialized) {
-            wardenListener = WardenListener(plugin, discordBot)
         }
         if (!this::aquaticListener.isInitialized) {
             aquaticListener = AquaticListener(discordBot)
@@ -119,18 +111,13 @@ object HeartRegistry {
         // just for crowned and strength, they are linked
         crownedListener.strengthListener = strengthListener
         strengthListener.crownedListener = crownedListener
-        // just for wither and fire, they are linked
-        fireListener.witherListener = witherListener
-        witherListener.fireListener = fireListener
 
         // enable the listeners
         crownedListener.enable()
         strengthListener.enable()
         hasteListener.enable()
         fireListener.enable()
-        witherListener.enable()
         frozenListener.enable()
-        wardenListener.enable()
         ghastlyListener.enable()
         wiseListener.enable()
         traderListener.enable()
@@ -153,8 +140,6 @@ object HeartRegistry {
         if (this::strengthListener.isInitialized) strengthListener.disable()
         if (this::hasteListener.isInitialized) hasteListener.disable()
         if (this::fireListener.isInitialized) fireListener.disable()
-        if (this::witherListener.isInitialized) witherListener.disable()
-        if (this::wardenListener.isInitialized) wardenListener.disable()
         if (this::frozenListener.isInitialized) frozenListener.disable()
         if (this::aquaticListener.isInitialized) aquaticListener.save()
         if (this::golemListener.isInitialized) golemListener.save()
@@ -171,8 +156,6 @@ object HeartRegistry {
         if (this::strengthListener.isInitialized) strengthListener.save()
         if (this::hasteListener.isInitialized) hasteListener.save()
         if (this::fireListener.isInitialized) fireListener.save()
-        if (this::witherListener.isInitialized) witherListener.save()
-        if (this::wardenListener.isInitialized) wardenListener.save()
         if (this::frozenListener.isInitialized) frozenListener.save()
         if (this::aquaticListener.isInitialized) aquaticListener.save()
         if (this::golemListener.isInitialized) golemListener.save()
@@ -187,8 +170,6 @@ object HeartRegistry {
         if (this::strengthListener.isInitialized) strengthListener.load()
         if (this::hasteListener.isInitialized) hasteListener.load()
         if (this::fireListener.isInitialized) fireListener.load()
-        if (this::witherListener.isInitialized) witherListener.load()
-        if (this::wardenListener.isInitialized) wardenListener.load()
         if (this::frozenListener.isInitialized) frozenListener.load()
         if (this::aquaticListener.isInitialized) aquaticListener.load()
         if (this::golemListener.isInitialized) golemListener.load()
