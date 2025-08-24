@@ -7,6 +7,7 @@ import site.thatkid.soulBound.commands.SoulboundTabCompleter
 import site.thatkid.soulBound.gui.player.DisplayHearts
 import site.thatkid.soulBound.hearts.ActiveHearts
 import site.thatkid.soulBound.hearts.ConstantAbilitiesCaller
+import site.thatkid.soulBound.items.HeartRegistry
 import site.thatkid.soulBound.items.hearts.normal.Frozen
 import site.thatkid.soulBound.listeners.GolemKBTracker
 import site.thatkid.soulBound.listeners.PlayerDeathListener
@@ -19,7 +20,6 @@ import java.io.File
 
 class SoulBound : KSpigot() {
 
-    private lateinit var bridge: DiscordBot
 
     private val displayHearts: DisplayHearts = DisplayHearts(this)
     private val autoSave: AutoSave = AutoSave(this)
@@ -27,14 +27,8 @@ class SoulBound : KSpigot() {
     private val heartRegistry = HeartRegistry
 
     override fun startup() {
-        val BOTIP: String = config.getString("botip") ?: "localhost"
-        val BOTPORT: Int = config.getInt("botport")
-
         heartRegistry.init(this)
         heartRegistry.enableAll()
-
-        bridge = DiscordBot(this, "https://$BOTIP:$BOTPORT")
-        bridge.connect()
 
         heartRegistry.trustManager = TrustStorageManager
 

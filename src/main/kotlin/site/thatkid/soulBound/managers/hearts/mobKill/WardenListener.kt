@@ -8,7 +8,7 @@ import net.axay.kspigot.extensions.broadcast
 import org.bukkit.Bukkit
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.plugin.java.JavaPlugin
-import site.thatkid.soulBound.HeartRegistry
+import site.thatkid.soulBound.items.HeartRegistry
 import java.io.File
 import java.util.UUID
 

@@ -6,10 +6,9 @@ import net.axay.kspigot.event.register
 import net.axay.kspigot.event.unregister
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
-import org.bukkit.advancement.Advancement
 import org.bukkit.event.player.PlayerAdvancementDoneEvent
 import org.bukkit.plugin.java.JavaPlugin
-import site.thatkid.soulBound.HeartRegistry
+import site.thatkid.soulBound.items.HeartRegistry
 import java.io.File
 import java.util.UUID
 

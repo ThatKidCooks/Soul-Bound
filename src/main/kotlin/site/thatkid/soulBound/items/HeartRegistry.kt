@@ -1,7 +1,6 @@
-package site.thatkid.soulBound
+package site.thatkid.soulBound.items
 
 import org.bukkit.plugin.java.JavaPlugin
-import site.thatkid.soulBound.items.Heart
 import site.thatkid.soulBound.items.hearts.normal.Aquatic
 import site.thatkid.soulBound.items.hearts.normal.Crowned
 import site.thatkid.soulBound.items.hearts.normal.Fire
@@ -15,7 +14,6 @@ import site.thatkid.soulBound.items.hearts.normal.Trader
 import site.thatkid.soulBound.items.hearts.normal.Warden
 import site.thatkid.soulBound.items.hearts.normal.Wise
 import site.thatkid.soulBound.items.hearts.normal.Wither
-import site.thatkid.soulBound.managers.*
 import site.thatkid.soulBound.managers.hearts.advancments.GhastlyListener
 import site.thatkid.soulBound.managers.hearts.every.TraderListener
 import site.thatkid.soulBound.managers.hearts.kill.*
@@ -25,6 +23,7 @@ import site.thatkid.soulBound.managers.hearts.every.WiseListener
 import site.thatkid.soulBound.managers.hearts.statistic.Caller
 import site.thatkid.soulBound.managers.hearts.statistic.Statistic
 import site.thatkid.soulBound.managers.hearts.statistic.listeners.*
+import site.thatkid.soulBound.managers.TrustStorageManager
 
 object HeartRegistry {
 
@@ -32,6 +31,7 @@ object HeartRegistry {
 
     lateinit var hearts: Map<String, Heart>
         private set
+    lateinit var trustmanager: TrustStorageManager
 
     fun init(plugin: JavaPlugin) {
         this.plugin = plugin

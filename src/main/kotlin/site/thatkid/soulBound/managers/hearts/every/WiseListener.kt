@@ -14,7 +14,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffectType
-import site.thatkid.soulBound.HeartRegistry
+import site.thatkid.soulBound.items.HeartRegistry
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -35,6 +35,9 @@ class WiseListener(private val plugin: JavaPlugin) {
     private var received = false
 
     private var lastBrewer: MutableMap<Location, UUID> = mutableMapOf()
+
+    @Transient
+    private var someReference: java.lang.ref.Reference<*>? = null
 
     val inventoryClick = listen<InventoryClickEvent> { event ->
         val stand = event.inventory.holder as? BrewingStand ?: return@listen

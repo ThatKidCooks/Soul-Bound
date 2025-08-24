@@ -8,7 +8,7 @@ import net.axay.kspigot.event.unregister
 import net.kyori.adventure.text.Component
 import org.bukkit.entity.Villager
 import org.bukkit.plugin.java.JavaPlugin
-import site.thatkid.soulBound.HeartRegistry
+import site.thatkid.soulBound.items.HeartRegistry
 import java.io.File
 import java.util.UUID
 

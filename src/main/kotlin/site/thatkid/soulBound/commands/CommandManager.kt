@@ -5,7 +5,7 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
-import site.thatkid.soulBound.HeartRegistry
+import site.thatkid.soulBound.items.HeartRegistry
 import site.thatkid.soulBound.SoulBound
 import site.thatkid.soulBound.gui.admin.Hearts
 import site.thatkid.soulBound.hearts.ActiveHearts
