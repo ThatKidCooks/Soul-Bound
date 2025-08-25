@@ -204,10 +204,10 @@ object ItemRegistry {
             )
         ),
         CustomItem(
-            id = Component.text("warden_heart"),
+            id = Component.text("dragon_heart"),
             type = Component.text("legendary"),
             modelData = 14,
-            displayName = Component.text("§5Warden Heart"),
+            displayName = Component.text("§Dragon Heart"),
             lore = listOf(
                 Component.text("§7Hunted a creature to extinction."),
                 Component.text("It grants the power of a dragon"),
