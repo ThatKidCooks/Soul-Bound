@@ -7,6 +7,7 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
 import site.thatkid.soulBound.hearts.ActiveHearts
+import site.thatkid.soulBound.items.hearts.legendary.Dragon
 import site.thatkid.soulBound.items.hearts.normal.Aquatic
 import site.thatkid.soulBound.items.hearts.rare.Crowned
 import site.thatkid.soulBound.items.hearts.normal.Fire
@@ -58,19 +59,62 @@ class DisplayHearts(private val plugin: JavaPlugin) : BukkitRunnable() {
         val detailedSymbols = mutableListOf<String>()
         for (heart in hearts) {
             when (heart) {
-                is Crowned -> detailedSymbols.add("§c❤ Crowned")
-                is Warden -> detailedSymbols.add("§1❤ Warden")
-                is Trader -> detailedSymbols.add("§a❤ Trader")
-                is Ghastly -> detailedSymbols.add("§d❤ Ghastly")
-                is Haste -> detailedSymbols.add("§e❤ Haste")
-                is Strength -> detailedSymbols.add("§6❤ Strength")
-                is Aquatic -> detailedSymbols.add("§b❤ Aquatic")
-                is Golem -> detailedSymbols.add("§7❤ Golem")
-                is Wise -> detailedSymbols.add("§f❤ Wise")
-                is Fire -> detailedSymbols.add("§c❤ Fire")
-                is Wither -> detailedSymbols.add("§8❤ Wither")
-                is Frozen -> detailedSymbols.add("§b❤ Frozen")
-                is Speed -> detailedSymbols.add("§e❤ Speed")
+                is Crowned -> {
+                    detailedSymbols.add("§c❤ Crowned")
+                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
+                }
+                is Warden -> {
+                    detailedSymbols.add("§1❤ Warden")
+                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
+                }
+                is Trader -> {
+                    detailedSymbols.add("§a❤ Trader")
+                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
+                }
+                is Ghastly -> {
+                    detailedSymbols.add("§d❤ Ghastly")
+                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
+                }
+                is Haste -> {
+                    detailedSymbols.add("§e❤ Haste")
+                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
+                }
+                is Strength -> {
+                    detailedSymbols.add("§6❤ Strength")
+                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
+                }
+                is Aquatic -> {
+                    detailedSymbols.add("§b❤ Aquatic")
+                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
+                }
+                is Golem -> {
+                    detailedSymbols.add("§7❤ Golem")
+                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
+                }
+                is Wise -> {
+                    detailedSymbols.add("§f❤ Wise")
+                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
+                }
+                is Fire -> {
+                    detailedSymbols.add("§c❤ Fire")
+                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
+                }
+                is Wither -> {
+                    detailedSymbols.add("§8❤ Wither")
+                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
+                }
+                is Frozen -> {
+                    detailedSymbols.add("§b❤ Frozen")
+                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
+                }
+                is Speed -> {
+                    detailedSymbols.add("§e❤ Speed")
+                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
+                }
+                is Dragon -> {
+                    detailedSymbols.add("§5❤ Dragon")
+                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
+                }
             }
         }
         return if (detailedSymbols.isNotEmpty()) detailedSymbols.joinToString(" §7| ") else ""
