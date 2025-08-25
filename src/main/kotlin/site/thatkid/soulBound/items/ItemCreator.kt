@@ -2,6 +2,7 @@ package site.thatkid.soulBound.items
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
+import site.thatkid.soulBound.items.hearts.legendary.Dragon
 import site.thatkid.soulBound.items.hearts.normal.Aquatic
 import site.thatkid.soulBound.items.hearts.rare.Crowned
 import site.thatkid.soulBound.items.hearts.normal.Fire
@@ -32,6 +33,7 @@ object ItemCreator {
             11 -> Warden.key
             12 -> Wise.key
             13 -> Wither.key
+            14 -> Dragon.key
             else -> null
         }
     }

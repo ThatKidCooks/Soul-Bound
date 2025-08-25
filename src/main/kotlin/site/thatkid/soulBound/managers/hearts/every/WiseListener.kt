@@ -22,8 +22,7 @@ import java.util.*
 class WiseListener(private val plugin: JavaPlugin) {
 
     data class SaveData(
-        val brewedPotions: MutableMap<UUID, MutableSet<PotionEffectType>> = mutableMapOf(),
-        val lastBrewer: MutableMap<Location, UUID> = mutableMapOf(),
+        val brewedPotions: MutableMap<UUID, MutableSet<String>> = mutableMapOf(),
         val received: Boolean = false
     )
 
@@ -91,7 +90,10 @@ class WiseListener(private val plugin: JavaPlugin) {
 
     fun save() {
         try {
-            val saveData = SaveData(brewedPotions, lastBrewer, received)
+            val serializedPotions = brewedPotions.mapValues { (_, effects) ->
+                effects.mapNotNull { it.name }.toMutableSet()
+            }
+            val saveData = SaveData(serializedPotions as MutableMap<UUID, MutableSet<String>>, received)
             val json = gson.toJson(saveData)
             file.parentFile.mkdirs()
             file.writeText(json)
@@ -102,13 +104,15 @@ class WiseListener(private val plugin: JavaPlugin) {
         }
     }
 
+
     fun load() {
         try {
             if (!file.exists()) return
             val json = file.readText()
             val saveData = gson.fromJson(json, SaveData::class.java)
-            brewedPotions = saveData.brewedPotions
-            lastBrewer = saveData.lastBrewer
+            brewedPotions = saveData.brewedPotions.mapValues { (_, effectNames) ->
+                effectNames.mapNotNull { PotionEffectType.getByName(it) }.toMutableSet()
+            }.toMutableMap()
             received = saveData.received
             plugin.logger.info("WiseListener data loaded from ${file.absolutePath}")
         } catch (e: IOException) {

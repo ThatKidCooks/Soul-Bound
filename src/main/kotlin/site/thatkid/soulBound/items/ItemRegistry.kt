@@ -143,8 +143,8 @@ object ItemRegistry {
             modelData = 10,
             displayName = Component.text("§2Trader Heart"),
             lore = listOf(
-                Component.text("§7Unlock by earning the"),
-                Component.text("§fHero of the Village §7advancement."),
+                Component.text("§7Unlock by trading"),
+                Component.text("§fwith every Villager Profession."),
                 Component.text(""),
                 Component.text("§f✧ §7Permanent §aHero of the Village I"),
                 Component.text(""),
@@ -203,5 +203,21 @@ object ItemRegistry {
                 Component.text("§8Cooldown: 30 seconds")
             )
         ),
+        CustomItem(
+            id = Component.text("warden_heart"),
+            type = Component.text("legendary"),
+            modelData = 14,
+            displayName = Component.text("§5Warden Heart"),
+            lore = listOf(
+                Component.text("§7Hunted a creature to extinction."),
+                Component.text("It grants the power of a dragon"),
+                Component.text(""),
+                Component.text("§f✧ §7Permanent aura that damages enemies."),
+                Component.text("§a§lPower — Dragon Fireball"),
+                Component.text("§7Unleashes the dragons powerful shot."),
+                Component.text("§7that shoots a dragon fireball"),
+                Component.text("§8Cooldown: 50 seconds"),
+            )
+        )
     ).associateBy { it.modelData }
 }
