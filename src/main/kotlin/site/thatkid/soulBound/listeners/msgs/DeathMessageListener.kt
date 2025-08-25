@@ -4,8 +4,8 @@ import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
-import site.thatkid.soulBound.items.hearts.normal.Crowned
-import site.thatkid.soulBound.items.hearts.normal.Warden
+import site.thatkid.soulBound.items.hearts.rare.Crowned
+import site.thatkid.soulBound.items.hearts.legendary.Warden
 import net.kyori.adventure.text.Component
 
 class DeathMessageListener : Listener {

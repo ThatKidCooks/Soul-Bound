@@ -19,6 +19,7 @@ object ItemRegistry {
         ),
         CustomItem(
             id = Component.text("crowned_heart"),
+            type = Component.text("rare"),
             modelData = 2,
             displayName = Component.text("§aCrowned Heart"),
             lore = listOf(
@@ -154,6 +155,7 @@ object ItemRegistry {
         ),
         CustomItem(
             id = Component.text("warden_heart"),
+            type = Component.text("legendary"),
             modelData = 11,
             displayName = Component.text("§1Warden Heart"),
             lore = listOf(
@@ -170,6 +172,7 @@ object ItemRegistry {
         ),
         CustomItem(
             id = Component.text("wise_heart"),
+            type = Component.text("rare"),
             modelData = 12,
             displayName = Component.text("§fWise Heart"),
             lore = listOf(
@@ -185,6 +188,7 @@ object ItemRegistry {
         ),
         CustomItem(
             id = Component.text("wither_heart"),
+            type = Component.text("legendary"),
             modelData = 13,
             displayName = Component.text("§8Wither Heart"),
             lore = listOf(

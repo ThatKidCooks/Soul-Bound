@@ -14,7 +14,7 @@ import site.thatkid.soulBound.listeners.PlayerDeathListener
 import site.thatkid.soulBound.listeners.PlayerQuitListener
 import site.thatkid.soulBound.listeners.msgs.DeathMessageListener
 import site.thatkid.soulBound.managers.*
-import site.thatkid.soulBound.items.hearts.normal.Wither
+import site.thatkid.soulBound.items.hearts.legendary.Wither
 import site.thatkid.soulBound.listeners.AutoSave
 import java.io.File
 
