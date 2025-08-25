@@ -207,7 +207,7 @@ object ItemRegistry {
             id = Component.text("dragon_heart"),
             type = Component.text("legendary"),
             modelData = 14,
-            displayName = Component.text("§Dragon Heart"),
+            displayName = Component.text("§5Dragon Heart"),
             lore = listOf(
                 Component.text("§7Hunted a creature to extinction."),
                 Component.text("It grants the power of a dragon"),
