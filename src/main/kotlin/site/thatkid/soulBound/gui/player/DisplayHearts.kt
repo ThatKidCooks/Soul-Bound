@@ -1,5 +1,7 @@
 package site.thatkid.soulBound.gui.player
 
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.bukkit.Bukkit
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.EntityType
@@ -7,20 +9,7 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
 import site.thatkid.soulBound.hearts.ActiveHearts
-import site.thatkid.soulBound.items.hearts.legendary.Dragon
-import site.thatkid.soulBound.items.hearts.normal.Aquatic
-import site.thatkid.soulBound.items.hearts.rare.Crowned
-import site.thatkid.soulBound.items.hearts.normal.Fire
-import site.thatkid.soulBound.items.hearts.normal.Frozen
-import site.thatkid.soulBound.items.hearts.normal.Ghastly
-import site.thatkid.soulBound.items.hearts.normal.Golem
-import site.thatkid.soulBound.items.hearts.normal.Haste
-import site.thatkid.soulBound.items.hearts.normal.Speed
-import site.thatkid.soulBound.items.hearts.normal.Strength
-import site.thatkid.soulBound.items.hearts.normal.Trader
-import site.thatkid.soulBound.items.hearts.legendary.Warden
-import site.thatkid.soulBound.items.hearts.rare.Wise
-import site.thatkid.soulBound.items.hearts.legendary.Wither
+import site.thatkid.soulBound.items.Heart
 import java.util.*
 
 class DisplayHearts(private val plugin: JavaPlugin) : BukkitRunnable() {
@@ -30,12 +19,11 @@ class DisplayHearts(private val plugin: JavaPlugin) : BukkitRunnable() {
     private val lastHeartText = mutableMapOf<UUID, String>()
 
     override fun run() {
-
         for (owner in Bukkit.getOnlinePlayers()) {
             val text = buildHeartText(owner)
 
             if (text.isNotEmpty()) {
-                owner.sendActionBar("§r$text")
+                owner.sendActionBar(Component.text(text))
             }
 
             if (isPlayerInvisible(owner)) {
@@ -50,86 +38,53 @@ class DisplayHearts(private val plugin: JavaPlugin) : BukkitRunnable() {
                 stand.teleport(loc)
             }
             updateViewerVisibility(owner, stand)
-            }
+        }
         cleanupMissingOwners()
     }
 
     private fun buildHeartText(player: Player): String {
         val hearts = ActiveHearts.getHearts(player.uniqueId)
-        val detailedSymbols = mutableListOf<String>()
+        var detailedSymbols = mutableListOf<String>()
         for (heart in hearts) {
-            when (heart) {
-                is Crowned -> {
-                    detailedSymbols.add("§c❤ Crowned")
-                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
-                }
-                is Warden -> {
-                    detailedSymbols.add("§1❤ Warden")
-                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
-                }
-                is Trader -> {
-                    detailedSymbols.add("§a❤ Trader")
-                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
-                }
-                is Ghastly -> {
-                    detailedSymbols.add("§d❤ Ghastly")
-                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
-                }
-                is Haste -> {
-                    detailedSymbols.add("§e❤ Haste")
-                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
-                }
-                is Strength -> {
-                    detailedSymbols.add("§6❤ Strength")
-                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
-                }
-                is Aquatic -> {
-                    detailedSymbols.add("§b❤ Aquatic")
-                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
-                }
-                is Golem -> {
-                    detailedSymbols.add("§7❤ Golem")
-                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
-                }
-                is Wise -> {
-                    detailedSymbols.add("§f❤ Wise")
-                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
-                }
-                is Fire -> {
-                    detailedSymbols.add("§c❤ Fire")
-                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
-                }
-                is Wither -> {
-                    detailedSymbols.add("§8❤ Wither")
-                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
-                }
-                is Frozen -> {
-                    detailedSymbols.add("§b❤ Frozen")
-                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
-                }
-                is Speed -> {
-                    detailedSymbols.add("§e❤ Speed")
-                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
-                }
-                is Dragon -> {
-                    detailedSymbols.add("§5❤ Dragon")
-                    detailedSymbols.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
-                }
-            }
+            detailedSymbols = detailedSymbols(heart, player)
         }
         return if (detailedSymbols.isNotEmpty()) detailedSymbols.joinToString(" §7| ") else ""
     }
 
+    private fun detailedSymbols(heart: Heart, player: Player): MutableList<String> {
+        val list = mutableListOf<String>()
+
+        list.add(heart.createItem().itemMeta.displayName()?.let { LegacyComponentSerializer.legacySection().serialize(it) } ?: "")
+        list.add(formatCooldown(heart, player))
+
+        return list
+    }
+
+    private fun formatCooldown(heart: Heart, player: Player): String {
+        val playerId = player.uniqueId
+        val cooldownStart = heart.getCooldown(playerId)
+        val cooldownDuration = try {
+            val field = heart.javaClass.getDeclaredField("cooldownTime")
+            field.isAccessible = true
+            field.getLong(heart)
+        } catch (e: Exception) {
+            0L
+        }
+        if (cooldownStart == 0L || cooldownDuration == 0L) return "Ready"
+        val now = System.currentTimeMillis()
+        val remaining = (cooldownDuration - (now - cooldownStart)) / 1000
+        return if (remaining > 0) "${remaining}s" else "Ready"
+    }
+
     private fun isPlayerInvisible(player: Player): Boolean {
-        val hearts = ActiveHearts.getHearts(player.uniqueId)
-        return hearts.any { it is Ghastly }
+        return player.isInvisible
     }
 
     private fun ensureStand(owner: Player, text: String): ArmorStand {
         val existing = ownerStands[owner.uniqueId]
         if (existing != null && !existing.isDead) {
             if (lastHeartText[owner.uniqueId] != text) {
-                existing.customName = text
+                existing.customName(Component.text(text))
                 existing.isCustomNameVisible = text.isNotEmpty()
                 lastHeartText[owner.uniqueId] = text
             }
@@ -142,9 +97,9 @@ class DisplayHearts(private val plugin: JavaPlugin) : BukkitRunnable() {
         stand.isSmall = true
         stand.setGravity(false)
         stand.isMarker = true
-        stand.customName = text
+        stand.customName(Component.text(text))
         stand.isCustomNameVisible = text.isNotEmpty()
-        stand.setCanPickupItems(false)
+        stand.canPickupItems = false
         stand.setBasePlate(false)
         stand.setArms(false)
 

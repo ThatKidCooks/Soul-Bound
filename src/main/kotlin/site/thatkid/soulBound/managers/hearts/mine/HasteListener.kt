@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import net.axay.kspigot.event.listen
 import net.axay.kspigot.event.register
 import net.axay.kspigot.event.unregister
+import net.axay.kspigot.extensions.broadcast
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.event.block.BlockBreakEvent
@@ -52,7 +53,7 @@ class HasteListener(private val plugin: JavaPlugin) {
                 val hasteHeart = HeartRegistry.hearts["haste"]?.createItem()
                 if (hasteHeart != null) {
                     player.inventory.addItem(hasteHeart)
-                    Bukkit.broadcastMessage("The Haste Heart has been awarded to ${player.name} for mining 10,000 Deepslate Blocks First!")
+                    broadcast("The Haste Heart has been awarded to ${player.name} for mining 10,000 Deepslate Blocks First!")
                     received = true // no one else can receive the Haste Heart after this
                     save() // save the state after giving the heart
                 }
@@ -60,7 +61,7 @@ class HasteListener(private val plugin: JavaPlugin) {
                 player.sendMessage("§7Someone already received the Haste Heart.") // feedback message
             }
         } else {
-            player.sendMessage("§7You need ${100 - blocksMined[playerId]!!} more blocks to receive the Haste Heart.") // feedback message
+            player.sendMessage("§7You need ${10000 - blocksMined[playerId]!!} more blocks to receive the Haste Heart.") // feedback message
         }
     }
 

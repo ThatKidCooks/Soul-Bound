@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import net.axay.kspigot.event.listen
 import net.axay.kspigot.event.register
 import net.axay.kspigot.event.unregister
+import net.axay.kspigot.extensions.broadcast
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.event.block.BlockBreakEvent
@@ -45,7 +46,7 @@ class FrozenListener(private val plugin: JavaPlugin) {
                 val frozenHeart = HeartRegistry.hearts["frozen"]?.createItem()
                 if (frozenHeart != null) {
                     player.inventory.addItem(frozenHeart)
-                    Bukkit.broadcastMessage("The Frozen Heart has been awarded to ${player.name} for mining 10,000 Ice Blocks First!")
+                    broadcast("The Frozen Heart has been awarded to ${player.name} for mining 10,000 Ice Blocks First!")
                     received = true // no one else can receive the Frozen Heart after this
                     save() // save the state after giving the heart
                 }
