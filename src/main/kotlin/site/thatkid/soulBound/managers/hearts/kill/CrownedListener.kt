@@ -56,7 +56,7 @@ class CrownedListener(private val plugin: JavaPlugin) {
                 killer.sendMessage("§7Someone already received the Crowned Heart.") // feedback message
             }
         } else {
-            killer.sendMessage("§7You need ${5 - victims.size} more kills to receive the Crowned Heart.") // feedback message
+            killer.sendMessage("§7You need ${15 - victims.size} more kills to receive the Crowned Heart.") // feedback message
         }
     }
 

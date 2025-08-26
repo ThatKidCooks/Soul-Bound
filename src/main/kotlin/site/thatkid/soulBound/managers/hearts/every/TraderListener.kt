@@ -16,25 +16,27 @@ class TraderListener(private val plugin: JavaPlugin) {
 
     data class SaveData(
         val received: Boolean = false,
-        val villagerTraded: MutableMap<UUID, MutableList<Villager.Profession>> = mutableMapOf()
+        val villagerTraded: MutableMap<UUID, MutableList<String>> = mutableMapOf()
     )
 
     private val file = File(plugin.dataFolder, "trader.json")
     private val gson = GsonBuilder().setPrettyPrinting().create()
 
     private var received = false
-    private var villagerTraded: MutableMap<UUID, MutableList<Villager.Profession>> = mutableMapOf()
+    // Store profession keys as strings for serialization
+    private var villagerTraded: MutableMap<UUID, MutableList<String>> = mutableMapOf()
 
     val listener = listen<PlayerTradeEvent> {
         val player = it.player
         val trader = it.villager
 
         if (trader is Villager) {
+            val profKey = trader.profession.key.key // Use the string key
             if (villagerTraded[player.uniqueId] == null) {
                 villagerTraded[player.uniqueId] = mutableListOf()
             }
-            if (!villagerTraded[player.uniqueId]!!.contains(trader.profession) ) {
-                villagerTraded[player.uniqueId]?.add(trader.profession)
+            if (!villagerTraded[player.uniqueId]!!.contains(profKey)) {
+                villagerTraded[player.uniqueId]?.add(profKey)
                 player.sendMessage("You have traded with a ${trader.profession.key} villager!")
             }
 

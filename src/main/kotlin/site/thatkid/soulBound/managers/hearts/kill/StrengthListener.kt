@@ -53,7 +53,7 @@ class StrengthListener(private val plugin: JavaPlugin) {
                 killer.sendMessage("§7Someone already received the Strength Heart.") // feedback message
             }
         } else {
-            killer.sendMessage("§7You need ${5 - victims.size} more kills to receive the Strength Heart.") // feedback message
+            killer.sendMessage("§7You need ${10 - victims.size} more kills to receive the Strength Heart.") // feedback message
         }
     }
 
