@@ -88,7 +88,7 @@ object Wither : Heart(), Listener {
             head.isCharged = true
             head.yield = 0f
             head.shooter = player
-            head.velocity = direction.multiply(5 + i * spacing)
+            head.velocity = direction.clone().multiply(5 + i * spacing)
         }
 
         cooldowns[player.uniqueId] = System.currentTimeMillis() + cooldownTime
