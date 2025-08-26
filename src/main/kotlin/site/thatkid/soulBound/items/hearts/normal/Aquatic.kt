@@ -11,6 +11,7 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import site.thatkid.soulBound.HeartRegistry.aquaticListener
 import site.thatkid.soulBound.items.Heart
 import site.thatkid.soulBound.items.ItemCreator
 import java.util.UUID
@@ -61,35 +62,9 @@ object Aquatic: Heart() {
         }
     }
 
-//    override fun checkProgress(player: Player): String {
-//        val tracker = HeartRegistry.aquaticTracker
-//        val uuid = player.uniqueId
-//
-//        // Calculate distance and progress percentage
-//        val dist = tracker.getDistance(uuid).toInt()
-//        val required = tracker.getDistanceRequired()
-//        val percent = (dist.toDouble() / required * 100).toInt().coerceAtMost(100)
-//
-//        return when {
-//            // ✅ Player has already unlocked it
-//            tracker.hasReceived(uuid) ->
-//                "§3Aquatic Heart §8| §aUnlocked by you"
-//
-//            // 🌊 Somebody else got it (and it's single‑award globally)
-//            tracker.isGloballyReceived() -> {
-//                val winner = tracker.getGlobalWinnerName() ?: "another player"
-//                "§3Aquatic Heart §8| §cAlready claimed by $winner"
-//            }
-//
-//            // 🏁 Requirement complete, just needs claiming
-//            dist >= required ->
-//                "§3Aquatic Heart §8| §a✓ Requirement complete — awaiting award"
-//
-//            // 📈 Still progressing
-//            else ->
-//                "§3Aquatic Heart Progress: §b$dist§7/§b$required blocks §8($percent%)"
-//        }
-//    }
+    override fun checkProgress(player: Player): String {
+        return aquaticListener.getProgress(player)
+    }
 
 
 

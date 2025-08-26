@@ -49,7 +49,7 @@ How this plugin works is there is unique hearts that you can get from different 
 
 - **⚔️ Trader:** Constant is Hero of the village I and it's special is villager prices is 1 emerald
 
-- **⚔️ Warden:** Special is a sonic boom that deals 3.75 hearts of damage ignoring armour.
+- **⚔️ Warden:** Special is a sonic boom that deals 5 hearts of damage ignoring armour.
 
 - **⚔️ Golem:** Constant is permanent Resistance I and it's Special is knocking back all players and getting Resistance II and Strength II for seconds.
 

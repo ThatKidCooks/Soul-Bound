@@ -8,9 +8,12 @@ import net.axay.kspigot.extensions.broadcast
 import org.bukkit.Bukkit
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.plugin.java.JavaPlugin
-import site.thatkid.soulBound.items.HeartRegistry
+import site.thatkid.soulBound.HeartRegistry
+import site.thatkid.soulBound.managers.DiscordBot
 import java.io.File
 import java.util.UUID
+
+class CrownedListener(private val plugin: JavaPlugin, private val discordBot: DiscordBot) {
 
 /**
  * CrownedListener manages the "Crowned Heart" achievement system.
@@ -33,7 +36,6 @@ import java.util.UUID
  * 
  * @param plugin The JavaPlugin instance for file operations and logging
  */
-class CrownedListener(private val plugin: JavaPlugin) {
 
     /**
      * Data class for JSON serialization of the crowned heart progress.
@@ -101,6 +103,7 @@ class CrownedListener(private val plugin: JavaPlugin) {
                 if (crownedHeart != null) {
                     killer.inventory.addItem(crownedHeart)
                     broadcast("The Crowned Heart has been awarded to ${killer.name} for killing 15 Players First!")
+                    discordBot.sendMessage("The Crowned Heart has been awarded to ${killer.name} for killing 15 Players First!")
                     received = true // no one else can receive the Crowned Heart after this
                     save() // save the state after giving the heart
                 }

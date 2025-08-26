@@ -9,11 +9,13 @@ import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.plugin.java.JavaPlugin
+import site.thatkid.soulBound.HeartRegistry
+import site.thatkid.soulBound.managers.DiscordBot
 import site.thatkid.soulBound.items.HeartRegistry
 import java.io.File
 import java.util.UUID
 
-class HasteListener(private val plugin: JavaPlugin) {
+class HasteListener(private val plugin: JavaPlugin, private val discordBot: DiscordBot) {
 
     private val file = File(plugin.dataFolder, "haste.json")
 
@@ -53,7 +55,9 @@ class HasteListener(private val plugin: JavaPlugin) {
                 val hasteHeart = HeartRegistry.hearts["haste"]?.createItem()
                 if (hasteHeart != null) {
                     player.inventory.addItem(hasteHeart)
+                    
                     broadcast("The Haste Heart has been awarded to ${player.name} for mining 10,000 Deepslate Blocks First!")
+                    discordBot.sendMessage("The Haste Heart has been awarded to ${player.name} for mining 10,000 Deepslate Blocks First!")
                     received = true // no one else can receive the Haste Heart after this
                     save() // save the state after giving the heart
                 }

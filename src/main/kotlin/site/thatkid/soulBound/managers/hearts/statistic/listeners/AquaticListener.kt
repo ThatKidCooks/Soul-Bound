@@ -2,11 +2,21 @@ package site.thatkid.soulBound.managers.hearts.statistic.listeners
 
 import com.google.gson.GsonBuilder
 import net.kyori.adventure.text.Component
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
+import site.thatkid.soulBound.HeartRegistry
+import site.thatkid.soulBound.managers.DiscordBot
+import site.thatkid.soulBound.managers.hearts.mine.FrozenListener
+import site.thatkid.soulBound.managers.hearts.mine.FrozenListener.SaveData
+import site.thatkid.soulBound.managers.hearts.statistic.Statistic
+import java.io.File
 import site.thatkid.soulBound.items.HeartRegistry
 import site.thatkid.soulBound.managers.hearts.statistic.Statistic
 import java.io.File
+
+class AquaticListener(private val discordBot: DiscordBot) {
+
 
 /**
  * AquaticListener manages the "Aquatic Heart" achievement system.
@@ -29,7 +39,6 @@ import java.io.File
  * @see site.thatkid.soulBound.managers.hearts.statistic.Caller
  * @see site.thatkid.soulBound.managers.hearts.statistic.Statistic
  */
-class AquaticListener {
 
     /**
      * Data class for JSON serialization of the aquatic heart status.
@@ -80,9 +89,10 @@ class AquaticListener {
                     if (aquaticHeart == null) return
 
                     player.inventory.addItem(aquaticHeart)
-                    plugin.server.broadcast(Component.text("§c${player.name} was the First Person to swim 5000 blocks and has obtained the Aquatic Heart"))
-                    received = true // Prevent future awards
-                    save() // Persist the state immediately
+                    plugin.server.broadcast(Component.text("&c$player was the First Person to swim 5000 blocks and has obtained the Aquatic Heart"))
+                    discordBot.sendMessage("The Aquatic Heart has been awarded to ${player.name} for swimming 5000 blocks first!")
+                    received = true
+                    save()
                 }
             }
         }
@@ -120,15 +130,16 @@ class AquaticListener {
         }
     }
 
-    /**
-     * Gets the swimming progress for a specific player in blocks.
-     * 
-     * @param player The player to check swimming progress for
-     * @return The number of blocks the player has swum (converted from centimeters)
-     */
-    fun getProgress(player: Player): Int {
+    fun getProgress(player: Player): String {
         val stat = player.getStatistic(org.bukkit.Statistic.SWIM_ONE_CM)
-        return (stat / 100) // Convert centimeters to blocks
+
+        val msg = "$player has swum ${stat / 100} / 5000 blocks."
+
+        if (received) {
+            return "$msg The Aquatic Heart has already been claimed."
+        }
+
+        return msg
     }
 
     /**

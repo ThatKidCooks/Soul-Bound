@@ -9,11 +9,13 @@ import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.plugin.java.JavaPlugin
+import site.thatkid.soulBound.HeartRegistry
+import site.thatkid.soulBound.managers.DiscordBot
 import site.thatkid.soulBound.items.HeartRegistry
 import java.io.File
 import java.util.UUID
 
-class FrozenListener(private val plugin: JavaPlugin) {
+class FrozenListener(private val plugin: JavaPlugin, private val discordBot: DiscordBot) {
     private val file = File(plugin.dataFolder, "frozen.json")
 
     var blocksMined: MutableMap<UUID, Int> = mutableMapOf()
@@ -46,7 +48,9 @@ class FrozenListener(private val plugin: JavaPlugin) {
                 val frozenHeart = HeartRegistry.hearts["frozen"]?.createItem()
                 if (frozenHeart != null) {
                     player.inventory.addItem(frozenHeart)
+                   
                     broadcast("The Frozen Heart has been awarded to ${player.name} for mining 10,000 Ice Blocks First!")
+                    discordBot.sendMessage("The Frozen Heart has been awarded to ${player.name} for mining 10,000 Ice Blocks First!")
                     received = true // no one else can receive the Frozen Heart after this
                     save() // save the state after giving the heart
                 }
@@ -54,7 +58,7 @@ class FrozenListener(private val plugin: JavaPlugin) {
                 player.sendMessage("§7Someone already received the Frozen Heart.") // feedback message
             }
         } else {
-            player.sendMessage("§7You need ${10000 - blocksMined[playerId]!!} more blocks to receive the Frozen Heart.") // feedback message
+            player.sendMessage("§7You need ${(10000 - blocksMined[playerId]!!).coerceAtLeast(0)} more blocks to receive the Frozen Heart.") // feedback message
         }
     }
 

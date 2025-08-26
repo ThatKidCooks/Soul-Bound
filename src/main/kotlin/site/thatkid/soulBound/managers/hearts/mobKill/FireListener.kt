@@ -8,11 +8,13 @@ import net.axay.kspigot.extensions.broadcast
 import org.bukkit.Bukkit
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.plugin.java.JavaPlugin
+import site.thatkid.soulBound.HeartRegistry
+import site.thatkid.soulBound.managers.DiscordBot
 import site.thatkid.soulBound.items.HeartRegistry
 import java.io.File
 import java.util.UUID
 
-class FireListener(private val plugin: JavaPlugin) {
+class FireListener(private val plugin: JavaPlugin, private val discordBot: DiscordBot) {
 
     private data class SaveData (
         val received: Boolean = false
@@ -34,6 +36,7 @@ class FireListener(private val plugin: JavaPlugin) {
             if (fireHeart != null) {
                 killer.inventory.addItem(fireHeart)
                 broadcast("The Fire Heart has been awarded to ${killer.name} for killing a Wither First!")
+                discordBot.sendMessage("The Fire Heart has been awarded to ${killer.name} for killing a Wither First!")
                 received = true // no one else can receive the Fire Heart after this
                 save() // save the state after giving the heart
             }

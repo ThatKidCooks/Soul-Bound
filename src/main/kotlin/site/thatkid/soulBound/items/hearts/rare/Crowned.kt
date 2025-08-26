@@ -1,6 +1,7 @@
 package site.thatkid.soulBound.items.hearts.rare
 
 import net.kyori.adventure.text.Component
+import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Particle
 import org.bukkit.Sound
@@ -11,6 +12,13 @@ import org.bukkit.entity.Phantom
 import org.bukkit.entity.Player
 import org.bukkit.entity.Slime
 import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
+import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
+import site.thatkid.soulBound.HeartRegistry.crownedListener
+import site.thatkid.soulBound.hearts.TrustRegistry
+import site.thatkid.soulBound.items.Heart
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -91,33 +99,10 @@ object Crowned : Heart() {
         player.world.playSound(player.location, Sound.ENTITY_WITHER_BREAK_BLOCK, 1f, 0.5f)
         player.world.spawnParticle(Particle.EXPLOSION, player.location, 6)
     }
-
-//    override fun checkProgress(player: Player): String {
-//        val tracker = HeartRegistry.crownedTracker
-//        val uuid = player.uniqueId
-//
-//        val kills = tracker.getKills(uuid)
-//        val required = tracker.getKillsRequired()
-//        val percent = ((kills.toDouble() / required) * 100).toInt().coerceIn(0, 100)
-//
-//        return when {
-//            tracker.isClaimed() && tracker.isOwner(uuid) ->
-//                "§eCrowned Heart §8| §aUnlocked by you"
-//
-//            tracker.isClaimed() && !tracker.isOwner(uuid) -> {
-//                val winner = tracker.getOwnerName() ?: "another player"
-//                "§eCrowned Heart §8| §cAlready claimed by $winner"
-//            }
-//
-//            kills >= required ->
-//                "§eCrowned Heart §8| §a✓ Requirement complete — awaiting award"
-//
-//            else ->
-//                "§eCrowned Heart Progress: §b$kills§7/§b$required kills §8($percent%)"
-//        }
-//    }
-
-
+    
+    override fun checkProgress(player: Player): String {
+        return crownedListener.getProgress(player.uniqueId)
+    }
 
     override fun clearCooldown(uuid: UUID) {
         cooldowns.remove(uuid)

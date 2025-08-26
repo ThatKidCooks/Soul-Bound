@@ -8,6 +8,7 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import site.thatkid.soulBound.HeartRegistry.hasteListener
 import site.thatkid.soulBound.items.Heart
 import site.thatkid.soulBound.items.ItemCreator
 import java.util.*
@@ -76,24 +77,9 @@ object Haste : Heart() {
         }
     }
 
-//    override fun checkProgress(player: Player): String {
-//        val tracker = HeartRegistry.hasteTracker
-//        val uuid = player.uniqueId
-//
-//        if (tracker.isGloballyReceived()) {
-//            return if (tracker.hasReceived(uuid)) {
-//                "§6Haste Heart §8| §aUnlocked by you"
-//            } else {
-//                "§6Haste Heart §8| §cAlready claimed by another player"
-//            }
-//        }
-//
-//        val mined = tracker.getDeepslateMined(uuid)
-//        val required = tracker.getRequired()
-//        val percent = (mined.toDouble() / required * 100).coerceAtMost(100.0)
-//
-//        return "§6Haste Heart Progress: §e$mined§7/§e$required blocks §8($percent%)"
-//    }
+    override fun checkProgress(player: Player): String {
+        return hasteListener.getProgress(player.uniqueId)
+    }
 
 
     override fun clearCooldown(uuid: UUID) {

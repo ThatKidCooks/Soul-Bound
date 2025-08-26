@@ -1,6 +1,11 @@
 package site.thatkid.soulBound.items.hearts.legendary
 
 import net.kyori.adventure.text.Component
+import org.bukkit.GameMode
+import org.bukkit.Material
+import org.bukkit.NamespacedKey
+import org.bukkit.Particle
+import org.bukkit.Sound
 import org.bukkit.*
 import org.bukkit.entity.Ghast
 import org.bukkit.entity.LivingEntity
@@ -9,10 +14,12 @@ import org.bukkit.entity.Phantom
 import org.bukkit.entity.Player
 import org.bukkit.entity.Slime
 import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.Heart
+import java.util.UUID
 import site.thatkid.soulBound.items.ItemCreator
 import java.util.*
 
@@ -77,8 +84,8 @@ object Warden : Heart() {
                         if (!(entity is Monster || entity is Slime || entity is Phantom || entity is Ghast))
                             continue
                     }
-
-                    val damage = 7.5 // 3.75 hearts
+                    
+                    val damage = 10 // 5 hearts
 
                     val newHealth = (entity.health - damage).coerceAtLeast(0.0)
                     entity.health = newHealth
@@ -98,7 +105,7 @@ object Warden : Heart() {
         player.sendMessage(Component.text("§bYou unleashed a §lSonic Boom§r§b!"))
         player.world.playSound(player.location, Sound.ENTITY_WARDEN_SONIC_BOOM, 2f, 0.8f)
     }
-
+    
     override fun clearCooldown(uuid: UUID) {
         cooldowns.remove(uuid)
     }

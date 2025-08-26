@@ -1,12 +1,20 @@
 package site.thatkid.soulBound.items.hearts.rare
 
 import net.kyori.adventure.text.Component
+import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
+import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
+import site.thatkid.soulBound.HeartRegistry.wiseListener
+import site.thatkid.soulBound.hearts.TrustRegistry
+import site.thatkid.soulBound.items.Heart
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -85,36 +93,9 @@ object Wise : Heart() {
         cooldowns[playerId] = currentTime
     }
 
-//    override fun checkProgress(player: Player): String {
-//        val tracker = HeartRegistry.wiseTracker
-//        val uuid = player.uniqueId
-//
-//        if (tracker.globallyReceived) {
-//            return if (tracker.recipient == uuid) {
-//                "§5Wise Heart §8| §aUnlocked by you"
-//            } else {
-//                "§5Wise Heart §8| §cAlready claimed by another player"
-//            }
-//        }
-//
-//        val brewed = tracker.playerBrewedPotions[uuid]?.size ?: 0
-//        val kills = tracker.playerPotionKills[uuid] ?: 0
-//        val totalPotions = tracker.allBrewablePotions.size
-//
-//        val brewStatus = if (brewed >= totalPotions) {
-//            "§a✓ Brewing complete"
-//        } else {
-//            "§7Brewed §f$brewed§7/§f$totalPotions potions"
-//        }
-//
-//        val killStatus = if (kills >= 5) {
-//            "§a✓ PvP complete"
-//        } else {
-//            "§7Kills under potion effects: §f$kills§7/§f5"
-//        }
-//
-//        return "§5Wise Heart Progress:\n$brewStatus\n$killStatus"
-//    }
+    override fun checkProgress(player: Player): String {
+        return wiseListener.getProgress(player.uniqueId)
+    }
 
 
     override fun clearCooldown(playerId: UUID) {

@@ -52,6 +52,7 @@ object HeartRegistry {
 
     /** Reference to the main plugin instance for logging and file operations */
     private lateinit var plugin: JavaPlugin
+    private lateinit var discordBot: DiscordBot
 
     /** 
      * Registry mapping heart names to their corresponding Heart objects.
@@ -62,7 +63,6 @@ object HeartRegistry {
         
     /** Manager for trust relationships between players (for certain heart mechanics) */
     lateinit var trustmanager: TrustStorageManager
-
     /**
      * Initializes the heart registry with the plugin instance and creates the hearts mapping.
      * Must be called during plugin initialization before any hearts can be used.
@@ -105,7 +105,6 @@ object HeartRegistry {
     
     /** Manages fire/lava related activities for the Fire Heart */
     lateinit var fireListener: FireListener
-    
     /** Manages ice/snow related activities for the Frozen Heart */
     lateinit var frozenListener: FrozenListener
     
@@ -155,37 +154,37 @@ object HeartRegistry {
         // Only create instances if they don't already exist (prevents double initialization)
         
         if (!this::crownedListener.isInitialized) {
-            crownedListener = CrownedListener(plugin)
+            crownedListener = CrownedListener(plugin, discordBot)
         }
         if (!this::strengthListener.isInitialized) {
-            strengthListener = StrengthListener(plugin)
+            strengthListener = StrengthListener(plugin, discordBot)
         }
         if (!this::hasteListener.isInitialized) {
-            hasteListener = HasteListener(plugin)
+            hasteListener = HasteListener(plugin, discordBot)
         }
         if (!this::fireListener.isInitialized) {
-            fireListener = FireListener(plugin)
+            fireListener = FireListener(plugin, discordBot)
         }
         if (!this::frozenListener.isInitialized) {
-            frozenListener = FrozenListener(plugin)
+            frozenListener = FrozenListener(plugin, discordBot)
         }
         if (!this::aquaticListener.isInitialized) {
-            aquaticListener = AquaticListener()
+            aquaticListener = AquaticListener(discordBot)
         }
         if (!this::golemListener.isInitialized) {
-            golemListener = GolemListener()
+            golemListener = GolemListener(discordBot)
         }
         if (!this::ghastlyListener.isInitialized) {
-            ghastlyListener = GhastlyListener(plugin)
+            ghastlyListener = GhastlyListener(plugin, discordBot)
         }
         if (!this::speedListener.isInitialized) {
-            speedListener = SpeedListener()
+            speedListener = SpeedListener(discordBot)
         }
         if (!this::wiseListener.isInitialized) {
-            wiseListener = WiseListener(plugin)
+            wiseListener = WiseListener(plugin, discordBot)
         }
         if (!this::traderListener.isInitialized) {
-            traderListener = TraderListener(plugin)
+            traderListener = TraderListener(plugin, discordBot)
         }
 
         // ===== CONFIGURE SPECIAL RELATIONSHIPS =====

@@ -5,11 +5,13 @@ import net.kyori.adventure.text.Component
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
+import site.thatkid.soulBound.HeartRegistry
+import site.thatkid.soulBound.managers.DiscordBot
 import site.thatkid.soulBound.items.HeartRegistry
 import site.thatkid.soulBound.managers.hearts.statistic.Statistic
 import java.io.File
 
-class GolemListener {
+class GolemListener(private val discordBot: DiscordBot) {
 
     data class SaveData(
         val received: Boolean = false
@@ -34,6 +36,7 @@ class GolemListener {
 
                     player.inventory.addItem(golemHeart)
                     plugin.server.broadcast(Component.text("&c$player was the First Person to kill 100 naturally spawned Iron Golems and has earned the Golem Heart"))
+                    discordBot.sendMessage("The Golem Heart has been awarded to ${player.name} for killing 100 naturally spawned Iron Golems first!")
                     received = true
                     save()
                 }
@@ -66,9 +69,16 @@ class GolemListener {
         }
     }
 
-    fun getProgress(player: Player): Int {
-        val stat = player.getStatistic(org.bukkit.Statistic.SWIM_ONE_CM)
-        return (stat / 100)
+    fun getProgress(player: Player): String {
+        val stat = player.getStatistic(org.bukkit.Statistic.KILL_ENTITY, EntityType.IRON_GOLEM)
+
+        val msg = "$player has killed $stat/100 naturally spawned Iron Golems"
+
+        if (received) {
+            return "$msg The Golem Heart has already been claimed."
+        }
+
+        return msg
     }
 
     fun setGlobalReceived(received: Boolean) {

@@ -1,5 +1,7 @@
 package site.thatkid.soulBound.items.hearts.legendary
 
+import net.kyori.adventure.text.Component
+import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
@@ -8,6 +10,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -50,7 +53,6 @@ object Wither : Heart(), Listener {
             attacker.sendMessage("§aYou inflicted Wither I on ${entity.name}!")
         }
     }
-
     override fun specialEffect(player: Player) {
         val now = System.currentTimeMillis()
         val until = cooldowns[player.uniqueId] ?: 0L
@@ -76,24 +78,6 @@ object Wither : Heart(), Listener {
 
         player.sendMessage("§aWither Blast unleashed!")
     }
-
-//    override fun checkProgress(player: Player): String {
-//        val tracker = HeartRegistry.witherTracker
-//        val uuid = player.uniqueId
-//
-//        if (tracker.isHeartClaimed()) {
-//            return if (tracker.hasReceived(uuid)) {
-//                "§8Wither Heart §8| §aUnlocked by you"
-//            } else {
-//                val winner = tracker.getWinnerName() ?: "another player"
-//                "§8Wither Heart §8| §cAlready claimed by $winner"
-//            }
-//        }
-//
-//        val kills = tracker.getKills(uuid)
-//        return "§8Wither Heart Progress: §f$kills§7/§f7 Wither kills"
-//    //
-
 
     override fun clearCooldown(playerId: UUID) {
         cooldowns.remove(playerId)

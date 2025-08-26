@@ -1,6 +1,7 @@
 package site.thatkid.soulBound.managers.hearts.every
 
 import com.google.gson.GsonBuilder
+import io.papermc.paper.command.brigadier.argument.ArgumentTypes.player
 import net.axay.kspigot.event.listen
 import net.axay.kspigot.event.register
 import net.axay.kspigot.event.unregister
@@ -14,11 +15,14 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffectType
+import site.thatkid.soulBound.HeartRegistry
+import site.thatkid.soulBound.managers.DiscordBot
 import site.thatkid.soulBound.items.HeartRegistry
 import java.io.File
 import java.io.IOException
 import java.util.*
 
+class WiseListener(private val plugin: JavaPlugin, private val discordBot: DiscordBot) {
 /**
  * WiseListener manages the "Wise Heart" achievement system.
  * 
@@ -50,7 +54,6 @@ import java.util.*
  * 
  * @param plugin The JavaPlugin instance for file operations and logging
  */
-class WiseListener(private val plugin: JavaPlugin) {
 
     /**
      * Data class for JSON serialization of the wise heart progress.
@@ -83,7 +86,7 @@ class WiseListener(private val plugin: JavaPlugin) {
      * This is essential because BrewEvent doesn't directly tell us which player initiated the brewing.
      */
     private var lastBrewer: MutableMap<Location, UUID> = mutableMapOf()
-
+    
     /** Transient reference for serialization compatibility */
     @Transient
     private var someReference: java.lang.ref.Reference<*>? = null
@@ -115,22 +118,38 @@ class WiseListener(private val plugin: JavaPlugin) {
         // Get the player who last interacted with this brewing stand
         val brewerId = lastBrewer[event.block.location] ?: return@listen
         val brewer = Bukkit.getPlayer(brewerId) ?: return@listen
+        */
 
-        // Examine all items produced by this brewing event
-        for (item in event.contents) {
-            if (item == null) continue
-            val meta = item.itemMeta
-            if (meta is PotionMeta) {
-                val effect = meta.basePotionType?.effectType ?: continue
+        Bukkit.getScheduler().runTaskLater(plugin, Runnable {
+            val brewingStand = event.block.state as? BrewingStand ?: return@Runnable
+            
 
-                println("Potion brewed by ${brewer.name}: $effect") // Debug output
+            for (i in 0..2) {
+                val item = brewingStand.inventory.getItem(i) ?: continue
+                val meta = item.itemMeta
+                if (meta is PotionMeta) {
+                    println("Checking final result in slot $i")
+                    
 
-                // Add this effect type to the player's collection of brewed effects
-                val set = brewedPotions.computeIfAbsent(brewer.uniqueId) { mutableSetOf() }
-                set.add(effect)
+                    val effect = when {
+
+                        meta.basePotionType?.effectType != null -> meta.basePotionType!!.effectType
+
+                        meta.hasCustomEffects() -> meta.customEffects.firstOrNull()?.type
+
+                        meta.basePotionData?.type?.effectType != null -> meta.basePotionData!!.type.effectType
+                        else -> null
+                    }
+
+                    if (effect != null) {
+                        println("Potion brewed by ${brewer.name}: $effect") // debug
+
+                        val set = brewedPotions.computeIfAbsent(brewer.uniqueId) { mutableSetOf() }
+                        set.add(effect)
+                        save()
+                    }
+                }
             }
-        }
-
         // Check if this player has now brewed all possible potion effects
         val craftablePotionEffects = PotionEffectType.values()
             .filterNotNull().toSet()
@@ -140,12 +159,14 @@ class WiseListener(private val plugin: JavaPlugin) {
             plugin.server.broadcast(Component.text("§a${brewer.name} has brewed all possible potion effects and received the Wise Heart!"))
             val wiseHeart = HeartRegistry.hearts["wise"]?.createItem()
 
-            if (wiseHeart != null) {
-                brewer.inventory.addItem(wiseHeart)
+                if (wiseHeart != null) {
+                    brewer.inventory.addItem(wiseHeart)
+                }
+                received = true
+                save()
             }
-            received = true // Prevent future awards
-            save() // Persist the achievement immediately
-        }
+        }, 1L)
+
     }
 
     /**
@@ -178,11 +199,13 @@ class WiseListener(private val plugin: JavaPlugin) {
      */
     fun save() {
         try {
-            // Convert PotionEffectType objects to String names for JSON serialization
-            val serializedPotions = brewedPotions.mapValues { (_, effects) ->
+            // Convert Location keys to String keys and PotionEffectType to String names for serialization
+            val lastBrewerStrings = lastBrewer.mapKeys { locationToString(it.key) }.toMutableMap()
+            val brewedPotionsStrings = brewedPotions.mapValues { (_, effects) ->
                 effects.mapNotNull { it.name }.toMutableSet()
-            }
-            val saveData = SaveData(serializedPotions as MutableMap<UUID, MutableSet<String>>, received)
+            }.toMutableMap()
+            
+            val saveData = SaveData(brewedPotionsStrings, lastBrewerStrings, received)
             val json = gson.toJson(saveData)
             file.parentFile.mkdirs() // Ensure directory exists
             file.writeText(json)
@@ -208,16 +231,42 @@ class WiseListener(private val plugin: JavaPlugin) {
             val json = file.readText()
             val saveData = gson.fromJson(json, SaveData::class.java)
             
-            // Convert String names back to PotionEffectType objects, filtering out any that no longer exist
+            // Convert String names back to PotionEffectType objects
             brewedPotions = saveData.brewedPotions.mapValues { (_, effectNames) ->
-                effectNames.mapNotNull { PotionEffectType.getByName(it) }.toMutableSet()
+                effectNames.mapNotNull { name ->
+                    PotionEffectType.values().find { it.name == name }
+                }.toMutableSet()
             }.toMutableMap()
             
+            // Convert String keys back to Location keys
+            lastBrewer = saveData.lastBrewer.mapNotNull { (locationString, uuid) ->
+                stringToLocation(locationString)?.let { it to uuid }
+            }.toMap().toMutableMap()
             received = saveData.received
             plugin.logger.info("WiseListener data loaded from ${file.absolutePath}")
         } catch (e: IOException) {
             plugin.logger.severe("Failed to load WiseListener data: ${e.message}")
             e.printStackTrace()
         }
+    }
+
+    fun getProgress(playerId: UUID): String {
+        val effects = brewedPotions[playerId] ?: return "No potions brewed yet."
+        val msg: String
+        if (effects.isEmpty()) {
+            msg = "No potions brewed yet."
+        } else {
+            msg = "Brewed Potions: ${effects.joinToString(", ") { it.name }}"
+        }
+
+        if (received) {
+            return "$msg §cThe Wise Heart has already been received by a player."
+        }
+
+        return msg
+    }
+
+    fun setGlobalReceived(received: Boolean) {
+        this.received = received
     }
 }
