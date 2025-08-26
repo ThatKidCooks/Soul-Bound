@@ -9,7 +9,6 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
 import site.thatkid.soulBound.hearts.ActiveHearts
 import site.thatkid.soulBound.items.Heart
-import site.thatkid.soulBound.items.hearts.normal.Ghastly
 import java.util.*
 
 class DisplayHearts(private val plugin: JavaPlugin) : BukkitRunnable() {
