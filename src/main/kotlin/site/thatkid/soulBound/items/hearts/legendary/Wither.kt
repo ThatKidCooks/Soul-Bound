@@ -51,12 +51,15 @@ object Wither : Heart(), Listener {
         }
     }
 
-    
     override fun specialEffect(player: Player) {
-        if (cooldowns.containsKey(player.uniqueId) && System.currentTimeMillis() < cooldowns[player.uniqueId]!!) {
-            player.sendMessage("§cYou must wait before using Wither Blast again.")
+        val now = System.currentTimeMillis()
+        val until = cooldowns[player.uniqueId] ?: 0L
+        if (now < until) {
+            val remaining = (until - now) / 1000
+            player.sendMessage("§cYou must wait $remaining seconds before using Wither Blast again.")
             return
         }
+        cooldowns[player.uniqueId] = now + cooldownTime
 
         val direction = player.location.direction
         val numHeads = 5 // Number of wither heads to shoot - this one is so obvious
@@ -71,7 +74,6 @@ object Wither : Heart(), Listener {
             head.velocity = direction.clone().multiply(1.5 + i * spacing)
         }
 
-        cooldowns[player.uniqueId] = System.currentTimeMillis() + cooldownTime
         player.sendMessage("§aWither Blast unleashed!")
     }
 
@@ -90,8 +92,7 @@ object Wither : Heart(), Listener {
 //
 //        val kills = tracker.getKills(uuid)
 //        return "§8Wither Heart Progress: §f$kills§7/§f7 Wither kills"
-//    }
-//
+//    //
 
 
     override fun clearCooldown(playerId: UUID) {
@@ -99,6 +100,9 @@ object Wither : Heart(), Listener {
     }
 
     override fun getCooldown(playerId: UUID): Long {
-        return cooldowns[playerId] ?: 0L
+        val until = cooldowns[playerId] ?: return 0L
+        val now = System.currentTimeMillis()
+        val remaining = until - now
+        return if (remaining > 0) remaining else 0L
     }
 }

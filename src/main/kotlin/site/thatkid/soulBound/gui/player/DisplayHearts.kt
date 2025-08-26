@@ -61,19 +61,8 @@ class DisplayHearts(private val plugin: JavaPlugin) : BukkitRunnable() {
     }
 
     private fun formatCooldown(heart: Heart, player: Player): String {
-        val playerId = player.uniqueId
-        val cooldownStart = heart.getCooldown(playerId)
-        val cooldownDuration = try {
-            val field = heart.javaClass.getDeclaredField("cooldownTime")
-            field.isAccessible = true
-            field.getLong(heart)
-        } catch (e: Exception) {
-            0L
-        }
-        if (cooldownStart == 0L || cooldownDuration == 0L) return "Ready"
-        val now = System.currentTimeMillis()
-        val remaining = (cooldownDuration - (now - cooldownStart)) / 1000
-        return if (remaining > 0) "${remaining}s" else "Ready"
+        val remaining = heart.getCooldown(player.uniqueId)
+        return if (remaining > 0) "${remaining / 1000}s" else "Ready"
     }
 
     private fun isPlayerInvisible(player: Player): Boolean {
