@@ -13,53 +13,20 @@ import site.thatkid.soulBound.items.HeartRegistry
 import java.io.File
 import java.util.UUID
 
-/**
- * HasteListener manages the "Haste Heart" achievement system.
- * 
- * The Haste Heart is awarded to the first player who mines 10,000 deepslate blocks.
- * This includes all variants of deepslate blocks and ores found in the deepslate layer.
- * 
- * Key Features:
- * - Tracks deepslate block mining for all players
- * - Awards the Haste Heart to the first player reaching the goal
- * - Provides progress feedback to players
- * - Persists data across server restarts
- * - Ensures only one player can receive the heart
- * 
- * @param plugin The JavaPlugin instance for file operations and logging
- */
 class HasteListener(private val plugin: JavaPlugin) {
 
-    /** File path for persistent data storage */
     private val file = File(plugin.dataFolder, "haste.json")
 
-    /** 
-     * Tracks the number of deepslate blocks mined by each player.
-     * Key: Player UUID, Value: Number of deepslate blocks mined
-     */
     var blocksMined: MutableMap<UUID, Int> = mutableMapOf()
-    
-    /** Flag indicating whether the Haste Heart has been awarded to any player */
     private var received: Boolean = false
 
-    /** JSON serializer for save/load operations */
     val gson = GsonBuilder().setPrettyPrinting().create()
 
-    /**
-     * Data class for JSON serialization of the haste heart progress.
-     * 
-     * @property blocksMined Map of player UUIDs to their deepslate block mining counts
-     * @property received Whether the Haste Heart has been awarded to any player
-     */
     data class SaveData(
         val blocksMined: MutableMap<UUID, Int> = mutableMapOf(),
         val received: Boolean = false
     )
 
-    /**
-     * Set of all deepslate block types that count toward the Haste Heart.
-     * Includes both regular deepslate blocks and all deepslate ore variants.
-     */
     private val deepslateTypes = setOf(
         Material.DEEPSLATE,
         Material.COBBLED_DEEPSLATE,
@@ -73,76 +40,49 @@ class HasteListener(private val plugin: JavaPlugin) {
         Material.DEEPSLATE_EMERALD_ORE
     )
 
-    /**
-     * Event listener for block break events.
-     * 
-     * This tracks deepslate block mining and awards the Haste Heart when a player
-     * reaches the 10,000 block milestone. Provides feedback to players about their
-     * progress and the status of the heart.
-     */
     private val listener = listen<BlockBreakEvent> {
         val player = it.player
         val playerId = player.uniqueId
         val blocks = blocksMined.computeIfAbsent(playerId) { 0 }
-        
-        // Only count deepslate blocks toward the achievement
         if (!deepslateTypes.contains(it.block.type)) return@listen
-        
-        // Increment the block count for this player
-        blocksMined[playerId] = blocks + 1
+        blocksMined[playerId] = blocks + 1 // increment the block count for the player
 
-        // Check if the player has reached the milestone
-        if (blocksMined[playerId]!! >= 10000) {
+        if (blocksMined[playerId]!! >= 10000) { // check if the player has mined enough blocks
             if (!received) {
-                // Award the Haste Heart to this player
+                // Give the player a Haste Heart item
                 val hasteHeart = HeartRegistry.hearts["haste"]?.createItem()
                 if (hasteHeart != null) {
                     player.inventory.addItem(hasteHeart)
                     broadcast("The Haste Heart has been awarded to ${player.name} for mining 10,000 Deepslate Blocks First!")
-                    received = true // Prevent future awards
-                    save() // Persist the state immediately
+                    received = true // no one else can receive the Haste Heart after this
+                    save() // save the state after giving the heart
                 }
             } else {
-                // Heart already awarded to someone else
-                player.sendMessage("§7Someone already received the Haste Heart.")
+                player.sendMessage("§7Someone already received the Haste Heart.") // feedback message
             }
         } else {
-            // Show progress to the player
-            val remaining = 10000 - blocksMined[playerId]!!
-            player.sendMessage("§7You need $remaining more blocks to receive the Haste Heart.")
+            player.sendMessage("§7You need ${10000 - blocksMined[playerId]!!} more blocks to receive the Haste Heart.") // feedback message
         }
     }
 
-    /**
-     * Enables this listener and loads any existing data from disk.
-     * Should be called when the plugin starts or when this heart system is activated.
-     */
     fun enable() {
-        load() // Load existing progress from disk
+        load()
         listener.register()
     }
 
-    /**
-     * Disables this listener and saves current data to disk.
-     * Should be called when the plugin stops or when this heart system is deactivated.
-     */
     fun disable() {
         listener.unregister()
-        save() // Persist current progress before shutdown
+        save()
     }
 
-    /**
-     * Loads haste heart progress from the JSON file.
-     * If the file doesn't exist, starts with empty data.
-     */
     fun load() {
         if (!file.exists()) return
         try {
             val json = file.readText()
-            val saveData = gson.fromJson(json, SaveData::class.java)
-            blocksMined = saveData.blocksMined.toMutableMap()
-            received = saveData.received
-            plugin.logger.info("Haste data loaded from ${file.absolutePath}")
+            val saveData = gson.fromJson(json, SaveData::class.java) // convert the saved JSON to SaveData object
+            blocksMined = saveData.blocksMined.toMutableMap() // set the kills map
+            received = saveData.received // set the received state
+            plugin.logger.info("Haste data loaded from ${file.absolutePath}") // log the load
         } catch (ex: Exception) {
             plugin.logger.warning("Failed to load haste.json: ${ex.message}")
             blocksMined = mutableMapOf()
@@ -150,28 +90,19 @@ class HasteListener(private val plugin: JavaPlugin) {
         }
     }
 
-    /**
-     * Saves the current haste heart progress to a JSON file.
-     */
     fun save() {
         try {
-            val saveData = SaveData(blocksMined, received)
-            val json = gson.toJson(saveData)
-            file.parentFile?.mkdirs() // Ensure directory exists
-            file.writeText(json)
-            plugin.logger.info("Haste data saved to ${file.absolutePath}")
+            val saveData = SaveData(blocksMined, received) // create a SaveData object with current state
+            val json = gson.toJson(saveData) // convert the SaveData object to JSON
+            file.parentFile?.mkdirs() // ensure the directory exists
+            file.writeText(json) // write the JSON to the file
+            plugin.logger.info("Haste data saved to ${file.absolutePath}") // log the save
         } catch (ex: Exception) {
             plugin.logger.warning("Failed to save haste.json: ${ex.message}")
         }
     }
 
-    /**
-     * Gets a formatted progress string for the specified player.
-     * 
-     * @param playerId The UUID of the player to check
-     * @return A formatted string showing mining progress and completion percentage
-     */
-    fun getProgress(playerId: UUID): String {
+    fun getProgress(playerId: UUID): String { // this seems easy to understand
         val blocks = blocksMined.computeIfAbsent(playerId) { 0 }
         val total = 10000
         val percent = ((blocks * 100) / total).coerceAtMost(100)
@@ -184,12 +115,6 @@ class HasteListener(private val plugin: JavaPlugin) {
         return msg
     }
 
-    /**
-     * Manually sets the global received status.
-     * Used for administrative purposes or testing.
-     * 
-     * @param received Whether the heart should be marked as received
-     */
     fun setGlobalReceived(received: Boolean) {
         this.received = received
     }

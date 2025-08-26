@@ -21,6 +21,9 @@ object Dragon: Heart() {
 
     private const val RADIUS = 3.0
 
+    private val cooldowns = mutableMapOf<UUID, Long>()
+    private val cooldownTime = 120 * 1000L // 2 minutes in milliseconds
+
     override fun createItem(): ItemStack {
         return ItemCreator.itemCreator(14)
     }
@@ -31,15 +34,26 @@ object Dragon: Heart() {
     }
 
     override fun specialEffect(player: Player) {
-        TODO("Not yet implemented")
+        val now = System.currentTimeMillis()
+        val lastUsed = cooldowns[player.uniqueId] ?: 0L
+        if (now - lastUsed < cooldownTime) {
+            val remaining = (cooldownTime - (now - lastUsed)) / 1000
+            player.sendMessage("§cDragon ability is on cooldown! Wait $remaining seconds.")
+            return
+        }
+        cooldowns[player.uniqueId] = now
+        // TODO: Implement actual dragon special effect logic here
     }
 
     override fun clearCooldown(playerId: UUID) {
-        TODO("Not yet implemented")
+        cooldowns.remove(playerId)
     }
 
     override fun getCooldown(playerId: UUID): Long {
-        TODO("Not yet implemented")
+        val lastUsed = cooldowns[playerId] ?: return 0L
+        val now = System.currentTimeMillis()
+        val remaining = cooldownTime - (now - lastUsed)
+        return if (remaining > 0) remaining else 0L
     }
 
     fun spawnParticles(spawn: Location) {
