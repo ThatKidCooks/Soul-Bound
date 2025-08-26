@@ -59,11 +59,12 @@ class Caller(statistic: Statistic) {
         aquaticListener.check(statistic)
         golemListener.check(statistic)
         speedListener.check(statistic)
+        // Add more statistic based checks later
         
         // Performance optimization: Stop the task if all hearts have been awarded
         // This prevents unnecessary CPU usage once all achievements are complete
         if (aquaticListener.received && golemListener.received && speedListener.received) {
-            cancel() // No more hearts to award, stop the periodic checks
+            cancel() // Stop the task if there is no reason to run it
         }
     }
 }

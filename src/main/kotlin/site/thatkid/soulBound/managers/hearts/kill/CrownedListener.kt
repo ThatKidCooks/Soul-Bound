@@ -85,6 +85,7 @@ class CrownedListener(private val plugin: JavaPlugin) {
         val victims = kills.computeIfAbsent(killerId) { mutableListOf() }
         
         // Check if Strength Heart has been obtained (linked progression requirement)
+        // Don't allow Crowned Heart to be given before Strength Heart
         if (!strengthListener.received) {
             killer.sendMessage("You killed ${victim.name}, however this kill will go to the strength heart progress as that hasn't been earned yet.")
             return@listen
@@ -103,15 +104,15 @@ class CrownedListener(private val plugin: JavaPlugin) {
                 if (crownedHeart != null) {
                     killer.inventory.addItem(crownedHeart)
                     broadcast("The Crowned Heart has been awarded to ${killer.name} for killing 15 Players First!")
-                    received = true // Prevent future awards
-                    save() // Persist the state immediately
+                    received = true // No one else can receive the Crowned Heart after this
+                    save() // Save the state after giving the heart
                 }
             } else {
                 // Heart already awarded to someone else
                 killer.sendMessage("§7Someone already received the Crowned Heart.")
             }
         } else {
-            // Show progress to the killer (note: there's a bug in the original - should be 15, not 5)
+            // Show progress to the killer
             val remaining = 15 - victims.size
             killer.sendMessage("§7You need $remaining more kills to receive the Crowned Heart.")
         }
@@ -143,10 +144,10 @@ class CrownedListener(private val plugin: JavaPlugin) {
         if (!file.exists()) return
         try {
             val json = file.readText()
-            val saveData = gson.fromJson(json, SaveData::class.java)
-            kills = saveData.kills.toMutableMap()
-            received = saveData.received
-            plugin.logger.info("Crowned data loaded from ${file.absolutePath}")
+            val saveData = gson.fromJson(json, SaveData::class.java) // Convert the saved JSON to SaveData object
+            kills = saveData.kills.toMutableMap() // Set the kills map
+            received = saveData.received // Set the received state
+            plugin.logger.info("Crowned data loaded from ${file.absolutePath}") // Log the load
         } catch (ex: Exception) {
             plugin.logger.warning("Failed to load crowned.json: ${ex.message}")
             kills = mutableMapOf()
@@ -159,11 +160,11 @@ class CrownedListener(private val plugin: JavaPlugin) {
      */
     fun save() {
         try {
-            val saveData = SaveData(kills, received)
-            val json = gson.toJson(saveData)
-            file.parentFile?.mkdirs() // Ensure directory exists
-            file.writeText(json)
-            plugin.logger.info("Crowned data saved to ${file.absolutePath}")
+            val saveData = SaveData(kills, received) // Create a SaveData object with current state
+            val json = gson.toJson(saveData) // Convert the SaveData object to JSON
+            file.parentFile?.mkdirs() // Ensure the directory exists
+            file.writeText(json) // Write the JSON to the file
+            plugin.logger.info("Crowned data saved to ${file.absolutePath}") // Log the save
         } catch (ex: Exception) {
             plugin.logger.warning("Failed to save crowned.json: ${ex.message}")
         }

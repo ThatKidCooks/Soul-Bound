@@ -109,26 +109,23 @@ object HeartRegistry {
     /** Manages ice/snow related activities for the Frozen Heart */
     lateinit var frozenListener: FrozenListener
     
-    /** Manages Nether advancement completion for the Ghastly Heart */
-    lateinit var ghastlyListener: GhastlyListener
-    
-    /** Manages potion brewing completion for the Wise Heart (rare) */
-    lateinit var wiseListener: WiseListener
-    
-    /** Manages trading activities for the Trader Heart */
-    lateinit var traderListener: TraderListener
-
-    // ===== STATISTIC-BASED HEART LISTENERS =====
-    // These listeners are managed by the Caller system for periodic checks
-    
     /** Manages swimming distance statistics for the Aquatic Heart */
     lateinit var aquaticListener: AquaticListener
     
     /** Manages iron golem interaction statistics for the Golem Heart */
     lateinit var golemListener: GolemListener
     
+    /** Manages Nether advancement completion for the Ghastly Heart */
+    lateinit var ghastlyListener: GhastlyListener
+    
     /** Manages movement distance statistics for the Speed Heart */
     lateinit var speedListener: SpeedListener
+    
+    /** Manages potion brewing completion for the Wise Heart (rare) */
+    lateinit var wiseListener: WiseListener
+    
+    /** Manages trading activities for the Trader Heart */
+    lateinit var traderListener: TraderListener
 
     // ===== STATISTIC MANAGEMENT SYSTEM =====
     
@@ -172,27 +169,23 @@ object HeartRegistry {
         if (!this::frozenListener.isInitialized) {
             frozenListener = FrozenListener(plugin)
         }
-        if (!this::ghastlyListener.isInitialized) {
-            ghastlyListener = GhastlyListener(plugin)
-        }
-        if (!this::wiseListener.isInitialized) {
-            wiseListener = WiseListener(plugin)
-        }
-        if (!this::traderListener.isInitialized) {
-            traderListener = TraderListener(plugin)
-        }
-
-        // ===== INITIALIZE STATISTIC-BASED LISTENERS =====
-        // These don't require plugin references as they're managed by the Caller
-        
         if (!this::aquaticListener.isInitialized) {
             aquaticListener = AquaticListener()
         }
         if (!this::golemListener.isInitialized) {
             golemListener = GolemListener()
         }
+        if (!this::ghastlyListener.isInitialized) {
+            ghastlyListener = GhastlyListener(plugin)
+        }
         if (!this::speedListener.isInitialized) {
             speedListener = SpeedListener()
+        }
+        if (!this::wiseListener.isInitialized) {
+            wiseListener = WiseListener(plugin)
+        }
+        if (!this::traderListener.isInitialized) {
+            traderListener = TraderListener(plugin)
         }
 
         // ===== CONFIGURE SPECIAL RELATIONSHIPS =====
@@ -225,7 +218,6 @@ object HeartRegistry {
         caller.task
     }
 
-
     /**
      * Disables all heart listeners and stops background tasks.
      * 
@@ -244,13 +236,11 @@ object HeartRegistry {
         if (this::hasteListener.isInitialized) hasteListener.disable()
         if (this::fireListener.isInitialized) fireListener.disable()
         if (this::frozenListener.isInitialized) frozenListener.disable()
+        if (this::aquaticListener.isInitialized) aquaticListener.save()
+        if (this::golemListener.isInitialized) golemListener.save()
         if (this::ghastlyListener.isInitialized) ghastlyListener.disable()
         if (this::wiseListener.isInitialized) wiseListener.disable()
         if (this::traderListener.isInitialized) traderListener.disable()
-        
-        // Save statistic-based listeners (they don't have event handlers to unregister)
-        if (this::aquaticListener.isInitialized) aquaticListener.save()
-        if (this::golemListener.isInitialized) golemListener.save()
 
         // Stop the periodic statistics checking task
         caller.task?.cancel()
@@ -270,14 +260,12 @@ object HeartRegistry {
         if (this::hasteListener.isInitialized) hasteListener.save()
         if (this::fireListener.isInitialized) fireListener.save()
         if (this::frozenListener.isInitialized) frozenListener.save()
-        if (this::ghastlyListener.isInitialized) ghastlyListener.save()
-        if (this::wiseListener.isInitialized) wiseListener.save()
-        if (this::traderListener.isInitialized) traderListener.save()
-        
-        // Save progress for all statistic-based hearts
         if (this::aquaticListener.isInitialized) aquaticListener.save()
         if (this::golemListener.isInitialized) golemListener.save()
+        if (this::ghastlyListener.isInitialized) ghastlyListener.save()
         if (this::speedListener.isInitialized) speedListener.save()
+        if (this::wiseListener.isInitialized) wiseListener.save()
+        if (this::traderListener.isInitialized) traderListener.save()
     }
 
     /**
@@ -294,13 +282,11 @@ object HeartRegistry {
         if (this::hasteListener.isInitialized) hasteListener.load()
         if (this::fireListener.isInitialized) fireListener.load()
         if (this::frozenListener.isInitialized) frozenListener.load()
-        if (this::ghastlyListener.isInitialized) ghastlyListener.load()
-        if (this::wiseListener.isInitialized) wiseListener.load()
-        if (this::traderListener.isInitialized) traderListener.load()
-        
-        // Load progress for all statistic-based hearts
         if (this::aquaticListener.isInitialized) aquaticListener.load()
         if (this::golemListener.isInitialized) golemListener.load()
+        if (this::ghastlyListener.isInitialized) ghastlyListener.load()
         if (this::speedListener.isInitialized) speedListener.load()
+        if (this::wiseListener.isInitialized) wiseListener.load()
+        if (this::traderListener.isInitialized) traderListener.load()
     }
 }

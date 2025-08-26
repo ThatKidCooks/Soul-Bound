@@ -39,10 +39,10 @@ class Statistic {
         
         // Use FALLING_BLOCK as a sentinel value to indicate simple statistics
         if (entity == EntityType.FALLING_BLOCK) {
-            return player.getStatistic(statistic) // Simple statistics (distance, time, etc.)
+            return player.getStatistic(statistic) // For statistics that don't require an entity type, like distance walked
         }
         
-        return player.getStatistic(statistic, entity) // Entity-specific statistics (kills, damage, etc.)
+        return player.getStatistic(statistic, entity) // How did I not know player.getStatistic wasn't a thing lol
     }
 
     /**
