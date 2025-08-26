@@ -61,7 +61,7 @@ class HasteListener(private val plugin: JavaPlugin) {
                 player.sendMessage("§7Someone already received the Haste Heart.") // feedback message
             }
         } else {
-            player.sendMessage("§7You need ${100 - blocksMined[playerId]!!} more blocks to receive the Haste Heart.") // feedback message
+            player.sendMessage("§7You need ${10000 - blocksMined[playerId]!!} more blocks to receive the Haste Heart.") // feedback message
         }
     }
 

@@ -1,6 +1,7 @@
 package site.thatkid.soulBound.gui.player
 
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.bukkit.Bukkit
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.EntityType
@@ -37,7 +38,7 @@ class DisplayHearts(private val plugin: JavaPlugin) : BukkitRunnable() {
                 stand.teleport(loc)
             }
             updateViewerVisibility(owner, stand)
-            }
+        }
         cleanupMissingOwners()
     }
 
@@ -53,10 +54,26 @@ class DisplayHearts(private val plugin: JavaPlugin) : BukkitRunnable() {
     private fun detailedSymbols(heart: Heart, player: Player): MutableList<String> {
         val list = mutableListOf<String>()
 
-        list.add(heart.createItem().itemMeta.displayName().toString())
-        list.add("§fCooldown: ${heart.getCooldown(player.uniqueId)}")
+        list.add(heart.createItem().itemMeta.displayName()?.let { LegacyComponentSerializer.legacySection().serialize(it) } ?: "")
+        list.add(formatCooldown(heart, player))
 
         return list
+    }
+
+    private fun formatCooldown(heart: Heart, player: Player): String {
+        val playerId = player.uniqueId
+        val cooldownStart = heart.getCooldown(playerId)
+        val cooldownDuration = try {
+            val field = heart.javaClass.getDeclaredField("cooldownTime")
+            field.isAccessible = true
+            field.getLong(heart)
+        } catch (e: Exception) {
+            0L
+        }
+        if (cooldownStart == 0L || cooldownDuration == 0L) return "Ready"
+        val now = System.currentTimeMillis()
+        val remaining = (cooldownDuration - (now - cooldownStart)) / 1000
+        return if (remaining > 0) "${remaining}s" else "Ready"
     }
 
     private fun isPlayerInvisible(player: Player): Boolean {
