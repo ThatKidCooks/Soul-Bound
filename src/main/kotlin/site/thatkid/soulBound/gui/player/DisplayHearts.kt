@@ -61,8 +61,7 @@ class DisplayHearts(private val plugin: JavaPlugin) : BukkitRunnable() {
     }
 
     private fun isPlayerInvisible(player: Player): Boolean {
-        val hearts = ActiveHearts.getHearts(player.uniqueId)
-        return hearts.any { it is Ghastly }
+        return player.isInvisible
     }
 
     private fun ensureStand(owner: Player, text: String): ArmorStand {
