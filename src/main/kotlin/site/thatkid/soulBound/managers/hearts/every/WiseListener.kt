@@ -91,7 +91,7 @@ class WiseListener(private val plugin: JavaPlugin, private val discordBot: Disco
                 }
             }
 
-            if (!received && brewedPotions[brewerId]?.count()!! > 15) {
+            if (!received && (brewedPotions[brewerId]?.count() ?: 0) > 15) {
                 plugin.server.broadcast(Component.text("§a${brewer.name} has brewed all possible potion effects and received the Wise Heart!"))
                 discordBot.sendMessage("${brewer.name} has brewed all possible potion effects and received the Wise Heart!")
 
