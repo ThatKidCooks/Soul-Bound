@@ -84,9 +84,7 @@ class CrownedListener(private val plugin: JavaPlugin) {
         // Get or create the kill list for this killer
         val victims = kills.computeIfAbsent(killerId) { mutableListOf() }
         
-        // Check if Strength Heart has been obtained (linked progression requirement)
-        // Don't allow Crowned Heart to be given before Strength Heart
-        if (!strengthListener.received) {
+        if (!strengthListener.received) { // don't allow Crowned Heart to be given before Strength Heart
             killer.sendMessage("You killed ${victim.name}, however this kill will go to the strength heart progress as that hasn't been earned yet.")
             return@listen
         }
@@ -96,58 +94,42 @@ class CrownedListener(private val plugin: JavaPlugin) {
             victims.add(victimId)
         }
 
-        // Check if this killer has reached the milestone
         if (victims.size >= 15) {
             if (!received) {
-                // Award the Crowned Heart to this player
+                // Give the player a Crowned Heart item
                 val crownedHeart = HeartRegistry.hearts["crowned"]?.createItem()
                 if (crownedHeart != null) {
                     killer.inventory.addItem(crownedHeart)
                     broadcast("The Crowned Heart has been awarded to ${killer.name} for killing 15 Players First!")
-                    received = true // No one else can receive the Crowned Heart after this
-                    save() // Save the state after giving the heart
+                    received = true // no one else can receive the Crowned Heart after this
+                    save() // save the state after giving the heart
                 }
             } else {
-                // Heart already awarded to someone else
-                killer.sendMessage("§7Someone already received the Crowned Heart.")
+                killer.sendMessage("§7Someone already received the Crowned Heart.") // feedback message
             }
         } else {
-            // Show progress to the killer
-            val remaining = 15 - victims.size
-            killer.sendMessage("§7You need $remaining more kills to receive the Crowned Heart.")
+            killer.sendMessage("§7You need ${15 - victims.size} more kills to receive the Crowned Heart.") // feedback message
         }
     }
 
-    /**
-     * Enables this listener and loads any existing data from disk.
-     * Should be called when the plugin starts or when this heart system is activated.
-     */
     fun enable() {
-        load() // Load existing progress from disk
+        load()
         listener.register()
     }
 
-    /**
-     * Disables this listener and saves current data to disk.
-     * Should be called when the plugin stops or when this heart system is deactivated.
-     */
     fun disable() {
         listener.unregister()
-        save() // Persist current progress before shutdown
+        save()
     }
 
-    /**
-     * Loads crowned heart progress from the JSON file.
-     * If the file doesn't exist, starts with empty data.
-     */
     fun load() {
         if (!file.exists()) return
         try {
             val json = file.readText()
-            val saveData = gson.fromJson(json, SaveData::class.java) // Convert the saved JSON to SaveData object
-            kills = saveData.kills.toMutableMap() // Set the kills map
-            received = saveData.received // Set the received state
-            plugin.logger.info("Crowned data loaded from ${file.absolutePath}") // Log the load
+            val saveData = gson.fromJson(json, SaveData::class.java) // convert the saved JSON to SaveData object
+            kills = saveData.kills.toMutableMap() // set the kills map
+            received = saveData.received // set the received state
+            plugin.logger.info("Crowned data loaded from ${file.absolutePath}") // log the load
         } catch (ex: Exception) {
             plugin.logger.warning("Failed to load crowned.json: ${ex.message}")
             kills = mutableMapOf()
@@ -155,29 +137,19 @@ class CrownedListener(private val plugin: JavaPlugin) {
         }
     }
 
-    /**
-     * Saves the current crowned heart progress to a JSON file.
-     */
     fun save() {
         try {
-            val saveData = SaveData(kills, received) // Create a SaveData object with current state
-            val json = gson.toJson(saveData) // Convert the SaveData object to JSON
-            file.parentFile?.mkdirs() // Ensure the directory exists
-            file.writeText(json) // Write the JSON to the file
-            plugin.logger.info("Crowned data saved to ${file.absolutePath}") // Log the save
+            val saveData = SaveData(kills, received) // create a SaveData object with current state
+            val json = gson.toJson(saveData) // convert the SaveData object to JSON
+            file.parentFile?.mkdirs() // ensure the directory exists
+            file.writeText(json) // write the JSON to the file
+            plugin.logger.info("Crowned data saved to ${file.absolutePath}") // log the save
         } catch (ex: Exception) {
             plugin.logger.warning("Failed to save crowned.json: ${ex.message}")
         }
     }
 
-    /**
-     * Gets a formatted progress string for the specified player.
-     * Shows how many unique players they have killed and progress toward the goal.
-     * 
-     * @param playerId The UUID of the player to check
-     * @return A formatted string showing kill progress and completion percentage
-     */
-    fun getProgress(playerId: UUID): String {
+    fun getProgress(playerId: UUID): String { // this seems easy to understand
         val victims = kills.computeIfAbsent(playerId) { mutableListOf() }
         val total = 15
         val killCount = victims.size
