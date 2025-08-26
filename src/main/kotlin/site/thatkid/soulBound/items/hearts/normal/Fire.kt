@@ -22,6 +22,7 @@ import org.bukkit.potion.PotionEffectType
 import site.thatkid.soulBound.HeartRegistry.fireListener
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.Heart
+import site.thatkid.soulBound.items.ItemCreator
 import java.util.UUID
 import kotlin.math.cos
 import kotlin.math.sin
@@ -39,22 +40,7 @@ object Fire : Heart() {
         get() = NamespacedKey(plugin, "fire")
 
     override fun createItem(): ItemStack {
-        val item = ItemStack(Material.APPLE)
-        val meta = item.itemMeta!!
-        meta.displayName(Component.text("§cFire Heart"))
-        meta.lore(listOf(
-            Component.text("§7Few can withstand the heart of fire."),
-            Component.text("§cThe Nether will not hand it to you — it will burn away the unworthy."),
-            Component.text(""),
-            Component.text("§f✧ §7Permanent §cFire Resistance §7& §9Strength when on Fire"),
-            Component.text(""),
-            Component.text("§3§lPower — Lava Surge"),
-            Component.text("§cLaunch Enemies into the Air & Set the Ground on Fire"),
-            Component.text("§8Cooldown: 100 seconds")
-        ))
-        meta.persistentDataContainer.set(key, PersistentDataType.BYTE, 1)
-        item.itemMeta = meta
-        return item
+        return ItemCreator.itemCreator(3)
     }
 
     override fun constantEffect(player: Player) {
@@ -117,7 +103,10 @@ object Fire : Heart() {
     }
 
     override fun getCooldown(playerId: UUID): Long {
-        return cooldowns[playerId] ?: 0L
+        val lastUsed = cooldowns[playerId] ?: return 0L
+        val now = System.currentTimeMillis()
+        val remaining = cooldownTime - (now - lastUsed)
+        return if (remaining > 0) remaining else 0L
     }
 
     private fun circlePoints(center: Location, radius: Double, points: Int): List<Location> {

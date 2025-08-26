@@ -11,6 +11,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import site.thatkid.soulBound.HeartRegistry.speedListener
 import site.thatkid.soulBound.items.Heart
+import site.thatkid.soulBound.items.ItemCreator
 import java.util.UUID
 
 object Speed : Heart() {
@@ -26,22 +27,7 @@ object Speed : Heart() {
         get() = NamespacedKey(plugin, "speed") // Overrides the key in Heart
 
     override fun createItem(): ItemStack {
-        val item = ItemStack(Material.APPLE) // Apple
-        val meta = item.itemMeta!! // Set meta do be the items meta
-        meta.displayName(Component.text("§eSpeed Heart")) // Display name
-        meta.lore(listOf(
-            Component.text("§7Born from the wind. Runs endlessly."),
-            Component.text(""),
-            Component.text("§f✧ §7Permanent §bSpeed II"),
-            Component.text(""),
-            Component.text("§a§lPower — Lightning Dash"),
-            Component.text("§7Dash forward and gain"),
-            Component.text("§7§fSpeed IV §7and §eJump Boost II §7for §f10s"),
-            Component.text("§8Cooldown: 60 seconds")
-        )) // Lore
-        meta.persistentDataContainer.set(key, PersistentDataType.BYTE, 1)
-        item.itemMeta = meta
-        return item
+        return ItemCreator.itemCreator(8)
     }
 
     override fun constantEffect(player: Player) {
@@ -75,6 +61,9 @@ object Speed : Heart() {
     }
 
     override fun getCooldown(playerId: UUID): Long {
-        return cooldowns[playerId] ?: 0L // Return 0 if no cooldown exists
+        val lastUsed = cooldowns[playerId] ?: return 0L
+        val now = System.currentTimeMillis()
+        val remaining = cooldownTime - (now - lastUsed)
+        return if (remaining > 0) remaining else 0L
     }
 }

@@ -19,6 +19,12 @@ import org.bukkit.potion.PotionEffectType
 import site.thatkid.soulBound.HeartRegistry.crownedListener
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.Heart
+import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
+import site.thatkid.soulBound.hearts.TrustRegistry
+import site.thatkid.soulBound.items.Heart
+import site.thatkid.soulBound.items.ItemCreator
 import java.util.UUID
 
 object Crowned : Heart() {
@@ -35,25 +41,7 @@ object Crowned : Heart() {
     val smashedBy = mutableMapOf<UUID, UUID>()
 
     override fun createItem(): ItemStack {
-        val item = ItemStack(Material.APPLE)
-        val meta = item.itemMeta!!
-
-        meta.displayName(Component.text("§aCrowned Heart"))
-        meta.lore(listOf(
-            Component.text("§7A heart split between two souls."),
-            Component.text("§7Fueled by conflict and loyalty."),
-            Component.text(""),
-            Component.text("§f✧ §7Permanent §fSpeed I"),
-            Component.text(""),
-            Component.text("§a§lPower — Smash"),
-            Component.text("§7Damages and blasts away enemies within §e6 blocks"),
-            Component.text("§7Deals §c3 hearts§7 to mobs and players."),
-            Component.text("§8Cooldown: 20 seconds")
-        ))
-
-        meta.persistentDataContainer.set(key, PersistentDataType.BYTE, 1)
-        item.itemMeta = meta
-        return item
+        return ItemCreator.itemCreator(2)
     }
 
 
@@ -111,18 +99,19 @@ object Crowned : Heart() {
         player.world.playSound(player.location, Sound.ENTITY_WITHER_BREAK_BLOCK, 1f, 0.5f)
         player.world.spawnParticle(Particle.EXPLOSION, player.location, 6)
     }
-
+    
     override fun checkProgress(player: Player): String {
         return crownedListener.getProgress(player.uniqueId)
     }
-
-
 
     override fun clearCooldown(uuid: UUID) {
         cooldowns.remove(uuid)
     }
 
     override fun getCooldown(playerId: UUID): Long {
-        return cooldowns[playerId] ?: 0L
+        val lastUsed = cooldowns[playerId] ?: return 0L
+        val now = System.currentTimeMillis()
+        val remaining = cooldownTime - (now - lastUsed)
+        return if (remaining > 0) remaining else 0L
     }
 }

@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "site.thatkid"
-version = "1.0-SNAPSHOT"
+version = "1.1-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -21,7 +21,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("net.axay:kspigot:1.21.0")
-    implementation("org.java-websocket:Java-WebSocket:1.6.0") // Discord bot integration
 
     // ← Use 5.3.0 (published) instead of 5.4.0
     compileOnly("com.comphenix.protocol:ProtocolLib:5.3.0")
@@ -43,7 +42,7 @@ tasks {
         mergeServiceFiles()       // merge META-INF/services if needed
 
         // Relocate WebSocket classes to avoid conflicts with other plugins
-        relocate("org.java_websocket", "site.thatkid.soulBound.libs.java_websocket")
+
     }
 
     build {

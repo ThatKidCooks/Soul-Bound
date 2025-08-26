@@ -17,6 +17,7 @@ import org.bukkit.potion.PotionEffectType
 import site.thatkid.soulBound.hearts.ActiveHearts
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.Heart
+import site.thatkid.soulBound.items.ItemCreator
 import java.util.UUID
 
 object Wither : Heart(), Listener {
@@ -31,25 +32,7 @@ object Wither : Heart(), Listener {
         get() = NamespacedKey(plugin, "wither")
 
     override fun createItem(): ItemStack {
-        val item = ItemStack(Material.APPLE)
-        val meta = item.itemMeta!!
-        meta.setDisplayName("§8Wither Heart")
-        meta.lore(listOf(
-            Component.text("§7A heart that carries the burden of decay."),
-            Component.text("§7It withers the soul, but grants power."),
-            Component.text(""),
-            Component.text("§f✧ §710% chance §fto inflict Wither I §1on hit"),
-            Component.text(""),
-            Component.text("§a§lPower — Wither Blast"),
-            Component.text("§7Unleashes a blast of withering energy"),
-            Component.text("§7that shoots wither §1heads in the direction you are facing."),
-            Component.text("§8Cooldown: 30 seconds")
-        ))
-
-        meta.persistentDataContainer.set(key, PersistentDataType.BYTE, 1)
-
-        item.itemMeta = meta
-        return item
+        return ItemCreator.itemCreator(13)
     }
 
     override fun constantEffect(player: Player) {
@@ -70,15 +53,17 @@ object Wither : Heart(), Listener {
             attacker.sendMessage("§aYou inflicted Wither I on ${entity.name}!")
         }
     }
-
-
     override fun specialEffect(player: Player) {
-        if (cooldowns.containsKey(player.uniqueId) && System.currentTimeMillis() < cooldowns[player.uniqueId]!!) {
-            player.sendMessage("§cYou must wait before using Wither Blast again.")
+        val now = System.currentTimeMillis()
+        val until = cooldowns[player.uniqueId] ?: 0L
+        if (now < until) {
+            val remaining = (until - now) / 1000
+            player.sendMessage("§cYou must wait $remaining seconds before using Wither Blast again.")
             return
         }
+        cooldowns[player.uniqueId] = now + cooldownTime
 
-        val direction = player.location.clone().direction
+        val direction = player.location.direction
         val numHeads = 5 // Number of wither heads to shoot - this one is so obvious
         val spacing = 1 // Distance between heads duh - then again that isn't really a duh
 
@@ -88,19 +73,20 @@ object Wither : Heart(), Listener {
             head.isCharged = true
             head.yield = 0f
             head.shooter = player
-            head.velocity = direction.clone().multiply(5 + i * spacing)
+            head.velocity = direction.clone().multiply(1.5 + i * spacing)
         }
 
-        cooldowns[player.uniqueId] = System.currentTimeMillis() + cooldownTime
         player.sendMessage("§aWither Blast unleashed!")
     }
-
 
     override fun clearCooldown(playerId: UUID) {
         cooldowns.remove(playerId)
     }
 
     override fun getCooldown(playerId: UUID): Long {
-        return cooldowns[playerId] ?: 0L
+        val until = cooldowns[playerId] ?: return 0L
+        val now = System.currentTimeMillis()
+        val remaining = until - now
+        return if (remaining > 0) remaining else 0L
     }
 }

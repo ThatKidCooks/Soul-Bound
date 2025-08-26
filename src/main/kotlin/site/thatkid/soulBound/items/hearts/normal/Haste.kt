@@ -10,6 +10,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import site.thatkid.soulBound.HeartRegistry.hasteListener
 import site.thatkid.soulBound.items.Heart
+import site.thatkid.soulBound.items.ItemCreator
 import java.util.*
 
 object Haste : Heart() {
@@ -24,21 +25,7 @@ object Haste : Heart() {
     private const val cooldownTime = 90 * 1000L // 1 minute 30 seconds
 
     override fun createItem(): ItemStack {
-        val item = ItemStack(Material.APPLE)
-        val meta = item.itemMeta
-
-        meta.persistentDataContainer.set(key, PersistentDataType.BYTE, 1)
-        meta.displayName(Component.text("§6Haste Heart"))
-        meta.lore(listOf(
-            Component.text("§7Obtained by mining 5000 deepslate blocks!"),
-            Component.text("§7Grants constant Haste I."),
-            Component.text("§aAbility:"),
-            Component.text("§f- Haste Surge: Speed III & Haste III for 40s"),
-            Component.text("§f- Breaks a 3x3 cube around you")
-        ))
-
-        item.itemMeta = meta
-        return item
+        return ItemCreator.itemCreator(7)
     }
 
     override fun constantEffect(player: Player) {
@@ -100,6 +87,9 @@ object Haste : Heart() {
     }
 
     override fun getCooldown(playerId: UUID): Long {
-        return cooldowns[playerId] ?: 0L
+        val lastUsed = cooldowns[playerId] ?: return 0L
+        val now = System.currentTimeMillis()
+        val remaining = cooldownTime - (now - lastUsed)
+        return if (remaining > 0) remaining else 0L
     }
 }
