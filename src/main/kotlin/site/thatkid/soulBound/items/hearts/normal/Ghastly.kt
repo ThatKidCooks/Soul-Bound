@@ -16,7 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
-import site.thatkid.soulBound.HeartRegistry.ghastlyListener
+import site.thatkid.soulBound.items.HeartRegistry.ghastlyListener
 import site.thatkid.soulBound.items.Heart
 import site.thatkid.soulBound.items.ItemCreator
 import java.util.*

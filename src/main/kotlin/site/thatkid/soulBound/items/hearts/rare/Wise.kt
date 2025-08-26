@@ -8,13 +8,7 @@ import org.bukkit.Sound
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import org.bukkit.persistence.PersistentDataType
-import org.bukkit.plugin.java.JavaPlugin
-import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionEffectType
-import site.thatkid.soulBound.HeartRegistry.wiseListener
-import site.thatkid.soulBound.hearts.TrustRegistry
-import site.thatkid.soulBound.items.Heart
+import site.thatkid.soulBound.items.HeartRegistry.wiseListener
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType

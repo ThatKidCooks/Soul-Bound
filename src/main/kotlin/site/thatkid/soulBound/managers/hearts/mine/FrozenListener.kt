@@ -9,7 +9,6 @@ import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.plugin.java.JavaPlugin
-import site.thatkid.soulBound.HeartRegistry
 import site.thatkid.soulBound.managers.DiscordBot
 import site.thatkid.soulBound.items.HeartRegistry
 import java.io.File

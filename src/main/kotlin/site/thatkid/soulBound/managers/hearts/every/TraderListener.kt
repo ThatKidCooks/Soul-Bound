@@ -9,9 +9,8 @@ import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.entity.Villager
 import org.bukkit.plugin.java.JavaPlugin
-import site.thatkid.soulBound.HeartRegistry
-import site.thatkid.soulBound.managers.DiscordBot
 import site.thatkid.soulBound.items.HeartRegistry
+import site.thatkid.soulBound.managers.DiscordBot
 import java.io.File
 import java.util.UUID
 
@@ -102,7 +101,7 @@ class TraderListener(private val plugin: JavaPlugin, private val discordBot: Dis
 
     fun getProgress(playerId: UUID): String {
         val msg = "§${Bukkit.getPlayer(playerId)} has gotten the following ${villagerTraded[playerId]?.size} out of 13 villager professions: \n" +
-                (villagerTraded[playerId]?.joinToString("\n") { "§a- ${it.key}" } ?: "§cNo professions traded yet.")
+                (villagerTraded[playerId]?.joinToString("\n") { "§a- ${it}" } ?: "§cNo professions traded yet.")
 
         if (received) {
             return "$msg §cThe Trader Heart has already been received by a player."

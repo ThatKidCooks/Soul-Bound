@@ -14,6 +14,7 @@ import site.thatkid.soulBound.items.hearts.normal.Trader
 import site.thatkid.soulBound.items.hearts.legendary.Warden
 import site.thatkid.soulBound.items.hearts.rare.Wise
 import site.thatkid.soulBound.items.hearts.legendary.Wither
+import site.thatkid.soulBound.managers.DiscordBot
 import site.thatkid.soulBound.managers.hearts.advancments.GhastlyListener
 import site.thatkid.soulBound.managers.hearts.every.TraderListener
 import site.thatkid.soulBound.managers.hearts.kill.*
@@ -69,8 +70,9 @@ object HeartRegistry {
      * 
      * @param plugin The main plugin instance
      */
-    fun init(plugin: JavaPlugin) {
+    fun init(plugin: JavaPlugin, discordBot: DiscordBot) {
         this.plugin = plugin
+        this.discordBot = discordBot
 
         // Create the mapping of heart names to their corresponding objects
         // This allows easy lookup by string keys for commands, configs, etc.

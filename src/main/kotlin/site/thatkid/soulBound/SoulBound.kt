@@ -26,6 +26,8 @@ class SoulBound : KSpigot() {
 
     private val heartRegistry = HeartRegistry
 
+    private lateinit var bridge: DiscordBot
+
     override fun startup() {
         val BOTIP: String = config.getString("botip") ?: "localhost"
         val BOTPORT: Int = config.getInt("botport")

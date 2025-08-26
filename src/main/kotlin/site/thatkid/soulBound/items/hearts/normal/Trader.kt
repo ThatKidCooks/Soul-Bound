@@ -8,8 +8,7 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import site.thatkid.soulBound.HeartRegistry.speedListener
-import site.thatkid.soulBound.HeartRegistry.traderListener
+import site.thatkid.soulBound.items.HeartRegistry.traderListener
 import site.thatkid.soulBound.items.Heart
 import site.thatkid.soulBound.items.ItemCreator
 import java.util.*

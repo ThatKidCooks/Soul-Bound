@@ -8,9 +8,8 @@ import net.axay.kspigot.extensions.broadcast
 import org.bukkit.Bukkit
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.plugin.java.JavaPlugin
-import site.thatkid.soulBound.HeartRegistry
-import site.thatkid.soulBound.managers.DiscordBot
 import site.thatkid.soulBound.items.HeartRegistry
+import site.thatkid.soulBound.managers.DiscordBot
 import java.io.File
 import java.util.UUID
 

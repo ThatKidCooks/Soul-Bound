@@ -15,7 +15,6 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffectType
-import site.thatkid.soulBound.HeartRegistry
 import site.thatkid.soulBound.managers.DiscordBot
 import site.thatkid.soulBound.items.HeartRegistry
 import java.io.File
@@ -120,16 +119,20 @@ class WiseListener(private val plugin: JavaPlugin, private val discordBot: Disco
         val brewer = Bukkit.getPlayer(brewerId) ?: return@listen
         */
 
+    val brewEvent = listen<BrewEvent> { event ->
+        val brewerId = lastBrewer[event.block.location] ?: return@listen
+        val brewer = Bukkit.getPlayer(brewerId) ?: return@listen
+
         Bukkit.getScheduler().runTaskLater(plugin, Runnable {
             val brewingStand = event.block.state as? BrewingStand ?: return@Runnable
-            
+
 
             for (i in 0..2) {
                 val item = brewingStand.inventory.getItem(i) ?: continue
                 val meta = item.itemMeta
                 if (meta is PotionMeta) {
                     println("Checking final result in slot $i")
-                    
+
 
                     val effect = when {
 
@@ -150,14 +153,12 @@ class WiseListener(private val plugin: JavaPlugin, private val discordBot: Disco
                     }
                 }
             }
-        // Check if this player has now brewed all possible potion effects
-        val craftablePotionEffects = PotionEffectType.values()
-            .filterNotNull().toSet()
 
-        if (!received && brewedPotions.values.any { it.containsAll(craftablePotionEffects) }) {
-            // Award the Wise Heart - first player to brew all effects wins
-            plugin.server.broadcast(Component.text("§a${brewer.name} has brewed all possible potion effects and received the Wise Heart!"))
-            val wiseHeart = HeartRegistry.hearts["wise"]?.createItem()
+            if (!received && (brewedPotions[brewerId]?.count() ?: 0) > 15) {
+                plugin.server.broadcast(Component.text("§a${brewer.name} has brewed all possible potion effects and received the Wise Heart!"))
+                discordBot.sendMessage("${brewer.name} has brewed all possible potion effects and received the Wise Heart!")
+
+                val wiseHeart = HeartRegistry.hearts["wise"]?.createItem()
 
                 if (wiseHeart != null) {
                     brewer.inventory.addItem(wiseHeart)
@@ -166,7 +167,6 @@ class WiseListener(private val plugin: JavaPlugin, private val discordBot: Disco
                 save()
             }
         }, 1L)
-
     }
 
     /**
@@ -199,15 +199,13 @@ class WiseListener(private val plugin: JavaPlugin, private val discordBot: Disco
      */
     fun save() {
         try {
-            // Convert Location keys to String keys and PotionEffectType to String names for serialization
-            val lastBrewerStrings = lastBrewer.mapKeys { locationToString(it.key) }.toMutableMap()
-            val brewedPotionsStrings = brewedPotions.mapValues { (_, effects) ->
-                effects.mapNotNull { it.name }.toMutableSet()
+            // Convert brewedPotions to Map<UUID, Set<String>>
+            val brewedPotionsString = brewedPotions.mapValues { entry ->
+                entry.value.map { it.name }.toMutableSet()
             }.toMutableMap()
-            
-            val saveData = SaveData(brewedPotionsStrings, lastBrewerStrings, received)
+            val saveData = SaveData(brewedPotionsString, received)
             val json = gson.toJson(saveData)
-            file.parentFile.mkdirs() // Ensure directory exists
+            file.parentFile.mkdirs()
             file.writeText(json)
             plugin.logger.info("WiseListener data saved to ${file.absolutePath}")
         } catch (e: Exception) {
@@ -230,18 +228,10 @@ class WiseListener(private val plugin: JavaPlugin, private val discordBot: Disco
             if (!file.exists()) return
             val json = file.readText()
             val saveData = gson.fromJson(json, SaveData::class.java)
-            
-            // Convert String names back to PotionEffectType objects
-            brewedPotions = saveData.brewedPotions.mapValues { (_, effectNames) ->
-                effectNames.mapNotNull { name ->
-                    PotionEffectType.values().find { it.name == name }
-                }.toMutableSet()
+            // Convert back to Map<UUID, Set<PotionEffectType>>
+            brewedPotions = saveData.brewedPotions.mapValues { entry ->
+                entry.value.mapNotNull { PotionEffectType.getByName(it) }.toMutableSet()
             }.toMutableMap()
-            
-            // Convert String keys back to Location keys
-            lastBrewer = saveData.lastBrewer.mapNotNull { (locationString, uuid) ->
-                stringToLocation(locationString)?.let { it to uuid }
-            }.toMap().toMutableMap()
             received = saveData.received
             plugin.logger.info("WiseListener data loaded from ${file.absolutePath}")
         } catch (e: IOException) {

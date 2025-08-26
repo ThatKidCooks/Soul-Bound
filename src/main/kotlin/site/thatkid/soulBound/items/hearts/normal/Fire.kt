@@ -19,7 +19,7 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import site.thatkid.soulBound.HeartRegistry.fireListener
+import site.thatkid.soulBound.items.HeartRegistry.fireListener
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.Heart
 import site.thatkid.soulBound.items.ItemCreator
