@@ -25,53 +25,138 @@ import site.thatkid.soulBound.managers.hearts.statistic.Statistic
 import site.thatkid.soulBound.managers.hearts.statistic.listeners.*
 import site.thatkid.soulBound.managers.TrustStorageManager
 
+/**
+ * HeartRegistry is the central management system for all Heart items and their associated listeners.
+ * 
+ * This object serves as the main coordination point for the Soul-Bound plugin's heart system.
+ * It manages the initialization, enabling, disabling, and persistence of all heart-related
+ * functionality across the plugin.
+ * 
+ * Key Responsibilities:
+ * - Maintains a registry of all available Heart items
+ * - Manages all heart listener instances (event handlers for earning hearts)
+ * - Coordinates the initialization and lifecycle of heart systems
+ * - Handles bulk operations for save/load/enable/disable across all hearts
+ * - Manages statistic-based hearts through the Caller system
+ * 
+ * Heart Types Managed:
+ * - Event-based hearts (kill, mine, brew, advancement-based)
+ * - Statistic-based hearts (swimming, mob damage, movement)
+ * - Special linked hearts (crowned/strength pair)
+ * 
+ * @see Heart Base interface for all heart items
+ * @see Statistic For player statistic tracking
+ * @see Caller For periodic statistic checks
+ */
 object HeartRegistry {
 
+    /** Reference to the main plugin instance for logging and file operations */
     private lateinit var plugin: JavaPlugin
 
+    /** 
+     * Registry mapping heart names to their corresponding Heart objects.
+     * This allows lookup of hearts by string keys for commands and configuration.
+     */
     lateinit var hearts: Map<String, Heart>
         private set
+        
+    /** Manager for trust relationships between players (for certain heart mechanics) */
     lateinit var trustmanager: TrustStorageManager
 
+    /**
+     * Initializes the heart registry with the plugin instance and creates the hearts mapping.
+     * Must be called during plugin initialization before any hearts can be used.
+     * 
+     * @param plugin The main plugin instance
+     */
     fun init(plugin: JavaPlugin) {
         this.plugin = plugin
 
+        // Create the mapping of heart names to their corresponding objects
+        // This allows easy lookup by string keys for commands, configs, etc.
         hearts = mapOf(
-            "crowned" to Crowned,
-            "warden" to Warden,
-            "trader" to Trader,
-            "ghastly" to Ghastly,
-            "haste" to Haste,
-            "strength" to Strength,
-            "aquatic" to Aquatic,
-            "golem" to Golem,
-            "wise" to Wise,
-            "fire" to Fire,
-            "wither" to Wither,
-            "frozen" to Frozen,
-            "speed" to Speed
+            "crowned" to Crowned,      // Rare: Awarded for PvP kills
+            "warden" to Warden,        // Legendary: Awarded for defeating the Warden
+            "trader" to Trader,        // Normal: Awarded for trading activities
+            "ghastly" to Ghastly,      // Normal: Awarded for Nether advancements
+            "haste" to Haste,          // Normal: Awarded for mining deepslate
+            "strength" to Strength,    // Normal: Linked with crowned heart
+            "aquatic" to Aquatic,      // Normal: Awarded for swimming distance
+            "golem" to Golem,          // Normal: Awarded for iron golem interactions
+            "wise" to Wise,            // Rare: Awarded for brewing all potion effects
+            "fire" to Fire,            // Normal: Awarded for fire/lava related activities
+            "wither" to Wither,        // Legendary: Awarded for defeating the Wither
+            "frozen" to Frozen,        // Normal: Awarded for ice/snow related activities
+            "speed" to Speed           // Normal: Awarded for movement distance
         )
     }
 
+    // ===== EVENT-BASED HEART LISTENERS =====
+    // These listeners handle specific game events to award hearts
+    
+    /** Manages PvP kill tracking for the Crowned Heart (rare) */
     lateinit var crownedListener: CrownedListener
+    
+    /** Manages strength-based activities (linked with crowned heart) */
     lateinit var strengthListener: StrengthListener
+    
+    /** Manages deepslate block mining for the Haste Heart */
     lateinit var hasteListener: HasteListener
+    
+    /** Manages fire/lava related activities for the Fire Heart */
     lateinit var fireListener: FireListener
+    
+    /** Manages ice/snow related activities for the Frozen Heart */
     lateinit var frozenListener: FrozenListener
-    lateinit var aquaticListener: AquaticListener
-    lateinit var golemListener: GolemListener
+    
+    /** Manages Nether advancement completion for the Ghastly Heart */
     lateinit var ghastlyListener: GhastlyListener
-    lateinit var speedListener: SpeedListener
+    
+    /** Manages potion brewing completion for the Wise Heart (rare) */
     lateinit var wiseListener: WiseListener
+    
+    /** Manages trading activities for the Trader Heart */
     lateinit var traderListener: TraderListener
 
+    // ===== STATISTIC-BASED HEART LISTENERS =====
+    // These listeners are managed by the Caller system for periodic checks
+    
+    /** Manages swimming distance statistics for the Aquatic Heart */
+    lateinit var aquaticListener: AquaticListener
+    
+    /** Manages iron golem interaction statistics for the Golem Heart */
+    lateinit var golemListener: GolemListener
+    
+    /** Manages movement distance statistics for the Speed Heart */
+    lateinit var speedListener: SpeedListener
+
+    // ===== STATISTIC MANAGEMENT SYSTEM =====
+    
+    /** Handles Bukkit statistic queries and calculations */
     lateinit var statistic: Statistic
+    
+    /** Periodically calls statistic-based listeners to check for heart awards */
     lateinit var caller: Caller
 
+    /** Manages player trust relationships for certain heart mechanics */
     lateinit var trustManager: TrustStorageManager
 
+    /**
+     * Initializes and enables all heart listeners and systems.
+     * 
+     * This is the main startup method that:
+     * 1. Initializes all listener instances if not already created
+     * 2. Sets up special relationships between linked hearts
+     * 3. Registers all event listeners
+     * 4. Configures the statistic-based heart system
+     * 5. Starts the periodic caller task for statistic checks
+     * 
+     * Should be called during plugin enable phase.
+     */
     fun enableAll() {
-        // Initialize the listeners if they are not already initialized
+        // ===== INITIALIZE EVENT-BASED LISTENERS =====
+        // Only create instances if they don't already exist (prevents double initialization)
+        
         if (!this::crownedListener.isInitialized) {
             crownedListener = CrownedListener(plugin)
         }
@@ -87,17 +172,8 @@ object HeartRegistry {
         if (!this::frozenListener.isInitialized) {
             frozenListener = FrozenListener(plugin)
         }
-        if (!this::aquaticListener.isInitialized) {
-            aquaticListener = AquaticListener()
-        }
-        if (!this::golemListener.isInitialized) {
-            golemListener = GolemListener()
-        }
         if (!this::ghastlyListener.isInitialized) {
             ghastlyListener = GhastlyListener(plugin)
-        }
-        if (!this::speedListener.isInitialized) {
-            speedListener = SpeedListener()
         }
         if (!this::wiseListener.isInitialized) {
             wiseListener = WiseListener(plugin)
@@ -106,11 +182,26 @@ object HeartRegistry {
             traderListener = TraderListener(plugin)
         }
 
-        // just for crowned and strength, they are linked
+        // ===== INITIALIZE STATISTIC-BASED LISTENERS =====
+        // These don't require plugin references as they're managed by the Caller
+        
+        if (!this::aquaticListener.isInitialized) {
+            aquaticListener = AquaticListener()
+        }
+        if (!this::golemListener.isInitialized) {
+            golemListener = GolemListener()
+        }
+        if (!this::speedListener.isInitialized) {
+            speedListener = SpeedListener()
+        }
+
+        // ===== CONFIGURE SPECIAL RELATIONSHIPS =====
+        // The crowned and strength hearts are linked - obtaining one affects the other
         crownedListener.strengthListener = strengthListener
         strengthListener.crownedListener = crownedListener
 
-        // enable the listeners
+        // ===== ENABLE ALL EVENT-BASED LISTENERS =====
+        // Register event handlers and load existing data
         crownedListener.enable()
         strengthListener.enable()
         hasteListener.enable()
@@ -120,60 +211,96 @@ object HeartRegistry {
         wiseListener.enable()
         traderListener.enable()
 
-        // set statistic and caller
+        // ===== CONFIGURE STATISTIC SYSTEM =====
+        // Set up the periodic checking system for statistic-based hearts
         statistic = Statistic()
         caller = Caller(statistic)
 
-        // do statistic based hearts
+        // Associate statistic-based listeners with the caller
         caller.aquaticListener = aquaticListener
         caller.golemListener = golemListener
         caller.speedListener = speedListener
 
+        // Start the periodic task that checks statistics and awards hearts
         caller.task
     }
 
 
+    /**
+     * Disables all heart listeners and stops background tasks.
+     * 
+     * This cleanup method:
+     * 1. Unregisters all event listeners
+     * 2. Saves current progress for event-based hearts
+     * 3. Saves current progress for statistic-based hearts
+     * 4. Cancels the periodic caller task
+     * 
+     * Should be called during plugin disable phase to ensure proper cleanup.
+     */
     fun disableAll() {
+        // Disable event-based listeners (unregister events and save data)
         if (this::crownedListener.isInitialized) crownedListener.disable()
         if (this::strengthListener.isInitialized) strengthListener.disable()
         if (this::hasteListener.isInitialized) hasteListener.disable()
         if (this::fireListener.isInitialized) fireListener.disable()
         if (this::frozenListener.isInitialized) frozenListener.disable()
-        if (this::aquaticListener.isInitialized) aquaticListener.save()
-        if (this::golemListener.isInitialized) golemListener.save()
         if (this::ghastlyListener.isInitialized) ghastlyListener.disable()
         if (this::wiseListener.isInitialized) wiseListener.disable()
         if (this::traderListener.isInitialized) traderListener.disable()
+        
+        // Save statistic-based listeners (they don't have event handlers to unregister)
+        if (this::aquaticListener.isInitialized) aquaticListener.save()
+        if (this::golemListener.isInitialized) golemListener.save()
 
-        // disable caller task
+        // Stop the periodic statistics checking task
         caller.task?.cancel()
     }
 
+    /**
+     * Saves all heart progress data to their respective files.
+     * 
+     * This can be called periodically or during shutdown to persist
+     * all player progress across server restarts. Safe to call even
+     * if some listeners aren't initialized.
+     */
     fun saveAll() {
+        // Save progress for all event-based hearts
         if (this::crownedListener.isInitialized) crownedListener.save()
         if (this::strengthListener.isInitialized) strengthListener.save()
         if (this::hasteListener.isInitialized) hasteListener.save()
         if (this::fireListener.isInitialized) fireListener.save()
         if (this::frozenListener.isInitialized) frozenListener.save()
-        if (this::aquaticListener.isInitialized) aquaticListener.save()
-        if (this::golemListener.isInitialized) golemListener.save()
         if (this::ghastlyListener.isInitialized) ghastlyListener.save()
-        if (this::speedListener.isInitialized) speedListener.save()
         if (this::wiseListener.isInitialized) wiseListener.save()
         if (this::traderListener.isInitialized) traderListener.save()
+        
+        // Save progress for all statistic-based hearts
+        if (this::aquaticListener.isInitialized) aquaticListener.save()
+        if (this::golemListener.isInitialized) golemListener.save()
+        if (this::speedListener.isInitialized) speedListener.save()
     }
 
+    /**
+     * Loads all heart progress data from their respective files.
+     * 
+     * This should be called during plugin startup to restore
+     * player progress from previous sessions. Safe to call even
+     * if some listeners aren't initialized or files don't exist.
+     */
     fun loadAll() {
+        // Load progress for all event-based hearts
         if (this::crownedListener.isInitialized) crownedListener.load()
         if (this::strengthListener.isInitialized) strengthListener.load()
         if (this::hasteListener.isInitialized) hasteListener.load()
         if (this::fireListener.isInitialized) fireListener.load()
         if (this::frozenListener.isInitialized) frozenListener.load()
-        if (this::aquaticListener.isInitialized) aquaticListener.load()
-        if (this::golemListener.isInitialized) golemListener.load()
         if (this::ghastlyListener.isInitialized) ghastlyListener.load()
-        if (this::speedListener.isInitialized) speedListener.load()
         if (this::wiseListener.isInitialized) wiseListener.load()
         if (this::traderListener.isInitialized) traderListener.load()
+        
+        // Load progress for all statistic-based hearts
+        if (this::aquaticListener.isInitialized) aquaticListener.load()
+        if (this::golemListener.isInitialized) golemListener.load()
+        if (this::speedListener.isInitialized) speedListener.load()
     }
 }
