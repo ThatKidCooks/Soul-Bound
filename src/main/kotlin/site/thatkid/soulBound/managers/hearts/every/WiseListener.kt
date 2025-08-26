@@ -21,7 +21,7 @@ import java.io.File
 import java.io.IOException
 import java.util.*
 
-class WiseListener(private val plugin: JavaPlugin, discordBot: DiscordBot) {
+class WiseListener(private val plugin: JavaPlugin, private val discordBot: DiscordBot) {
 
     data class SaveData(
         val brewedPotions: MutableMap<UUID, MutableSet<String>> = mutableMapOf(), // Store as String names
