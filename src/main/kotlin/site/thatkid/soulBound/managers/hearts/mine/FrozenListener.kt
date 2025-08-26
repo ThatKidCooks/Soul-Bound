@@ -55,7 +55,7 @@ class FrozenListener(private val plugin: JavaPlugin, private val discordBot: Dis
                 player.sendMessage("§7Someone already received the Frozen Heart.") // feedback message
             }
         } else {
-            player.sendMessage("§7You need ${(5000 - blocksMined[playerId]!!).coerceAtLeast(0)} more blocks to receive the Frozen Heart.") // feedback message
+            player.sendMessage("§7You need ${(10000 - blocksMined[playerId]!!).coerceAtLeast(0)} more blocks to receive the Frozen Heart.") // feedback message
         }
     }
 
