@@ -6,6 +6,7 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.Particle
 import org.bukkit.Sound
+import org.bukkit.*
 import org.bukkit.entity.Ghast
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Monster
@@ -19,6 +20,8 @@ import org.bukkit.scheduler.BukkitRunnable
 import site.thatkid.soulBound.hearts.TrustRegistry
 import site.thatkid.soulBound.items.Heart
 import java.util.UUID
+import site.thatkid.soulBound.items.ItemCreator
+import java.util.*
 
 object Warden : Heart() {
 
@@ -34,23 +37,7 @@ object Warden : Heart() {
     val obliteratedBy = mutableMapOf<UUID, UUID>()
 
     override fun createItem(): ItemStack {
-        val item = ItemStack(Material.APPLE)
-        val meta = item.itemMeta!!
-        meta.displayName(Component.text("§1Warden Heart"))
-        meta.lore(listOf(
-            Component.text("§7Unlock by defeating the"),
-            Component.text("§fWarden §7without dying."),
-            Component.text(""),
-            Component.text("§f✧ §7Nearby mobs tremble in your presence."),
-            Component.text("§f✧ §7Darkness creeps into the hearts of enemies."),
-            Component.text(""),
-            Component.text("§9§lPower — Sonic Pulse"),
-            Component.text("§7Unleash a §bSonic Boom §7that damages and knocks back enemies"),
-            Component.text("§8Cooldown: 2m 30s")
-        ))
-        meta.persistentDataContainer.set(key, PersistentDataType.BYTE, 1)
-        item.itemMeta = meta
-        return item
+        return ItemCreator.itemCreator(11)
     }
 
 
@@ -97,7 +84,7 @@ object Warden : Heart() {
                         if (!(entity is Monster || entity is Slime || entity is Phantom || entity is Ghast))
                             continue
                     }
-
+                    
                     val damage = 10 // 5 hearts
 
                     val newHealth = (entity.health - damage).coerceAtLeast(0.0)
@@ -118,13 +105,15 @@ object Warden : Heart() {
         player.sendMessage(Component.text("§bYou unleashed a §lSonic Boom§r§b!"))
         player.world.playSound(player.location, Sound.ENTITY_WARDEN_SONIC_BOOM, 2f, 0.8f)
     }
-
-
+    
     override fun clearCooldown(uuid: UUID) {
         cooldowns.remove(uuid)
     }
 
     override fun getCooldown(playerId: UUID): Long {
-        return cooldowns[playerId] ?: 0L
+        val lastUsed = cooldowns[playerId] ?: return 0L
+        val now = System.currentTimeMillis()
+        val remaining = cooldownTime - (now - lastUsed)
+        return if (remaining > 0) remaining else 0L
     }
 }

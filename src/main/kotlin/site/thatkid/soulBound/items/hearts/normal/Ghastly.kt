@@ -18,6 +18,7 @@ import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
 import site.thatkid.soulBound.HeartRegistry.ghastlyListener
 import site.thatkid.soulBound.items.Heart
+import site.thatkid.soulBound.items.ItemCreator
 import java.util.*
 import com.comphenix.protocol.wrappers.Pair as ProtoPair
 
@@ -50,23 +51,7 @@ object Ghastly : Heart() {
     private fun isProtocolLibAvailable(): Boolean = protocolManager != null
 
     override fun createItem(): ItemStack {
-        val item = ItemStack(Material.APPLE)
-        val meta = item.itemMeta!!
-        meta.displayName(Component.text("§5Ghastly Heart"))
-        meta.lore(listOf(
-            Component.text("§7Born from fire, hidden in smoke..."),
-            Component.text(""),
-            Component.text("§f✧ §7Permanent §fInvisibility"),
-            Component.text("§7  (does not hide armor)"),
-            Component.text(""),
-            Component.text("§5§lPower — Phantom Veil"),
-            Component.text("§7Become §finvisible (true)§7 and gain §bSpeed II§7 for §f15s"),
-            Component.text("§7Armor hidden. Entity hidden."),
-            Component.text("§8Cooldown: 45 seconds")
-        ))
-        meta.persistentDataContainer.set(key, PersistentDataType.BYTE, 1)
-        item.itemMeta = meta
-        return item
+        return ItemCreator.itemCreator(5)
     }
 
     override fun constantEffect(player: Player) {
@@ -215,7 +200,10 @@ object Ghastly : Heart() {
     }
 
     override fun getCooldown(playerId: UUID): Long {
-        return cooldowns[playerId] ?: 0L
+        val lastUsed = cooldowns[playerId] ?: return 0L
+        val now = System.currentTimeMillis()
+        val remaining = cooldownTime - (now - lastUsed)
+        return if (remaining > 0) remaining else 0L
     }
 
     fun isSpecialActive(playerId: UUID): Boolean {

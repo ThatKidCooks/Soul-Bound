@@ -8,6 +8,7 @@ import site.thatkid.soulBound.HeartRegistry
 import site.thatkid.soulBound.managers.DiscordBot
 import site.thatkid.soulBound.managers.hearts.mine.FrozenListener
 import site.thatkid.soulBound.managers.hearts.mine.FrozenListener.SaveData
+import site.thatkid.soulBound.items.HeartRegistry
 import site.thatkid.soulBound.managers.hearts.statistic.Statistic
 import java.io.File
 

@@ -13,6 +13,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import site.thatkid.soulBound.HeartRegistry.aquaticListener
 import site.thatkid.soulBound.items.Heart
+import site.thatkid.soulBound.items.ItemCreator
 import java.util.UUID
 
 object Aquatic: Heart() {
@@ -25,21 +26,7 @@ object Aquatic: Heart() {
     private val cooldownTime = 100 * 1000L // 20 seconds in milliseconds
 
     override fun createItem(): ItemStack {
-        val item = ItemStack(Material.APPLE)
-        val meta = item.itemMeta!!
-        meta.displayName(Component.text("§bAquatic Heart"))
-        meta.lore(listOf(
-            Component.text("§7Born from the ocean. Swam away."),
-            Component.text(""),
-            Component.text("§f✧ §7Permanent §bDolphin’s Grace §7& §9Conduit Power"),
-            Component.text(""),
-            Component.text("§3§lPower — Tidal Surge"),
-            Component.text("§7If in water, gain §cStrength III §7for §f5s"),
-            Component.text("§8Cooldown: 100 seconds")
-        ))
-        meta.persistentDataContainer.set(key, PersistentDataType.BYTE, 1)
-        item.itemMeta = meta
-        return item
+        return ItemCreator.itemCreator(1)
     }
 
     override fun constantEffect(player: Player) {
@@ -86,6 +73,9 @@ object Aquatic: Heart() {
     }
 
     override fun getCooldown(playerId: UUID): Long {
-        return cooldowns[playerId] ?: 0L
+        val lastUsed = cooldowns[playerId] ?: return 0L
+        val now = System.currentTimeMillis()
+        val remaining = cooldownTime - (now - lastUsed)
+        return if (remaining > 0) remaining else 0L
     }
 }

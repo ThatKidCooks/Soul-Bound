@@ -7,6 +7,7 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.HeartRegistry
 import site.thatkid.soulBound.managers.DiscordBot
+import site.thatkid.soulBound.items.HeartRegistry
 import site.thatkid.soulBound.managers.hearts.statistic.Statistic
 import java.io.File
 

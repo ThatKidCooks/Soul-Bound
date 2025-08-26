@@ -4,12 +4,14 @@ import com.google.gson.GsonBuilder
 import net.axay.kspigot.event.listen
 import net.axay.kspigot.event.register
 import net.axay.kspigot.event.unregister
+import net.axay.kspigot.extensions.broadcast
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.plugin.java.JavaPlugin
 import site.thatkid.soulBound.HeartRegistry
 import site.thatkid.soulBound.managers.DiscordBot
+import site.thatkid.soulBound.items.HeartRegistry
 import java.io.File
 import java.util.UUID
 
@@ -46,7 +48,8 @@ class FrozenListener(private val plugin: JavaPlugin, private val discordBot: Dis
                 val frozenHeart = HeartRegistry.hearts["frozen"]?.createItem()
                 if (frozenHeart != null) {
                     player.inventory.addItem(frozenHeart)
-                    Bukkit.broadcastMessage("The Frozen Heart has been awarded to ${player.name} for mining 10,000 Ice Blocks First!")
+                   
+                    broadcast("The Frozen Heart has been awarded to ${player.name} for mining 10,000 Ice Blocks First!")
                     discordBot.sendMessage("The Frozen Heart has been awarded to ${player.name} for mining 10,000 Ice Blocks First!")
                     received = true // no one else can receive the Frozen Heart after this
                     save() // save the state after giving the heart
